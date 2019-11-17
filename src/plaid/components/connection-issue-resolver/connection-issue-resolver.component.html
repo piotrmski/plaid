@@ -1,0 +1,64 @@
+<div class="popup-background" [class.visible]="errorPopupVisible || lostConnectionPopupVisible || loginPopupVisible">
+  <div class="popup" [class.open]="errorPopupVisible">
+    <div class="popup-header">
+      Application error
+    </div>
+    <div class="popup-body">
+      {{ error ? error.message : null }}
+    </div>
+    <div class="popup-footer">
+      <button class="button" (click)="errorPopupVisible = false">Close</button>
+    </div>
+  </div>
+
+  <div class="popup" [class.open]="lostConnectionPopupVisible">
+    <div class="popup-header">
+      Connection error
+    </div>
+    <div class="popup-body">
+      Could not connect to Jira. Verify your internet connection and retry.
+    </div>
+    <div class="popup-footer">
+      <button class="button primary" (click)="resubmit()" [disabled]="fetching">
+        <span *ngIf="fetching" class="icon-spinner"></span>
+        <ng-container *ngIf="!fetching">Retry</ng-container>
+      </button>
+      <button class="button" (click)="lostConnectionPopupVisible = false">Close</button>
+    </div>
+  </div>
+
+  <form #form="ngForm" class="popup" [class.open]="loginPopupVisible">
+    <div class="popup-header">
+      Log in to Jira
+    </div>
+    <div class="popup-body">
+      <p class="error" *ngIf="error">
+        <ng-container *ngIf="error.status === 403">
+          Jira denied authentication to this client. <u [plaidExtHref]="authInfo.jiraUrl + '/login.jsp'">Log in to Jira in your browser</u> to see the details. You will likely need to solve CAPTCHA. If you are stuck on CAPTCHA and can't log in, clear your browser cookies.
+        </ng-container>
+        <ng-container *ngIf="error.status === 401">
+          An authentication error occurred. Verify your username and password.
+        </ng-container>
+        <ng-container *ngIf="error.status === 0">
+          Could not connect to Jira. Verify the URL and your internet connection.
+        </ng-container>
+        <ng-container *ngIf="[0, 401, 403].indexOf(error.status) === -1">
+          {{ error.message }}
+        </ng-container>
+      </p>
+      <label>Jira URL</label>
+      <input name="jiraUrl" type="url" [(ngModel)]="authInfo.jiraUrl" required (change)="stripUrl()">
+      <label>Username <small>(for Jira Cloud use your email address instead)</small></label>
+      <input name="username" type="text" [(ngModel)]="authInfo.username" required>
+      <label>Password <small>(for Jira Cloud use an <u plaidExtHref="https://id.atlassian.com/manage/api-tokens">API token</u> instead)</small></label>
+      <input name="password" type="password" [(ngModel)]="authInfo.password" required>
+    </div>
+    <div class="popup-footer">
+      <button class="button primary" (click)="submit()" [disabled]="form.invalid || fetching">
+        <span *ngIf="fetching" class="icon-spinner"></span>
+        <ng-container *ngIf="!fetching">Log in</ng-container>
+      </button>
+      <button class="button" (click)="loginPopupVisible = false">Cancel</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.top-bar {
+  display: flex;
+  padding: 3px;
+
+  & > * {
+    margin: 0 10px;
+  }
+
+  & > *:first-child {
+    margin-left: 0;
+  }
+
+  & > *:last-child {
+    margin-right: 0;
+  }
+
+  plaid-auth-status {
+    margin-left: auto;
+  }
+}

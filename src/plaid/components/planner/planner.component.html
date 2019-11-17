@@ -1,0 +1,30 @@
+<div class="planner" [style.min-width.px]="30 + weekdays.length * 180">
+  <div class="planner-header">
+    <div class="header-over-labels"></div>
+    <div class="header-over-content" *ngFor="let weekday of weekdays">
+      {{ weekday | date:'EEE, LLL d' }}
+    </div>
+  </div>
+  <plaid-planner-grid-background
+    [pixelsPerMinute]="pixelsPerMinute"
+    [numberOfWeekdays]="weekdays.length || 0"
+  ></plaid-planner-grid-background>
+  <div class="worklog-panels-area">
+    <plaid-worklog-panel
+      *ngFor="let worklog of worklogs"
+      [worklog]="worklog"
+      [pixelsPerMinute]="pixelsPerMinute"
+    ></plaid-worklog-panel>
+  </div>
+  <div class="planner-footer">
+    <div class="footer-under-labels">
+      &Sigma;
+    </div>
+    <div class="footer-under-content" *ngFor="let timeSum of timeSums">
+      {{ timeSum }}
+    </div>
+  </div>
+</div>
+<div class="loading-overlay" [class.visible]="loading">
+  <span class="icon-spinner"></span>
+</div>

@@ -1,0 +1,64 @@
+<div
+  class="panel-outer"
+  [ngStyle]="{
+    width: '14.2857%',
+    height: panelHeight + 'px',
+    top: panelOffsetTop + 'px',
+    left: panelOffsetLeft * 14.2857 + '%'
+  }"
+>
+  <div
+    #panelInner
+    class="panel-inner"
+    [class.float]="float"
+    [ngStyle]="{
+      maxHeight: panelHeight + 'px',
+      backgroundColor: 'hsl(' + panelHue + ', 50%, 95%)',
+      borderColor: 'hsl(' + panelHue + ', 50%, 60%)'
+    }"
+  >
+    <div class="panel-content">
+      <a
+        class="button edit-button"
+        [plaidExtHref]="jiraURL + '/secure/UpdateWorklog!default.jspa?id=' + worklog.issueId + '&worklogId=' + worklog.id"
+      >
+        <span class="icon-edit"></span>
+      </a>
+      <p
+        class="parent-name"
+        *ngIf="worklog.issue.fields.parent"
+        [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.fields.parent.key"
+      >
+        <span class="icon-parent"></span>
+        <b>{{ worklog.issue.fields.parent.key }}</b>
+        {{ worklog.issue.fields.parent.fields.summary }}
+      </p>
+      <p
+        class="name"
+        [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.key"
+      >
+        <b>{{ worklog.issue.key }}</b>
+        {{ worklog.issue.fields.summary }}
+      </p>
+      <p class="fields">
+        <img
+          *ngIf="worklog.issue.fields.issuetype"
+          [src]="worklog.issue.fields.issuetype.iconUrl"
+          [title]="worklog.issue.fields.issuetype.name"
+          class="field-icon"
+        >
+        <img
+          *ngIf="worklog.issue.fields.priority"
+          [src]="worklog.issue.fields.priority.iconUrl"
+          [title]="worklog.issue.fields.priority.name"
+          class="field-icon"
+        >
+        {{ components }}
+      </p>
+      <p class="time">
+        {{ timeRange }}
+      </p>
+      <pre class="comment">{{ worklog.comment?.trim() }}</pre>
+    </div>
+  </div>
+</div>

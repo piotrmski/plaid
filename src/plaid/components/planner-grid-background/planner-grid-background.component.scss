@@ -1,0 +1,41 @@
+:host {
+  display: flex;
+}
+
+.weekday-labels {
+  flex: 0;
+  min-width: 30px;
+  max-width: 30px;position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+}
+
+.weekday {
+  flex: 1;
+}
+
+.weekday-label {
+  border-right: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  width: 30px;
+  text-align: center;
+}
+
+.weekday-hour {
+  border-right: 1px solid #aaa;
+}
+
+.weekday-fivemin {
+  &:not(:nth-child(3n+1)):not(:first-child) {
+    border-top: 1px dotted #e7e7e7;
+  }
+
+  &:nth-child(3n+1):not(:first-child) {
+    border-top: 1px dashed #ccc;
+  }
+
+  &:first-child {
+    border-top: 1px solid #aaa;
+  }
+}

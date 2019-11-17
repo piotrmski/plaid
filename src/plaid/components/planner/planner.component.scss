@@ -1,0 +1,97 @@
+:host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: auto;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 36px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(200, 200, 200, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-primary-4);
+  z-index: -1;
+  opacity: 0;
+  transition: 0.2s opacity, 0s z-index 0.2s;
+  font-size: 100px;
+
+  &.visible {
+    z-index: 3;
+    opacity: 1;
+    transition: 0.2s opacity, 0s z-index 0s;
+  }
+}
+
+.planner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.planner-header {
+  display: flex;
+  align-items: stretch;
+  background-color: var(--color-gray-7);
+  position: sticky;
+  top: 0;
+  z-index: 3;
+
+  .header-over-labels {
+    flex: 0;
+    min-width: 30px;
+    max-width: 30px;
+  }
+
+  .header-over-content {
+    flex: 1;
+    padding: 0 5px;
+    line-height: 35px;
+    color: #fff;
+  }
+}
+
+.worklog-panels-area {
+  position: absolute;
+  top: 35px;
+  left: 30px;
+  width: calc(100% - 30px);
+}
+
+.planner-footer {
+  display: flex;
+  align-items: stretch;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  line-height: 24px;
+  background-color: #fff;
+  font-weight: 600;
+
+  .footer-under-labels {
+    flex: 0;
+    min-width: 30px;
+    max-width: 30px;
+    font-family: sans-serif;
+    text-align: center;
+    border-right: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+    background-color: #fff;
+    position: sticky;
+    left: 0;
+  }
+
+  .footer-under-content {
+    flex: 1;
+    padding: 0 5px;
+    border-right: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+  }
+}

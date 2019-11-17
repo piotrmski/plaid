@@ -1,0 +1,63 @@
+:host {
+  position: relative;
+}
+
+img {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  position: relative;
+  bottom: 2px;
+  border-radius: 100%;
+}
+
+.dropdown {
+  text-align: center;
+  position: absolute;
+  opacity: 0;
+  width: 300px;
+  background: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  padding: 0 0 20px;
+  top: 20px;
+  right: 0;
+  transition: 0.25s opacity, 0.25s top, 0.25s z-index step-end;
+  z-index: -1;
+
+  &::before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    bottom: 100%;
+    right: 20px;
+    border-bottom: 10px solid #fff;
+    border-left: 20px solid transparent;
+  }
+
+  &.open {
+    opacity: 1;
+    top: 40px;
+    transition: 0.25s opacity, 0.25s top, 0.25s z-index step-start;
+    z-index: 4;
+  }
+
+  .headline {
+    margin: 20px 0 10px;
+    padding: 0 15px;
+    font-weight: 600;
+  }
+
+  .button {
+    display: block;
+    border-radius: 0;
+    padding: 0 15px;
+    margin: 0;
+  }
+}
+
+.appName {
+  display: inline-block;
+  color: var(--color-gray-2);
+  margin-top: 10px;
+}

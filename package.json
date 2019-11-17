@@ -1,0 +1,71 @@
+{
+  "name": "plaid",
+  "productName": "Plaid",
+  "version": "0.1.0",
+  "author": {
+    "name": "Piotr Marczyński",
+    "email": "piotmski@gmail.com"
+  },
+  "description": "Get a better overview of your Jira work log",
+  "keywords": [
+    "jira",
+    "work log",
+    "planner",
+    "calendar"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/piotrmski/plaid",
+  "main": "main.js",
+  "build": {
+    "appId": "com.github.piotrmski.plaid",
+    "files": [
+      "main.js",
+      "build"
+    ],
+    "win": {
+      "icon": "build/assets/icon/icon.ico"
+    },
+    "linux": {
+      "icon": "assets/icon/icon.png"
+    }
+  },
+  "scripts": {
+    "ng": "ng",
+    "serve-dev": "ng serve --port 4300",
+    "start-dev": "electron main-dev.js",
+    "start": "electron main.js",
+    "build": "ng build --prod",
+    "dist": "electron-builder",
+    "lint": "ng lint"
+  },
+  "private": false,
+  "dependencies": {
+    "@angular/animations": "~8.2.0",
+    "@angular/common": "~8.2.0",
+    "@angular/compiler": "~8.2.0",
+    "@angular/core": "~8.2.0",
+    "@angular/forms": "~8.2.0",
+    "@angular/platform-browser": "~8.2.0",
+    "@angular/platform-browser-dynamic": "~8.2.0",
+    "@angular/router": "~8.2.0",
+    "@openfonts/comfortaa_latin": "^0.1.0",
+    "@openfonts/source-sans-pro_all": "^0.1.0",
+    "ngx-electron": "~2.1.1",
+    "rxjs": "~6.4.0",
+    "tslib": "~1.10.0",
+    "zone.js": "~0.9.1"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.802.1",
+    "@angular/cli": "~8.2.0",
+    "@angular/compiler-cli": "~8.2.0",
+    "@angular/language-service": "~8.2.0",
+    "@types/node": "~8.9.4",
+    "codelyzer": "^5.0.0",
+    "electron": "^6.0.1",
+    "electron-builder": "^21.2.0",
+    "ts-node": "~7.0.0",
+    "tslint": "~5.15.0",
+    "typescript": "~3.5.3"
+  }
+}

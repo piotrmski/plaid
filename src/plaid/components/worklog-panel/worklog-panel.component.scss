@@ -1,0 +1,101 @@
+p {
+  margin: 0;
+}
+
+.panel-outer {
+  position: absolute;
+  padding: 0 5px 0 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-inner {
+  position: relative;
+  flex: 1;
+  border-radius: 5px;
+  border-top: 2px solid;
+  overflow: hidden;
+  padding: 2px 5px 5px;
+  transition: 0.2s all;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    &.float {
+      max-height: none!important;
+      overflow: visible;
+      z-index: 1;
+      background: #fff!important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .edit-button {
+      opacity: 1;
+    }
+  }
+
+  b {
+    font-weight: 600;
+  }
+}
+
+.panel-content {
+  flex-grow: 1;
+  position: relative;
+}
+
+.parent-name {
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.5;
+
+  .icon-parent {
+    margin-right: 8px;
+  }
+}
+
+.name {
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 3px;
+}
+
+.fields {
+  font-size: 11px;
+
+  img {
+    vertical-align: middle;
+    height: 16px;
+    margin-right: 4px;
+  }
+}
+
+.time {
+  font-size: 19px;
+}
+
+.comment {
+  font-size: 14px;
+  font-style: italic;
+  margin: 0;
+  white-space: pre-wrap;
+  opacity: 0.8;
+}
+
+.edit-button {
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  cursor: default!important;
+
+  &:not(:hover):not(:active) {
+    background: rgba(255, 255, 255, 0.8);
+  }
+}

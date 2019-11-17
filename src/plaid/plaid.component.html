@@ -1,0 +1,23 @@
+<plaid-connection-issue-resolver
+  [changeCredentials]="changeCredentials"
+></plaid-connection-issue-resolver>
+<div class="top-bar">
+  <plaid-date-range-picker
+    (selectedDateRange)="selectedDateRange = $event"
+  ></plaid-date-range-picker>
+  <plaid-refresh-button
+    (refresh)="refresh()"
+    [disabled]="!currentUser"
+  ></plaid-refresh-button>
+  <plaid-auth-status
+    [user]="currentUser"
+    (changeCredentials)="changeCredentials.emit()"
+    (forgetAccount)="forgetAccount()"
+  ></plaid-auth-status>
+</div>
+<plaid-planner
+  [pixelsPerMinute]="pixelsPerMinute"
+  [worklogs]="worklogs"
+  [dateRange]="selectedDateRange"
+  [loading]="loading"
+></plaid-planner>

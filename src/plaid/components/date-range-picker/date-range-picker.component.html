@@ -1,0 +1,42 @@
+<a class="button" (click)="decrementWeek()">
+  <span class="icon-arrow-left"></span>
+</a>
+<a class="button toggle-button" [class.active]="calendarOpen" (click)="calendarOpen = !calendarOpen">
+  {{ buttonText }}
+</a>
+<a class="button" (click)="incrementWeek()">
+  <span class="icon-arrow-right"></span>
+</a>
+<div class="calendar" [class.open]="calendarOpen">
+  <div class="month-changer">
+    <a class="button" (click)="decrementMonth()">
+      <span class="icon-arrow-left"></span>
+    </a>
+    <div class="month-label">
+      {{ months[month.getMonth()] }} {{ month.getFullYear() }}
+    </div>
+    <a class="button" (click)="incrementMonth()">
+      <span class="icon-arrow-right"></span>
+    </a>
+  </div>
+  <div class="weekdays">
+    <div class="weekday" *ngFor="let weekday of weekdays">
+      {{ weekday }}
+    </div>
+  </div>
+  <div
+    class="week"
+    *ngFor="let week of days"
+    [class.selected]="_selectedDateRange.start.valueOf() === week[0].valueOf() && _selectedDateRange.end.valueOf() === week[6].valueOf()"
+    (click)="selectDateRange({ start: week[0], end: week[6] })"
+  >
+    <div
+      class="day"
+      *ngFor="let day of week"
+      [class.other-month]="day.getMonth() !== month.getMonth()"
+      [class.today]="day.getTime() === today.getTime()"
+    >
+      {{ day.getDate() }}
+    </div>
+  </div>
+</div>
