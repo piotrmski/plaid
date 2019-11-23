@@ -1,10 +1,16 @@
 # Plaid
 
+![Screenshot](https://raw.githubusercontent.com/piotrmski/plaid/master/screenshot.png)
+
 Plaid lets you get a better overview of your Jira work logs. See your work logs laid out on a weekly calendar and never struggle searching for gaps in your hours again.
 
 ## Change log
 
-### 0.1
+**0.1.1**
+
+- published for Windows, Snapcraft
+
+**0.1.0**
 
 - initial release
 
@@ -12,17 +18,17 @@ Plaid lets you get a better overview of your Jira work logs. See your work logs 
 
 ### Windows
 
-#### Portable
+Download the installer from the latest [release](https://github.com/piotrmski/plaid/releases). Run the executable and you're good to go. Your application will automatically update to newer releases.
 
-Download and unpack the latest release from the [releases](https://github.com/piotrmski/plaid/releases) page. Run the executable and you're good to go.
+### GNU/Linux
 
-#### Installer
+Application is available to install from Snapcraft:
 
-Installer with updater for Windows is on the way.
+```
+sudo snap install plaid
+```
 
-### Linux
-
-Application will soon be avaliable from Flathub and Snapcraft.
+Release on Flathub is planned for future.
 
 ## Development
 
@@ -46,7 +52,23 @@ npm run start-dev
 
 ### Building
 
-Building and packaging instructions will soon be added.
+To build the Angular project to `./build`, run:
+
+```
+npm run build
+```
+
+The built project can then be run without packaging:
+
+```
+npm run start
+```
+
+After building you can also package the project for the current platform to `./dist`:
+
+```
+npm run package
+```
 
 ## Roadmap
 
