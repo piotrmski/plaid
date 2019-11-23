@@ -23,10 +23,16 @@
       "build"
     ],
     "win": {
-      "icon": "build/assets/icon/icon.ico"
+      "icon": "build/assets/icon/icon.ico",
+      "publish": [
+        "github"
+      ]
     },
     "linux": {
-      "icon": "assets/icon/icon.png"
+      "icon": "assets/icon/icon.png",
+      "publish": [
+        "snap"
+      ]
     }
   },
   "scripts": {
@@ -35,7 +41,8 @@
     "start-dev": "electron main-dev.js",
     "start": "electron main.js",
     "build": "ng build --prod",
-    "dist": "electron-builder",
+    "package": "electron-builder",
+    "publish": "electron-builder --publish always",
     "lint": "ng lint"
   },
   "private": false,
@@ -50,6 +57,7 @@
     "@angular/router": "~8.2.0",
     "@openfonts/comfortaa_latin": "^0.1.0",
     "@openfonts/source-sans-pro_all": "^0.1.0",
+    "electron-updater": "^4.2.0",
     "ngx-electron": "~2.1.1",
     "rxjs": "~6.4.0",
     "tslib": "~1.10.0",
