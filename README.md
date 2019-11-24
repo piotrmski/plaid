@@ -6,6 +6,10 @@ Plaid lets you get a better overview of your Jira work logs. See your work logs 
 
 ## Change log
 
+**0.1.2**
+
+- added VisualElementsManifest.xml (Windows only)
+
 **0.1.1**
 
 - published for Windows, Snapcraft
