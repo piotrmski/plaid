@@ -24,15 +24,18 @@
     ],
     "win": {
       "icon": "build/assets/icon/icon.ico",
+      "extraFiles": [
+        {
+          "from": "src/assets/Plaid.VisualElementsManifest.xml",
+          "to": "Plaid.VisualElementsManifest.xml"
+        }
+      ],
       "publish": [
         "github"
       ]
     },
     "linux": {
-      "icon": "assets/icon/icon.png",
-      "publish": [
-        "snap"
-      ]
+      "icon": "assets/icon/icon.png"
     }
   },
   "scripts": {
