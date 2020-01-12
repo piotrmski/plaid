@@ -15,4 +15,7 @@ export interface Worklog {
   id?: string;
   issueId?: string;
   issue?: Issue;
+
+  _column: number;
+  _columns: number;
 }

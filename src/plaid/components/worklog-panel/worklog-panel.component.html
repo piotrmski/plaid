@@ -1,16 +1,16 @@
 <div
   class="panel-outer"
   [ngStyle]="{
-    width: '14.2857%',
+    width: panelWidth * 100 + '%',
     height: panelHeight + 'px',
     top: panelOffsetTop + 'px',
-    left: panelOffsetLeft * 14.2857 + '%'
+    left: panelOffsetLeft * 100 + '%'
   }"
 >
   <div
     #panelInner
     class="panel-inner"
-    [class.float]="float"
+    [class.undersized]="undersized"
     [ngStyle]="{
       maxHeight: panelHeight + 'px',
       backgroundColor: 'hsl(' + panelHue + ', 50%, 95%)',

@@ -13,9 +13,10 @@ import {DateRange} from '../../models/date-range';
   styleUrls: ['./planner.component.scss']
 })
 export class PlannerComponent implements AfterViewInit {
-  weekdays: Date[];
+  days: Date[];
   _dateRange: DateRange;
   _worklogs: Worklog[];
+  worklogsSplitByDays: Worklog[][];
   timeSums: string[];
 
   @Input()
@@ -27,39 +28,39 @@ export class PlannerComponent implements AfterViewInit {
         .filter(worklog =>
           new Date(worklog.started) >= this.dateRange.start &&
           new Date(worklog.started) < new Date(this.dateRange.end.getTime() + 86400000)
-        );
+        ).sort((a, b) => new Date(a.started).getTime() - new Date(b.started).getTime());
 
-      if (this.weekdays && this.weekdays.length > 0) {
-        const timeSumsSeconds: number[] = this.weekdays.map(() => 0);
-
-        worklogs.forEach(worklog => {
-          const wlDate: Date = new Date(worklog.started);
-          const wlDay: Date = new Date(wlDate.getFullYear(), wlDate.getMonth(), wlDate.getDate());
-          const offset: number = Math.round((wlDay.valueOf() - this.weekdays[0].valueOf()) / 86400000);
-          timeSumsSeconds[offset] += worklog.timeSpentSeconds;
+      if (this.days && this.days.length > 0) {
+        this.worklogsSplitByDays = this.days.map(weekday => {
+          const columnsLastLogsEndsDates: Date[] = [];
+          return this.worklogs.filter(worklog =>
+            new Date(worklog.started) >= weekday &&
+            new Date(worklog.started) < new Date(weekday.getTime() + 86400000)
+          ).map(worklog => {
+            let column = 0;
+            while ((columnsLastLogsEndsDates[column] || new Date(0)) > new Date(worklog.started)) {
+              ++column;
+            }
+            columnsLastLogsEndsDates[column] = new Date(new Date(worklog.started).getTime() + worklog.timeSpentSeconds * 1000);
+            return {...worklog, _column: column};
+          });
         });
 
-        this.timeSums = [];
-        timeSumsSeconds.forEach(sum => {
-          const hours: number = Math.floor(sum / 3600);
-          sum -= hours * 3600;
-          const minutes: number = Math.floor(sum / 60);
-          sum -= minutes * 60;
-          const seconds: number = sum;
-          const timeSumStringParts: string[] = [];
-          if (hours > 0) {
-            timeSumStringParts.push(hours + 'h');
-          }
-          if (minutes > 0) {
-            timeSumStringParts.push(minutes + 'm');
-          }
-          if (seconds > 0) {
-            timeSumStringParts.push(seconds + 's');
-          }
-          this.timeSums.push(timeSumStringParts.join(' '));
+        this.timeSums = this.worklogsSplitByDays
+          .map(logs => logs
+            .map(worklog => worklog.timeSpentSeconds)
+            .reduce((a, b) => a + b, 0)
+          ).map(sumOfSeconds => {
+          const hours: number = Math.floor(sumOfSeconds / 3600);
+          sumOfSeconds -= hours * 3600;
+          const minutes: number = Math.floor(sumOfSeconds / 60);
+          sumOfSeconds -= minutes * 60;
+          const seconds: number = sumOfSeconds;
+          return (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + (seconds ? seconds + 's' : '');
         });
       } else {
-        this._worklogs = null;
+        this._worklogs = [];
+        this.worklogsSplitByDays = [];
       }
     }
   }
@@ -75,7 +76,7 @@ export class PlannerComponent implements AfterViewInit {
         wd.push(new Date(date));
       }
     }
-    this.weekdays = wd;
+    this.days = wd;
     this.worklogs = this.worklogs || [];
   }
   get dateRange(): DateRange {

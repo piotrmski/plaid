@@ -20,14 +20,14 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   jiraURL: string;
   _worklog: Worklog;
   _pixelsPerMinute: number;
-  float = false;
+  undersized = false;
   subscriptions: Subscription[] = [];
 
   @Input()
   set worklog(worklog: Worklog) {
     this._worklog = worklog;
     if (this.pixelsPerMinute) {
-      setTimeout(() => this.adjustFloat());
+      setTimeout(() => this.checkIfUndersized());
     }
   }
   get worklog(): Worklog {
@@ -37,7 +37,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   set pixelsPerMinute(pixelsPerMinute: number) {
     this._pixelsPerMinute = pixelsPerMinute;
     if (this.worklog) {
-      setTimeout(() => this.adjustFloat());
+      setTimeout(() => this.checkIfUndersized());
     }
   }
   get pixelsPerMinute(): number {
@@ -51,7 +51,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(this.facade.getJiraURL$().subscribe(url => this.jiraURL = url));
-    this.subscriptions.push(this.facade.windowResize$().subscribe(() => this.adjustFloat()));
+    this.subscriptions.push(this.facade.windowResize$().subscribe(() => this.checkIfUndersized()));
   }
 
   ngOnDestroy(): void {
@@ -64,6 +64,10 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     return new Date(this.worklog.started);
   }
 
+  get panelWidth(): number {
+    return 0.3; // FIXME
+  }
+
   get panelHeight(): number {
     return this.worklog.timeSpentSeconds / 60 * this.pixelsPerMinute;
   }
@@ -73,7 +77,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   get panelOffsetLeft(): number {
-    return this.date.getDay();
+    return this.worklog._column * 0.3; // FIXME
   }
 
   // tslint:disable:no-bitwise
@@ -109,8 +113,8 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     }
   }
 
-  adjustFloat(): void {
-    this.float = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
+  checkIfUndersized(): void {
+    this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
     this.cdr.detectChanges();
   }
 }

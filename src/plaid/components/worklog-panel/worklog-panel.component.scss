@@ -4,7 +4,6 @@ p {
 
 .panel-outer {
   position: absolute;
-  padding: 0 5px 0 4px;
   display: flex;
   flex-direction: column;
 }
@@ -21,7 +20,7 @@ p {
   flex-direction: column;
 
   &:hover {
-    &.float {
+    &.undersized {
       max-height: none!important;
       overflow: visible;
       z-index: 1;
