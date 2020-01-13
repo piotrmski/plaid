@@ -63,6 +63,13 @@
   top: 35px;
   left: 30px;
   width: calc(100% - 30px);
+  display: flex;
+
+  .worklog-panels-area-column {
+    flex: 1;
+    position: relative;
+    margin: 0 5px 0 4px;
+  }
 }
 
 .planner-footer {
