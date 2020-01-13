@@ -15,7 +15,8 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'plaid-worklog-panel',
   templateUrl: './worklog-panel.component.html',
-  styleUrls: ['./worklog-panel.component.scss']
+  styleUrls: ['./worklog-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorklogPanelComponent implements OnInit, OnDestroy {
   jiraURL: string;
@@ -23,6 +24,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   _pixelsPerMinute: number;
   undersized = false;
   subscriptions: Subscription[] = [];
+  viewDestroyed = false;
 
   @Input()
   set worklog(worklog: Worklog) {
@@ -48,7 +50,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   @ViewChild('panelInner', { static: true })
   panelInner: ElementRef;
 
-  constructor(private facade: PlaidFacade) { }
+  constructor(private facade: PlaidFacade, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.subscriptions.push(this.facade.getJiraURL$().subscribe(url => this.jiraURL = url));
@@ -56,6 +58,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.viewDestroyed = true;
     while (this.subscriptions.length > 0) {
       this.subscriptions.pop().unsubscribe();
     }
@@ -108,6 +111,9 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   checkIfUndersized(): void {
-    this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
+    if (!this.viewDestroyed) {
+      this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
+      this.cdr.detectChanges();
+    }
   }
 }
