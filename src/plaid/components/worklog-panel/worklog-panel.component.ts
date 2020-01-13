@@ -15,8 +15,7 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'plaid-worklog-panel',
   templateUrl: './worklog-panel.component.html',
-  styleUrls: ['./worklog-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./worklog-panel.component.scss']
 })
 export class WorklogPanelComponent implements OnInit, OnDestroy {
   jiraURL: string;
@@ -49,7 +48,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   @ViewChild('panelInner', { static: true })
   panelInner: ElementRef;
 
-  constructor(private facade: PlaidFacade, private cdr: ChangeDetectorRef) { }
+  constructor(private facade: PlaidFacade) { }
 
   ngOnInit(): void {
     this.subscriptions.push(this.facade.getJiraURL$().subscribe(url => this.jiraURL = url));
@@ -82,17 +81,10 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     return this.worklog._column * this.panelWidth;
   }
 
-  // tslint:disable:no-bitwise
   get panelHue(): number {
-    let hash = 0;
-    const str = this.worklog.issue.fields.parent ? this.worklog.issue.fields.parent.id : this.worklog.issue.id;
-    for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash) + str.charCodeAt(i);
-      hash = hash & hash;
-    }
-    return Math.round(Math.abs(hash)) % 360;
+    const num = Number(this.worklog.issue.fields.parent ? this.worklog.issue.fields.parent.id : this.worklog.issue.id);
+    return Math.round((num * 360 / 1.61803)) % 360;
   }
-  // tslint:enable:no-bitwise
 
   get components(): string {
     return this.worklog.issue.fields.components ? this.worklog.issue.fields.components.map(c => c.name).join(', ') : null;
@@ -117,6 +109,5 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
 
   checkIfUndersized(): void {
     this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
-    this.cdr.detectChanges();
   }
 }

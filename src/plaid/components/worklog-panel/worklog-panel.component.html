@@ -1,10 +1,10 @@
 <div
   class="panel-outer"
   [ngStyle]="{
-    width: panelWidth * 100 + '%',
-    height: panelHeight + 'px',
+    width: 'calc(' + panelWidth * 100 + '% + 1px)',
+    height: panelHeight + 1 + 'px',
     top: panelOffsetTop + 'px',
-    left: panelOffsetLeft * 100 + '%'
+    left: 'calc(' + panelOffsetLeft * 100 + '% - 1px)'
   }"
 >
   <div
@@ -12,7 +12,7 @@
     class="panel-inner"
     [class.undersized]="undersized"
     [ngStyle]="{
-      maxHeight: panelHeight + 'px',
+      maxHeight: panelHeight + 1 + 'px',
       backgroundColor: 'hsl(' + panelHue + ', 50%, 95%)',
       borderColor: 'hsl(' + panelHue + ', 50%, 60%)'
     }"
