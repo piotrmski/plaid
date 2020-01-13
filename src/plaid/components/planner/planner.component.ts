@@ -33,31 +33,51 @@ export class PlannerComponent implements AfterViewInit {
       if (this.days && this.days.length > 0) {
         this.worklogsSplitByDays = this.days.map(weekday => {
           const columnsLastLogsEndsDates: Date[] = [];
+          let lastLogEndDate: Date = new Date(0); // (last in terms of ending time)
+          const sectionsSizes: number[] = []; // Sizes of unbroken series of overlapping work logs (here called sections)
+          const sectionsMaxColumns: number[] = []; // Greatest column number which had to be used in each section
           return this.worklogs.filter(worklog =>
             new Date(worklog.started) >= weekday &&
             new Date(worklog.started) < new Date(weekday.getTime() + 86400000)
           ).map(worklog => {
             let column = 0;
-            while ((columnsLastLogsEndsDates[column] || new Date(0)) > new Date(worklog.started)) {
+            while ((columnsLastLogsEndsDates[column] || new Date(0)) > new Date(worklog.started)) { // Find first column where work log fits
               ++column;
             }
             columnsLastLogsEndsDates[column] = new Date(new Date(worklog.started).getTime() + worklog.timeSpentSeconds * 1000);
+            if (new Date(worklog.started) < lastLogEndDate) { // If this and last work logs overlap
+              ++sectionsSizes[sectionsSizes.length - 1];
+              if (sectionsMaxColumns[sectionsMaxColumns.length - 1] < column) {
+                sectionsMaxColumns[sectionsMaxColumns.length - 1] = column;
+              }
+            } else { // If this and last work logs no not overlap
+              sectionsSizes.push(1);
+              sectionsMaxColumns.push(column);
+            }
+            if (lastLogEndDate < columnsLastLogsEndsDates[column]) {
+              lastLogEndDate = columnsLastLogsEndsDates[column];
+            }
             return {...worklog, _column: column};
+          }).map(worklog => {
+            if (sectionsSizes[0] === 0) {
+              sectionsSizes.shift();
+              sectionsMaxColumns.shift();
+            }
+            --sectionsSizes[0];
+            return {...worklog, _columns: sectionsMaxColumns[0] + 1};
           });
         });
 
         this.timeSums = this.worklogsSplitByDays
-          .map(logs => logs
-            .map(worklog => worklog.timeSpentSeconds)
-            .reduce((a, b) => a + b, 0)
-          ).map(sumOfSeconds => {
-          const hours: number = Math.floor(sumOfSeconds / 3600);
-          sumOfSeconds -= hours * 3600;
-          const minutes: number = Math.floor(sumOfSeconds / 60);
-          sumOfSeconds -= minutes * 60;
-          const seconds: number = sumOfSeconds;
-          return (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + (seconds ? seconds + 's' : '');
-        });
+          .map(logs => logs.map(worklog => worklog.timeSpentSeconds).reduce((a, b) => a + b, 0)) // Add up all worklog.timeSpentSeconds
+          .map(sumOfSeconds => { // Translate it to human readable format
+            const hours: number = Math.floor(sumOfSeconds / 3600);
+            sumOfSeconds -= hours * 3600;
+            const minutes: number = Math.floor(sumOfSeconds / 60);
+            sumOfSeconds -= minutes * 60;
+            const seconds: number = sumOfSeconds;
+            return (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + (seconds ? seconds + 's' : '');
+          });
       } else {
         this._worklogs = [];
         this.worklogsSplitByDays = [];

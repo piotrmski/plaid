@@ -1,8 +1,10 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  Input, OnDestroy,
+  Input,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -65,7 +67,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   get panelWidth(): number {
-    return 0.3; // FIXME
+    return 1 / this.worklog._columns;
   }
 
   get panelHeight(): number {
@@ -77,7 +79,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   get panelOffsetLeft(): number {
-    return this.worklog._column * 0.3; // FIXME
+    return this.worklog._column * this.panelWidth;
   }
 
   // tslint:disable:no-bitwise
