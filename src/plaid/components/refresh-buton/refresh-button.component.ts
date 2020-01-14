@@ -19,7 +19,7 @@ export class RefreshButtonComponent implements OnInit {
     Mousetrap.bind(['f5', 'ctrl+r'], () => {
       this.buttonActive = true;
       this.button.nativeElement.click();
-      setTimeout(() => this.buttonActive = false);
+      setTimeout(() => this.buttonActive = false, 100);
     });
   }
 
