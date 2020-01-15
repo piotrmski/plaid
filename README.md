@@ -4,19 +4,13 @@
 
 Plaid lets you get a better overview of your Jira work logs. See your work logs laid out on a weekly calendar and never struggle searching for gaps in your hours again.
 
-## Change log
+## New in 0.2
 
-**0.1.2**
+- overlapping logs now appear side by side
+- changed appearance of logs for better clarity and contrast
+- F5 and Ctrl+R now refresh work logs
 
-- added VisualElementsManifest.xml (Windows only)
-
-**0.1.1**
-
-- published for Windows, Snapcraft
-
-**0.1.0**
-
-- initial release
+See full change log in `changelog.md`
 
 ## Installation
 
@@ -82,5 +76,5 @@ Planned functionality includes:
 - changing zoom level
 - setting hour markers for beginnings and ends of work days,
 - automatic refreshing,
-- displaying overlapping logs side by side,
+- dark mode,
 - adding and editing work logs within the application.

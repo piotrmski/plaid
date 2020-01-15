@@ -1,20 +1,22 @@
-<div class="planner" [style.min-width.px]="30 + weekdays.length * 180">
+<div class="planner" [style.min-width.px]="30 + days.length * 180">
   <div class="planner-header">
     <div class="header-over-labels"></div>
-    <div class="header-over-content" *ngFor="let weekday of weekdays">
+    <div class="header-over-content" *ngFor="let weekday of days">
       {{ weekday | date:'EEE, LLL d' }}
     </div>
   </div>
   <plaid-planner-grid-background
     [pixelsPerMinute]="pixelsPerMinute"
-    [numberOfWeekdays]="weekdays.length || 0"
+    [numberOfWeekdays]="days.length || 0"
   ></plaid-planner-grid-background>
   <div class="worklog-panels-area">
-    <plaid-worklog-panel
-      *ngFor="let worklog of worklogs"
-      [worklog]="worklog"
-      [pixelsPerMinute]="pixelsPerMinute"
-    ></plaid-worklog-panel>
+    <div class="worklog-panels-area-column" *ngFor="let logs of worklogsSplitByDays">
+      <plaid-worklog-panel
+        *ngFor="let worklog of logs"
+        [worklog]="worklog"
+        [pixelsPerMinute]="pixelsPerMinute"
+      ></plaid-worklog-panel>
+    </div>
   </div>
   <div class="planner-footer">
     <div class="footer-under-labels">
