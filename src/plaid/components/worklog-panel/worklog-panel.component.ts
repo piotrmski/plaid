@@ -1,8 +1,10 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  Input, OnDestroy,
+  Input,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -20,14 +22,15 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   jiraURL: string;
   _worklog: Worklog;
   _pixelsPerMinute: number;
-  float = false;
+  undersized = false;
   subscriptions: Subscription[] = [];
+  viewDestroyed = false;
 
   @Input()
   set worklog(worklog: Worklog) {
     this._worklog = worklog;
     if (this.pixelsPerMinute) {
-      setTimeout(() => this.adjustFloat());
+      setTimeout(() => this.checkIfUndersized());
     }
   }
   get worklog(): Worklog {
@@ -37,7 +40,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   set pixelsPerMinute(pixelsPerMinute: number) {
     this._pixelsPerMinute = pixelsPerMinute;
     if (this.worklog) {
-      setTimeout(() => this.adjustFloat());
+      setTimeout(() => this.checkIfUndersized());
     }
   }
   get pixelsPerMinute(): number {
@@ -51,10 +54,11 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(this.facade.getJiraURL$().subscribe(url => this.jiraURL = url));
-    this.subscriptions.push(this.facade.windowResize$().subscribe(() => this.adjustFloat()));
+    this.subscriptions.push(this.facade.windowResize$().subscribe(() => this.checkIfUndersized()));
   }
 
   ngOnDestroy(): void {
+    this.viewDestroyed = true;
     while (this.subscriptions.length > 0) {
       this.subscriptions.pop().unsubscribe();
     }
@@ -62,6 +66,10 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
 
   get date(): Date {
     return new Date(this.worklog.started);
+  }
+
+  get panelWidth(): number {
+    return 1 / this.worklog._columns;
   }
 
   get panelHeight(): number {
@@ -73,20 +81,13 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   get panelOffsetLeft(): number {
-    return this.date.getDay();
+    return this.worklog._column * this.panelWidth;
   }
 
-  // tslint:disable:no-bitwise
   get panelHue(): number {
-    let hash = 0;
-    const str = this.worklog.issue.fields.parent ? this.worklog.issue.fields.parent.id : this.worklog.issue.id;
-    for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash) + str.charCodeAt(i);
-      hash = hash & hash;
-    }
-    return Math.round(Math.abs(hash)) % 360;
+    const num = Number(this.worklog.issue.fields.parent ? this.worklog.issue.fields.parent.id : this.worklog.issue.id);
+    return Math.round((num * 360 / 1.61803)) % 360;
   }
-  // tslint:enable:no-bitwise
 
   get components(): string {
     return this.worklog.issue.fields.components ? this.worklog.issue.fields.components.map(c => c.name).join(', ') : null;
@@ -109,8 +110,10 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     }
   }
 
-  adjustFloat(): void {
-    this.float = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
-    this.cdr.detectChanges();
+  checkIfUndersized(): void {
+    if (!this.viewDestroyed) {
+      this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
+      this.cdr.detectChanges();
+    }
   }
 }

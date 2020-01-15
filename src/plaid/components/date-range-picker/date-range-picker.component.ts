@@ -86,6 +86,8 @@ export class DateRangePickerComponent implements OnInit {
         this._selectedDateRange.start.getFullYear(),
         this._selectedDateRange.start.getMonth()
       );
+      const curTime: Date = new Date();
+      this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
     }
   }
 
