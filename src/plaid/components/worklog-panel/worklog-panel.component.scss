@@ -6,6 +6,32 @@ p {
   position: absolute;
   display: flex;
   flex-direction: column;
+
+  &:hover {
+    &.undersized {
+      .panel-inner {
+        max-height: none !important;
+        overflow: visible;
+        z-index: 1;
+        background: #fff !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      &.too-low {
+        top: auto !important;
+        bottom: 0;
+
+        .panel-inner {
+          position: absolute;
+          bottom: 0;
+        }
+      }
+    }
+
+    .edit-button {
+      opacity: 1;
+    }
+  }
 }
 
 .panel-inner {
@@ -18,20 +44,6 @@ p {
   transition: 0.2s all;
   display: flex;
   flex-direction: column;
-
-  &:hover {
-    &.undersized {
-      max-height: none!important;
-      overflow: visible;
-      z-index: 1;
-      background: #fff!important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    .edit-button {
-      opacity: 1;
-    }
-  }
 
   b {
     font-weight: 600;

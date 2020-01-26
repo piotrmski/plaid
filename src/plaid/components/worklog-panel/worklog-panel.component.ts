@@ -23,6 +23,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   _worklog: Worklog;
   _pixelsPerMinute: number;
   undersized = false;
+  tooLow = false;
   subscriptions: Subscription[] = [];
   viewDestroyed = false;
 
@@ -30,7 +31,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   set worklog(worklog: Worklog) {
     this._worklog = worklog;
     if (this.pixelsPerMinute) {
-      setTimeout(() => this.checkIfUndersized());
+      setTimeout(() => this.checkSizeAndPosition());
     }
   }
   get worklog(): Worklog {
@@ -40,7 +41,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   set pixelsPerMinute(pixelsPerMinute: number) {
     this._pixelsPerMinute = pixelsPerMinute;
     if (this.worklog) {
-      setTimeout(() => this.checkIfUndersized());
+      setTimeout(() => this.checkSizeAndPosition());
     }
   }
   get pixelsPerMinute(): number {
@@ -54,7 +55,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(this.facade.getJiraURL$().subscribe(url => this.jiraURL = url));
-    this.subscriptions.push(this.facade.windowResize$().subscribe(() => this.checkIfUndersized()));
+    this.subscriptions.push(this.facade.windowResize$().subscribe(() => this.checkSizeAndPosition()));
   }
 
   ngOnDestroy(): void {
@@ -73,7 +74,11 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   get panelHeight(): number {
-    return this.worklog.timeSpentSeconds / 60 * this.pixelsPerMinute;
+    return Math.min(this.worklog.timeSpentSeconds / 60 * this.pixelsPerMinute, this.maxHeight);
+  }
+
+  get maxHeight(): number {
+    return 1440 * this.pixelsPerMinute - this.panelOffsetTop;
   }
 
   get panelOffsetTop(): number {
@@ -106,13 +111,21 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
       return startTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) + ' - ' +
         endTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
     } else {
-      return null;
+      let sumOfSeconds = this.worklog.timeSpentSeconds;
+      const hours: number = Math.floor(sumOfSeconds / 3600);
+      sumOfSeconds -= hours * 3600;
+      const minutes: number = Math.floor(sumOfSeconds / 60);
+      sumOfSeconds -= minutes * 60;
+      const seconds: number = sumOfSeconds;
+      return 'Since ' + startTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) +
+        ' for ' + (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + (seconds ? seconds + 's' : '');
     }
   }
 
-  checkIfUndersized(): void {
+  checkSizeAndPosition(): void {
     if (!this.viewDestroyed) {
       this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
+      this.tooLow = this.panelInner.nativeElement.scrollHeight > this.maxHeight;
       this.cdr.detectChanges();
     }
   }
