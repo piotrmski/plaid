@@ -1,5 +1,7 @@
 <div
   class="panel-outer"
+  [class.too-low]="tooLow"
+  [class.undersized]="undersized"
   [ngStyle]="{
     width: 'calc(' + panelWidth * 100 + '% + 1px)',
     height: panelHeight + 1 + 'px',
@@ -10,7 +12,6 @@
   <div
     #panelInner
     class="panel-inner"
-    [class.undersized]="undersized"
     [ngStyle]="{
       maxHeight: panelHeight + 1 + 'px',
       backgroundColor: 'hsl(' + panelHue + ', 50%, 95%)',
