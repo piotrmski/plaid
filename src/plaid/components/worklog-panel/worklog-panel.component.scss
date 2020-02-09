@@ -19,7 +19,7 @@ p {
 
       &.too-low {
         top: auto !important;
-        bottom: 0;
+        bottom: -1px;
 
         .panel-inner {
           position: absolute;

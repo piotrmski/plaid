@@ -125,7 +125,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   checkSizeAndPosition(): void {
     if (!this.viewDestroyed) {
       this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
-      this.tooLow = this.panelInner.nativeElement.scrollHeight > this.maxHeight;
+      this.tooLow = this.panelInner.nativeElement.scrollHeight + 1 > this.maxHeight;
       this.cdr.detectChanges();
     }
   }

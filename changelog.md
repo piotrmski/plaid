@@ -2,6 +2,12 @@
 
 ## 0.2
 
+**0.2.1**
+
+![Long worklogs](https://raw.githubusercontent.com/piotrmski/plaid/master/changelog-screenshots/long-logs.png)
+
+- worklogs longer and lower than valid now don't break the layout
+
 **0.2.0**
 
 ![Overlaps](https://raw.githubusercontent.com/piotrmski/plaid/master/changelog-screenshots/overlap.png)

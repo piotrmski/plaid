@@ -10,7 +10,11 @@
     [numberOfWeekdays]="days.length || 0"
   ></plaid-planner-grid-background>
   <div class="worklog-panels-area">
-    <div class="worklog-panels-area-column" *ngFor="let logs of worklogsSplitByDays" [style.height.px]="pixelsPerMinute * 1440">
+    <div
+      class="worklog-panels-area-column"
+      *ngFor="let logs of worklogsSplitByDays"
+      [style.height.px]="pixelsPerMinute * 1440"
+    >
       <plaid-worklog-panel
         *ngFor="let worklog of logs"
         [worklog]="worklog"
