@@ -205,6 +205,49 @@ body {
   }
 }
 
+.icon-zoom-in,
+.icon-zoom-out {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid;
+  color: inherit;
+  vertical-align: middle;
+  border-radius: 100%;
+  position: relative;
+  top: -3px;
+  left: -1px;
+
+  &::before {
+    content: " ";
+    display: block;
+    color: inherit;
+    border-bottom: 2px solid;
+    width: 6px;
+    height: 0;
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    content: " ";
+    display: block;
+    width: 2px;
+    height: 2px;
+    color: inherit;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    box-shadow: inset 2px 0, 2px 0, -2px 0;
+  }
+}
+
+.icon-zoom-in::after {
+  box-shadow: inset 2px 0, 2px 0, -2px 0, 0 2px, 0 -2px;
+}
+
 /* Buttons */
 
 .button {
