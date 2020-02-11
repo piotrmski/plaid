@@ -1,4 +1,4 @@
-<div class="planner" [style.min-width.px]="30 + days.length * 180">
+<div class="planner" [style.min-width.px]="30 + days.length * 180" [style.min-height.px]="forcedHeight">
   <div class="planner-header">
     <div class="header-over-labels"></div>
     <div class="header-over-content" *ngFor="let weekday of days">
