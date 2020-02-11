@@ -9,7 +9,9 @@
     (refresh)="refresh()"
     [disabled]="!currentUser"
   ></plaid-refresh-button>
-  <plaid-zoom-controls></plaid-zoom-controls>
+  <plaid-zoom-controls
+    [(pixelsPerMinute)]="pixelsPerMinute"
+  ></plaid-zoom-controls>
   <plaid-auth-status
     [user]="currentUser"
     (changeCredentials)="changeCredentials.emit()"

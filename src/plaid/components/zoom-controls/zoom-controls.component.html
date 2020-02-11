@@ -1,6 +1,6 @@
-<a class="button">
+<a class="button" [class.disabled]="!isAbleToZoomIn" (click)="zoomIn()">
     <span class="icon-zoom-in"></span>
 </a>
-<a class="button">
+<a class="button" [class.disabled]="!isAbleToZoomOut" (click)="zoomOut()">
     <span class="icon-zoom-out"></span>
 </a>

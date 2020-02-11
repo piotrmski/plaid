@@ -41,7 +41,7 @@ p {
   border: 1px solid;
   overflow: hidden;
   padding: 2px 5px 5px;
-  transition: 0.2s all;
+  transition: 0.2s background-color, 0.2s box-shadow;
   display: flex;
   flex-direction: column;
 
