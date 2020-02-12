@@ -13,6 +13,7 @@ import {RefreshButtonComponent} from './components/refresh-buton/refresh-button.
 import {ExtHrefDirective} from './directives/ext-href.directive';
 import {NgxElectronModule} from 'ngx-electron';
 import {AuthStatusComponent} from './components/auth-status/auth-status.component';
+import {ZoomControlsComponent} from './components/zoom-controls/zoom-controls.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {AuthStatusComponent} from './components/auth-status/auth-status.componen
     PlannerGridBackgroundComponent,
     RefreshButtonComponent,
     ExtHrefDirective,
-    AuthStatusComponent
+    AuthStatusComponent,
+    ZoomControlsComponent
   ],
   imports: [
     BrowserModule,

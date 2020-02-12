@@ -25,3 +25,9 @@
     margin-left: auto;
   }
 }
+
+@media (max-width: 450px) {
+  .top-bar > plaid-zoom-controls {
+    display: none;
+  }
+}
