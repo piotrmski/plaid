@@ -1,6 +1,4 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
@@ -15,43 +13,23 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'plaid-worklog-panel',
   templateUrl: './worklog-panel.component.html',
-  styleUrls: ['./worklog-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./worklog-panel.component.scss']
 })
 export class WorklogPanelComponent implements OnInit, OnDestroy {
+  @Input()
+  worklog: Worklog;
+  @Input()
+  pixelsPerMinute: number;
   jiraURL: string;
-  _worklog: Worklog;
-  _pixelsPerMinute: number;
   undersized = false;
   tooLow = false;
   subscriptions: Subscription[] = [];
   viewDestroyed = false;
 
-  @Input()
-  set worklog(worklog: Worklog) {
-    this._worklog = worklog;
-    if (this.pixelsPerMinute) {
-      setTimeout(() => this.checkSizeAndPosition());
-    }
-  }
-  get worklog(): Worklog {
-    return this._worklog;
-  }
-  @Input()
-  set pixelsPerMinute(pixelsPerMinute: number) {
-    this._pixelsPerMinute = pixelsPerMinute;
-    if (this.worklog) {
-      setTimeout(() => this.checkSizeAndPosition());
-    }
-  }
-  get pixelsPerMinute(): number {
-    return this._pixelsPerMinute;
-  }
-
   @ViewChild('panelInner', { static: true })
   panelInner: ElementRef;
 
-  constructor(private facade: PlaidFacade, private cdr: ChangeDetectorRef) { }
+  constructor(private facade: PlaidFacade) { }
 
   ngOnInit(): void {
     this.subscriptions.push(this.facade.getJiraURL$().subscribe(url => this.jiraURL = url));
@@ -126,7 +104,6 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     if (!this.viewDestroyed) {
       this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
       this.tooLow = this.panelInner.nativeElement.scrollHeight + 1 > this.maxHeight;
-      this.cdr.detectChanges();
     }
   }
 }
