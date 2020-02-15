@@ -14,20 +14,13 @@ import {debounceTime, filter, mergeMap, skip, take} from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class PlaidFacade {
   private fetchWorklogsSubscription: Subscription;
-  private windowResize = new Subject<void>();
 
   constructor(
     private worklogApi: WorklogApi,
     private worklogState: WorklogState,
     private authApi: AuthApi,
     private authState: AuthState
-  ) {
-    fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe(() => this.windowResize.next());
-  }
-
-  windowResize$(): Observable<void> {
-    return this.windowResize.asObservable();
-  }
+  ) { }
 
   getWorklogsFetching$(): Observable<boolean> {
     return this.worklogState.getFetching$();
@@ -59,8 +52,8 @@ export class PlaidFacade {
     return this.authState.getAuthInfo();
   }
 
-  getJiraURL$(): Observable<string> {
-    return this.authState.getJiraURL$();
+  getJiraURL(): string {
+    return this.authState.getJiraURL();
   }
 
   setAuthError(error: HttpErrorResponse): void {

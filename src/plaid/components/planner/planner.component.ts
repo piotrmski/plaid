@@ -4,12 +4,10 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Input,
-  ViewChildren,
+  Input
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
-import {WorklogPanelComponent} from '../worklog-panel/worklog-panel.component';
 
 @Component({
   selector: 'plaid-planner',
@@ -25,10 +23,9 @@ export class PlannerComponent implements AfterViewInit {
   timeSums: string[];
   _pixelsPerMinute: number;
   forcedHeight: number = null;
-  _loading = false;
 
-  @ViewChildren(WorklogPanelComponent)
-  panels: WorklogPanelComponent[];
+  @Input()
+  loading: boolean;
 
   @Input()
   set pixelsPerMinute(ppm: number) {
@@ -41,18 +38,12 @@ export class PlannerComponent implements AfterViewInit {
         this.hostElement.nativeElement.scrollTop = newScrollTop;
         this.forcedHeight = null;
         this._pixelsPerMinute = ppm;
+        this.cdr.detectChanges();
       });
     } else {
       this.hostElement.nativeElement.scrollTop = newScrollTop;
       this._pixelsPerMinute = ppm;
     }
-
-    setTimeout(() => {
-      if (this.panels) {
-        this.panels.forEach(panel => panel.checkSizeAndPosition());
-        this.cdr.detectChanges();
-      }
-    });
 
   }
   get pixelsPerMinute(): number {
@@ -140,22 +131,6 @@ export class PlannerComponent implements AfterViewInit {
   }
   get dateRange(): DateRange {
     return this._dateRange;
-  }
-
-  @Input()
-  set loading(val: boolean) {
-    this._loading = val;
-    if (!val) {
-      setTimeout(() => {
-        if (this.panels) {
-          this.panels.forEach(panel => panel.checkSizeAndPosition());
-          this.cdr.detectChanges();
-        }
-      });
-    }
-  }
-  get loading(): boolean {
-    return this._loading;
   }
 
   constructor(private hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
