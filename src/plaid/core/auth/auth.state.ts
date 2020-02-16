@@ -9,9 +9,9 @@ export class AuthState {
   private readonly AUTH_INFO = 'AUTH_INFO';
   private readonly AUTH_HEADER = 'AUTH_HEADER';
 
-  private jiraURL = new BehaviorSubject<string>(
-    localStorage.getItem(this.AUTH_INFO) ? JSON.parse(localStorage.getItem(this.AUTH_INFO)).jiraUrl : null
-  );
+  private jiraURL: string = localStorage.getItem(this.AUTH_INFO)
+    ? JSON.parse(localStorage.getItem(this.AUTH_INFO)).jiraUrl
+    : null;
   private authError = new BehaviorSubject<HttpErrorResponse>(null);
   private authenticatedUser = new BehaviorSubject<User>(null);
 
@@ -24,11 +24,11 @@ export class AuthState {
       const header: string = AuthState.getAuthHeaderKey(authInfo);
       localStorage.setItem(this.AUTH_INFO, JSON.stringify(authInfo));
       localStorage.setItem(this.AUTH_HEADER, header);
-      this.jiraURL.next(authInfo.jiraUrl);
+      this.jiraURL = authInfo.jiraUrl;
     } else {
       localStorage.removeItem(this.AUTH_INFO);
       localStorage.removeItem(this.AUTH_HEADER);
-      this.jiraURL.next(null);
+      this.jiraURL = null;
     }
   }
 
@@ -49,8 +49,8 @@ export class AuthState {
     return this.authError.asObservable();
   }
 
-  getJiraURL$(): Observable<string> {
-    return this.jiraURL.asObservable();
+  getJiraURL(): string {
+    return this.jiraURL;
   }
 
   getAuthenticatedUser$(): Observable<User> {
