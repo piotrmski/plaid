@@ -23,7 +23,7 @@
       "build"
     ],
     "win": {
-      "icon": "build/assets/icon/icon.ico",
+      "icon": "build/assets/appicon/icon.ico",
       "extraFiles": [
         {
           "from": "src/assets/Plaid.VisualElementsManifest.xml",
@@ -35,7 +35,7 @@
       ]
     },
     "linux": {
-      "icon": "assets/icon/icon.png"
+      "icon": "assets/appicon/icon.png"
     }
   },
   "scripts": {

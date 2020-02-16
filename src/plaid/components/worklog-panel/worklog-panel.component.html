@@ -23,14 +23,14 @@
         class="button edit-button"
         [plaidExtHref]="jiraURL + '/secure/UpdateWorklog!default.jspa?id=' + worklog.issueId + '&worklogId=' + worklog.id"
       >
-        <span class="icon-edit"></span>
+        <svg class="icon"><use href="assets/icons.svg#edit"></use></svg>
       </a>
       <p
         class="parent-name"
         *ngIf="worklog.issue.fields.parent"
         [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.fields.parent.key"
       >
-        <span class="icon-parent"></span>
+        <svg class="icon-parent"><use href="assets/icons.svg#parent"></use></svg>
         <b>{{ worklog.issue.fields.parent.key }}</b>
         {{ worklog.issue.fields.parent.fields.summary }}
       </p>

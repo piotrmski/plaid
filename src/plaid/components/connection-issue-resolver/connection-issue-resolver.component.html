@@ -20,7 +20,7 @@
     </div>
     <div class="popup-footer">
       <button class="button primary" (click)="resubmit()" [disabled]="fetching">
-        <span *ngIf="fetching" class="icon-spinner"></span>
+        <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Retry</ng-container>
       </button>
       <button class="button" (click)="lostConnectionPopupVisible = false">Close</button>
@@ -55,7 +55,7 @@
     </div>
     <div class="popup-footer">
       <button class="button primary" (click)="submit()" [disabled]="form.invalid || fetching">
-        <span *ngIf="fetching" class="icon-spinner"></span>
+        <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Log in</ng-container>
       </button>
       <button class="button" (click)="loginPopupVisible = false">Cancel</button>

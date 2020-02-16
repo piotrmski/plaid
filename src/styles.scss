@@ -33,119 +33,24 @@ body {
 
 /* Icons */
 
-.icon-arrow-left,
-.icon-arrow-right {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border: 2px solid;
-  color: inherit;
-  vertical-align: middle;
-  border-bottom: none;
+.icon {
+  width: 16px;
+  height: 16px;
+  margin-bottom: -2px;
 }
 
-.icon-arrow-left {
-  border-right: none;
-  transform: rotate(-45deg) translate(2px, -0.5px);
-}
-
-.icon-arrow-right {
-  border-left: none;
-  transform: rotate(45deg) translate(-2px, -0.5px);
-}
-
-.icon-refresh {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid;
-  border-top-color: transparent;
-  border-radius: 100%;
-  color: inherit;
-  vertical-align: middle;
-  position: relative;
-  top: -2px;
-  transform: rotate(90deg);
-
-  &::before {
-    content: ' ';
-    display: block;
-    border-bottom: 3px solid transparent;
-    border-left: 3px solid transparent;
-    border-right: 3px solid;
-    border-top: 3px solid;
-    position: absolute;
-    top: -2px;
-    left: -2px;
-  }
-}
-
-.icon-edit {
-  display: inline-block;
-  position: relative;
-  width: 10px;
-  border-bottom: 5px solid;
-  color: inherit;
-  transform: rotate(-45deg) translate(0.5px, -1px);
-  vertical-align: middle;
-  top: -1px;
-
-  &::before {
-    content: ' ';
-    display: block;
-    position: absolute;
-    width: 3px;
-    border-bottom: 3px solid;
-    transform: rotate(45deg);
-    left: -2px;
-    top: 1px;
-  }
-
-  &::after {
-    content: ' ';
-    display: block;
-    position: absolute;
-    left: 11px;
-    top: 0;
-    border-bottom: 5px solid;
-    width: 2px;
-  }
+.icon-user {
+  width: 24px;
+  height: 24px;
+  margin-bottom: -6px;
 }
 
 .icon-parent {
-  display: inline-block;
-  position: relative;
-  border-left: 1px solid;
-  border-bottom: 1px solid;
-  width: 2px;
-  height: 2px;
-  border-bottom-left-radius: 1px;
-  margin: 3px 3px 1px 1px;
-  color: inherit;
-
-  &::before,
-  &::after {
-    content: ' ';
-    display: block;
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    border: 1px solid;
-    border-radius: 1px;
-  }
-
-  &::before {
-    bottom: 1px;
-    left: -2px;
-  }
-
-  &::after {
-    bottom: -2px;
-    left: 1px;
-  }
+  width: 6px;
+  height: 6px;
 }
 
-.icon-spinner {
+.spinner {
   display: inline-block;
   width: 1em;
   height: 1em;
@@ -168,84 +73,6 @@ body {
   to {
     transform: rotate(360deg);
   }
-}
-
-.icon-user {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  box-shadow: inset 0 0 0 12px rgba(0, 0, 0, 0.05);
-  border-radius: 100%;
-  position: relative;
-  vertical-align: middle;
-  bottom: 2px;
-  color: inherit;
-  overflow: hidden;
-
-  &::before {
-    content: " ";
-    display: block;
-    color: inherit;
-    border: 4px solid;
-    position: absolute;
-    left: 8px;
-    top: 5px;
-    border-radius: 100%;
-  }
-
-  &::after {
-    content: " ";
-    display: block;
-    color: inherit;
-    border: 8px solid;
-    position: absolute;
-    left: 4px;
-    top: 14px;
-    border-radius: 100%;
-  }
-}
-
-.icon-zoom-in,
-.icon-zoom-out {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid;
-  color: inherit;
-  vertical-align: middle;
-  border-radius: 100%;
-  position: relative;
-  top: -3px;
-  left: -1px;
-
-  &::before {
-    content: " ";
-    display: block;
-    color: inherit;
-    border-bottom: 2px solid;
-    width: 6px;
-    height: 0;
-    position: absolute;
-    top: 10px;
-    left: 8px;
-    transform: rotate(45deg);
-  }
-
-  &::after {
-    content: " ";
-    display: block;
-    width: 2px;
-    height: 2px;
-    color: inherit;
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    box-shadow: inset 2px 0, 2px 0, -2px 0;
-  }
-}
-
-.icon-zoom-in::after {
-  box-shadow: inset 2px 0, 2px 0, -2px 0, 0 2px, 0 -2px;
 }
 
 /* Buttons */
