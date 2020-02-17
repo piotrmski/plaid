@@ -77,7 +77,7 @@
     "electron": "^8.0.1",
     "electron-builder": "^22.3.2",
     "ts-node": "~8.6.2",
-    "tslint": "~6.0.0",
+    "tslint": "~5.20.1",
     "typescript": "~3.7.5"
   }
 }
