@@ -14,6 +14,7 @@ import {ExtHrefDirective} from './directives/ext-href.directive';
 import {NgxElectronModule} from 'ngx-electron';
 import {AuthStatusComponent} from './components/auth-status/auth-status.component';
 import {ZoomControlsComponent} from './components/zoom-controls/zoom-controls.component';
+import {CurrentTimeMarkerComponent} from './components/current-time-marker/current-time-marker.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import {ZoomControlsComponent} from './components/zoom-controls/zoom-controls.co
     RefreshButtonComponent,
     ExtHrefDirective,
     AuthStatusComponent,
-    ZoomControlsComponent
+    ZoomControlsComponent,
+    CurrentTimeMarkerComponent
   ],
   imports: [
     BrowserModule,
