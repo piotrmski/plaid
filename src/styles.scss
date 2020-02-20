@@ -3,14 +3,14 @@
   user-select: none;
   font-family: var(--font-text);
 
-  --color-gray-0: #f9fbfd;
-  --color-gray-1: #ebf2f8;
-  --color-gray-2: #cfd5dc;
-  --color-gray-3: #a6acb3;
-  --color-gray-4: #72787e;
-  --color-gray-5: #42474d;
-  --color-gray-6: #2c3136;
-  --color-gray-7: #21262b;
+  --color-gray-0: #f9f9f9;
+  --color-gray-1: #ebebeb;
+  --color-gray-2: #cfcfcf;
+  --color-gray-3: #a6a6a6;
+  --color-gray-4: #727272;
+  --color-gray-5: #424242;
+  --color-gray-6: #2c2c2c;
+  --color-gray-7: #1d1d1d;
 
   --color-primary-0: #ebfaff;
   --color-primary-1: #c8f1ff;
@@ -21,8 +21,8 @@
 
   --color-red: #c20;
 
-  --font-display: Comfortaa;
-  --font-text: "Source Sans Pro";
+  --font-display: Comfortaa, sans-serif;
+  --font-text: "Source Sans Pro", sans-serif;
 }
 
 body {
