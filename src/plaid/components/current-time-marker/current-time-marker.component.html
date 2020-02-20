@@ -1,9 +1,12 @@
 <div class="time-marker" [style.top.px]="markerOffsetTop + 35">
-  <div class="time-label" [innerHTML]="timeLabel"></div>
   <div
     *ngIf="markerVisible"
     class="day-marker"
     [style.width.%]="100 / daysVisible"
     [style.left.%]="100 / daysVisible * markerOffsetLeft"
   ></div>
+</div>
+<div class="time-label-wrapper">
+  <div class="time-label-spacer" [style.height.px]="markerOffsetTop"></div>
+  <div class="time-label" [innerHTML]="timeLabel"></div>
 </div>
