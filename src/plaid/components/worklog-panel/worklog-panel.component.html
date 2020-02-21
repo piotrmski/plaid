@@ -14,8 +14,8 @@
     class="panel-inner"
     [ngStyle]="{
       maxHeight: panelHeight + 1 + 'px',
-      backgroundColor: 'hsl(' + panelHue + ', 50%, 95%)',
-      borderColor: 'hsl(' + panelHue + ', 50%, 60%)'
+      backgroundColor: 'hsl(' + panelHue + ', ' + (darkMode ? 30 : 50 ) + '%, ' + (darkMode ? 15 : 95 ) + '%)',
+      borderColor: 'hsl(' + panelHue + ', 50%, ' + (darkMode ? 40 : 60 ) + '%)'
     }"
   >
     <div class="panel-content">

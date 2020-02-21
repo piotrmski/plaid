@@ -1,18 +1,5 @@
-.wrapper {
+:host {
   display: flex;
-
-  &.dark-theme {
-    * {
-      --separator-5min: 1px dotted var(--color-gray-7);
-      --separator-15min: 1px dashed var(--color-gray-6);
-      --separator-60min: 1px solid var(--color-gray-5);
-    }
-
-    .weekday-labels {
-      background: #000;
-      color: #fff;
-    }
-  }
 }
 
 .weekday-labels {
@@ -70,5 +57,18 @@
   &:nth-child(6n+4) {
     border-top: var(--separator-15min);
     border-bottom: var(--separator-5min);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  * {
+    --separator-5min: 1px dotted var(--color-gray-7);
+    --separator-15min: 1px dashed var(--color-gray-6);
+    --separator-60min: 1px solid var(--color-gray-5);
+  }
+
+  .weekday-labels {
+    background: #000;
+    color: #fff;
   }
 }

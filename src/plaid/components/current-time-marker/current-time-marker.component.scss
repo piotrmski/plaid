@@ -28,7 +28,7 @@
   color: var(--color-primary-5);
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 
-  &.dark-theme {
+  @media (prefers-color-scheme: dark) {
     text-shadow: 0 1px 0 #000, 0 -1px 0 #000, 1px 0 0 #000, -1px 0 0 #000;
   }
 }

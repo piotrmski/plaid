@@ -15,6 +15,10 @@ p {
         z-index: 1;
         background: #fff !important;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+        @media (prefers-color-scheme: dark) {
+          background: #000 !important;
+        }
       }
 
       &.too-low {
@@ -47,6 +51,10 @@ p {
 
   b {
     font-weight: 600;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
   }
 }
 

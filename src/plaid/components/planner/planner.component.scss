@@ -36,7 +36,7 @@
   position: relative;
   background: #fff;
 
-  &.dark-theme {
+  @media (prefers-color-scheme: dark) {
     background: #000;
 
     .planner-footer {
