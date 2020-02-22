@@ -1,5 +1,5 @@
-const {app, BrowserWindow, ipcMain, nativeTheme} = require('electron');
-const url = require("url");
+const {app, BrowserWindow} = require('electron');
+const url = require('url');
 
 let window;
 
@@ -30,7 +30,7 @@ function createWindow () {
 
   window.on('closed', () => {
     window = null;
-  })
+  });
 }
 
 app.on('ready', createWindow);
@@ -42,11 +42,3 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (window === null) createWindow();
 });
-
-ipcMain.on('getShouldUseDarkColors',
-  () => window.webContents.send('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
-);
-
-nativeTheme.on('updated',
-  () => window.webContents.send('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
-);

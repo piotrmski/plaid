@@ -1,14 +1,13 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-const {ipcRenderer} = window.require('electron');
+const {nativeTheme} = window.require('electron').remote;
 
 @Injectable({ providedIn: 'root' })
 export class SystemPreferencesService {
-  private darkModeSubject = new BehaviorSubject<boolean>(false);
+  private darkModeSubject = new BehaviorSubject<boolean>(nativeTheme.shouldUseDarkColors);
 
   constructor() {
-    ipcRenderer.on('shouldUseDarkColors', (_, darkMode) => this.darkModeSubject.next(darkMode));
-    ipcRenderer.send('getShouldUseDarkColors');
+    nativeTheme.on('updated', () => this.darkModeSubject.next(nativeTheme.shouldUseDarkColors));
   }
 
   darkMode$(): Observable<boolean> {

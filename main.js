@@ -1,7 +1,7 @@
-const {app, BrowserWindow, Menu, ipcMain, nativeTheme} = require('electron');
-const url = require("url");
-const path = require("path");
-const {autoUpdater} = require("electron-updater");
+const {app, BrowserWindow, Menu} = require('electron');
+const url = require('url');
+const path = require('path');
+const {autoUpdater} = require('electron-updater');
 
 let window;
 
@@ -36,7 +36,7 @@ function createWindow () {
 
   window.on('closed', () => {
     window = null;
-  })
+  });
 }
 
 app.on('ready', createWindow);
@@ -48,11 +48,3 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (window === null) createWindow();
 });
-
-ipcMain.on('getShouldUseDarkColors',
-  () => window.webContents.send('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
-);
-
-nativeTheme.on('updated',
-  () => window.webContents.send('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
-);
