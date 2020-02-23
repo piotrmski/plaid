@@ -3,14 +3,14 @@
   user-select: none;
   font-family: var(--font-text);
 
-  --color-gray-0: #f9fbfd;
-  --color-gray-1: #ebf2f8;
-  --color-gray-2: #cfd5dc;
-  --color-gray-3: #a6acb3;
-  --color-gray-4: #72787e;
-  --color-gray-5: #42474d;
-  --color-gray-6: #2c3136;
-  --color-gray-7: #21262b;
+  --color-gray-0: #f9f9f9;
+  --color-gray-1: #ebebeb;
+  --color-gray-2: #cfcfcf;
+  --color-gray-3: #adadad;
+  --color-gray-4: #727272;
+  --color-gray-5: #424242;
+  --color-gray-6: #2c2c2c;
+  --color-gray-7: #1d1d1d;
 
   --color-primary-0: #ebfaff;
   --color-primary-1: #c8f1ff;
@@ -21,8 +21,8 @@
 
   --color-red: #c20;
 
-  --font-display: Comfortaa;
-  --font-text: "Source Sans Pro";
+  --font-display: Comfortaa, sans-serif;
+  --font-text: "Source Sans Pro", sans-serif;
 }
 
 body {
@@ -84,13 +84,12 @@ body {
   text-align: center;
   margin: 0 2px;
   border-radius: 15px;
-  transition: 0.25s all;
-  background: #fff;
+  transition: 0.1s all;
+  background: transparent;
   border: none;
   font-size: 16px;
   outline: none;
   display: inline-block;
-  //padding: 0;
 
   &.disabled, &[disabled] {
     color: var(--color-gray-2);
@@ -98,7 +97,7 @@ body {
 
   &:not(.disabled):not([disabled]) {
     &:hover {
-      background: var(--color-gray-1);
+      background: rgba(0, 0, 0, 0.1);
       color: var(--color-gray-6);
     }
 
@@ -108,9 +107,9 @@ body {
 
     &:active,
     &.active {
-      background: var(--color-gray-2);
+      background: rgba(0, 0, 0, 0.2);
       color: var(--color-gray-7);
-      transition: 0.05s all ease-out;
+      transition: 0.025s all ease-out;
     }
 
     &.primary {
@@ -144,7 +143,7 @@ label {
 input {
   display: block;
   width: 100%;
-  background: var(--color-gray-0);
+  background: rgba(0, 0, 0, 0.05);
   border-radius: 15px;
   border: none;
   font-weight: 500;
@@ -152,12 +151,12 @@ input {
   padding: 0 15px;
   font-size: 13px;
   margin: 0 0 5px;
-  transition: 0.25s all;
+  transition: 0.1s all;
   outline: none;
 }
 
 input:hover {
-  background: var(--color-gray-1);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 input:focus {

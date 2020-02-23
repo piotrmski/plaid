@@ -63,18 +63,18 @@
 
 .week {
   display: flex;
-  transition: 0.25s all;
+  transition: 0.1s all;
   justify-content: space-around;
 
   &:hover,
   &:focus {
-    background: var(--color-gray-1);
+    background: rgba(0, 0, 0, 0.1);
     color: var(--color-gray-6);
-    transition: 0.05s all ease-out;
+    transition: 0.025s all ease-out;
   }
 
   &:active {
-    background: var(--color-gray-2);
+    background: rgba(0, 0, 0, 0.2);
     color: var(--color-gray-7);
   }
 
@@ -104,5 +104,5 @@
 
 .button.toggle-button {
   width: 180px;
-  background: var(--color-gray-0);
+  background: rgba(0, 0, 0, 0.05);
 }

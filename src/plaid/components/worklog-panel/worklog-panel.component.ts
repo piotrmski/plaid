@@ -33,6 +33,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   panelHue: number;
   components: string;
   timeRange: string;
+  _darkMode: boolean;
 
   @Input()
   set worklog(worklog: Worklog) {
@@ -53,6 +54,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   get worklog(): Worklog {
     return this._worklog;
   }
+
   @Input()
   set pixelsPerMinute(pixelsPerMinute: number) {
     this._pixelsPerMinute = pixelsPerMinute;
@@ -61,6 +63,14 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
   get pixelsPerMinute(): number {
     return this._pixelsPerMinute;
+  }
+
+  set darkMode(value: boolean) {
+    this._darkMode = value;
+    this.cdr.markForCheck();
+  }
+  get darkMode(): boolean {
+    return this._darkMode;
   }
 
   @ViewChild('panelInner', { static: true })

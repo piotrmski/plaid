@@ -1,5 +1,5 @@
 const {app, BrowserWindow} = require('electron');
-const url = require("url");
+const url = require('url');
 
 let window;
 
@@ -28,17 +28,17 @@ function createWindow () {
 
   window.webContents.openDevTools();
 
-  window.on('closed', function () {
+  window.on('closed', () => {
     window = null;
-  })
+  });
 }
 
 app.on('ready', createWindow);
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-app.on('activate', function () {
+app.on('activate', () => {
   if (window === null) createWindow();
 });
