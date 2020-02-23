@@ -17,6 +17,7 @@ export class PlaidComponent implements OnInit {
   _selectedDateRange: DateRange;
   _currentUser: User;
   changeCredentials = new EventEmitter<void>();
+  connectionIssueResolverModalVisible = false;
 
   constructor(private facade: PlaidFacade) {}
 
