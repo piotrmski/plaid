@@ -32,7 +32,7 @@ p {
       }
     }
 
-    .edit-button {
+    .button.edit-button {
       opacity: 1;
     }
   }
@@ -106,7 +106,7 @@ p {
   opacity: 0.8;
 }
 
-.edit-button {
+.button.edit-button {
   opacity: 0;
   position: absolute;
   bottom: 0;
@@ -114,7 +114,17 @@ p {
   z-index: 1;
   cursor: default!important;
 
-  &:not(:hover):not(:active) {
-    background: rgba(255, 255, 255, 0.8);
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+    }
   }
 }

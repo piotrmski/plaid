@@ -84,13 +84,12 @@ body {
   text-align: center;
   margin: 0 2px;
   border-radius: 15px;
-  transition: 0.25s all;
-  background: #fff;
+  transition: 0.1s all;
+  background: transparent;
   border: none;
   font-size: 16px;
   outline: none;
   display: inline-block;
-  //padding: 0;
 
   &.disabled, &[disabled] {
     color: var(--color-gray-2);
@@ -98,7 +97,7 @@ body {
 
   &:not(.disabled):not([disabled]) {
     &:hover {
-      background: var(--color-gray-1);
+      background: rgba(0, 0, 0, 0.1);
       color: var(--color-gray-6);
     }
 
@@ -108,9 +107,9 @@ body {
 
     &:active,
     &.active {
-      background: var(--color-gray-2);
+      background: rgba(0, 0, 0, 0.2);
       color: var(--color-gray-7);
-      transition: 0.05s all ease-out;
+      transition: 0.025s all ease-out;
     }
 
     &.primary {
@@ -144,7 +143,7 @@ label {
 input {
   display: block;
   width: 100%;
-  background: var(--color-gray-0);
+  background: rgba(0, 0, 0, 0.05);
   border-radius: 15px;
   border: none;
   font-weight: 500;
@@ -152,12 +151,12 @@ input {
   padding: 0 15px;
   font-size: 13px;
   margin: 0 0 5px;
-  transition: 0.25s all;
+  transition: 0.1s all;
   outline: none;
 }
 
 input:hover {
-  background: var(--color-gray-1);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 input:focus {
