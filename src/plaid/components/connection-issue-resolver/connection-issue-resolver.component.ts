@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PlaidFacade} from '../../plaid.facade';
 import {AuthInfo} from '../../models/auth-info';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -11,9 +11,9 @@ import {User} from '../../models/user';
   styleUrls: ['./connection-issue-resolver.component.scss']
 })
 export class ConnectionIssueResolverComponent implements OnInit {
-  loginPopupVisible = false;
-  lostConnectionPopupVisible = false;
-  errorPopupVisible = false;
+  loginModalVisible = false;
+  lostConnectionModalVisible = false;
+  errorModalVisible = false;
   authInfo: AuthInfo = { jiraUrl: null, username: null, password: null };
   _error: HttpErrorResponse;
   fetching = false;
@@ -23,6 +23,9 @@ export class ConnectionIssueResolverComponent implements OnInit {
   @Input()
   changeCredentials: EventEmitter<void>;
 
+  @Output()
+  modalVisible = new EventEmitter<boolean>();
+
   constructor(private facade: PlaidFacade) {}
 
   ngOnInit(): void {
@@ -30,10 +33,11 @@ export class ConnectionIssueResolverComponent implements OnInit {
     this.facade.getAuthError$().pipe(skip(1)).subscribe((authError: HttpErrorResponse) => this.error = authError);
     this.facade.getAuthenticatedUser$().pipe(skip(1)).subscribe(user => this.currentUser = user);
     this.changeCredentials.subscribe(() => {
-      this.loginPopupVisible = true;
+      this.loginModalVisible = true;
       this._error = null;
       this.fetching = false;
       this.authInfo = this.facade.getAuthInfo() ? this.facade.getAuthInfo() : { jiraUrl: null, username: null, password: null };
+      this.modalVisible.emit(true);
     });
   }
 
@@ -42,12 +46,15 @@ export class ConnectionIssueResolverComponent implements OnInit {
     this.fetching = false;
     if (!this.currentUser || error && [401, 403].indexOf(error.status) !== -1) { // Authentication error
       this.facade.discardAuthenticatedUser();
-      this.loginPopupVisible = true;
+      this.loginModalVisible = true;
       this.authInfo = this.facade.getAuthInfo() ? this.facade.getAuthInfo() : { jiraUrl: null, username: null, password: null };
+      this.modalVisible.emit(true);
     } else if (error && error.status === 0) { // Network connection issue
-      this.lostConnectionPopupVisible = true;
+      this.lostConnectionModalVisible = true;
+      this.modalVisible.emit(true);
     } else if (error) { // Unknown error
-      this.errorPopupVisible = true;
+      this.errorModalVisible = true;
+      this.modalVisible.emit(true);
     }
   }
   get error(): HttpErrorResponse {
@@ -57,9 +64,10 @@ export class ConnectionIssueResolverComponent implements OnInit {
   set currentUser(user: User) {
     this._currentUser = user;
     if (user) {
-      this.loginPopupVisible = false;
-      this.lostConnectionPopupVisible = false;
-      this.errorPopupVisible = false;
+      this.loginModalVisible = false;
+      this.lostConnectionModalVisible = false;
+      this.errorModalVisible = false;
+      this.modalVisible.emit(false);
     }
   }
   get currentUser(): User {

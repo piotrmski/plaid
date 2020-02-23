@@ -1,13 +1,13 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  Input,
+  Input
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
-import {PlaidFacade} from "../../plaid.facade";
 
 @Component({
   selector: 'plaid-planner',
@@ -23,6 +23,9 @@ export class PlannerComponent implements AfterViewInit {
   timeSums: string[];
   _pixelsPerMinute: number;
   forcedHeight: number = null;
+
+  @Input()
+  loading: boolean;
 
   @Input()
   set pixelsPerMinute(ppm: number) {
@@ -41,6 +44,7 @@ export class PlannerComponent implements AfterViewInit {
       this.hostElement.nativeElement.scrollTop = newScrollTop;
       this._pixelsPerMinute = ppm;
     }
+
   }
   get pixelsPerMinute(): number {
     return this._pixelsPerMinute;
@@ -128,8 +132,6 @@ export class PlannerComponent implements AfterViewInit {
   get dateRange(): DateRange {
     return this._dateRange;
   }
-  @Input()
-  loading: boolean;
 
   constructor(private hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
 

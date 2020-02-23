@@ -10,7 +10,7 @@ export class PlannerGridBackgroundComponent {
   readonly hoursLabels: string[] = Array.from<string>({ length: 24 }).map((_, i) =>
     new Date(1970, 0, 1, i).toLocaleTimeString(undefined, { hour: 'numeric' })
   );
-  readonly hoursGrid: void[][] = Array.from<void[]>({ length: 24 }).map(() => Array.from<void>({ length: 12 }).map(() => null));
+  readonly minutesGrid: void[] = Array.from<void>({ length: 144 }).map(() => null);
   weekdays: void[];
 
   @Input()

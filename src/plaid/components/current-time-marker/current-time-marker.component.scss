@@ -1,0 +1,41 @@
+.time-marker {
+  position: absolute;
+  left: 30px;
+  width: calc(100% - 30px);
+  height: 0;
+  border-top: 1px dashed var(--color-primary-5);
+}
+
+.time-label-wrapper{
+  position: absolute;
+  top: 35px;
+  bottom: 25px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.time-label {
+  position: sticky;
+  width: 30px;
+  left: 0;
+  z-index: 2;
+  text-align: center;
+  margin-top: -4px;
+  margin-bottom: -2px;
+  line-height: 1;
+  color: var(--color-primary-5);
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+
+  @media (prefers-color-scheme: dark) {
+    text-shadow: 0 1px 0 #000, 0 -1px 0 #000, 1px 0 0 #000, -1px 0 0 #000;
+  }
+}
+
+.day-marker {
+  position: absolute;
+  top: -1px;
+  height: 0;
+  border-top: 2px solid var(--color-primary-5);
+}

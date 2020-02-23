@@ -1,37 +1,37 @@
-<div class="popup-background" [class.visible]="errorPopupVisible || lostConnectionPopupVisible || loginPopupVisible">
-  <div class="popup" [class.open]="errorPopupVisible">
-    <div class="popup-header">
+<div class="modal-background" [class.visible]="errorModalVisible || lostConnectionModalVisible || loginModalVisible">
+  <div class="modal" [class.open]="errorModalVisible">
+    <div class="modal-header">
       Application error
     </div>
-    <div class="popup-body">
+    <div class="modal-body">
       {{ error ? error.message : null }}
     </div>
-    <div class="popup-footer">
-      <button class="button" (click)="errorPopupVisible = false">Close</button>
+    <div class="modal-footer">
+      <button class="button" (click)="errorModalVisible = false; modalVisible.emit(false)">Close</button>
     </div>
   </div>
 
-  <div class="popup" [class.open]="lostConnectionPopupVisible">
-    <div class="popup-header">
+  <div class="modal" [class.open]="lostConnectionModalVisible">
+    <div class="modal-header">
       Connection error
     </div>
-    <div class="popup-body">
+    <div class="modal-body">
       Could not connect to Jira. Verify your internet connection and retry.
     </div>
-    <div class="popup-footer">
+    <div class="modal-footer">
       <button class="button primary" (click)="resubmit()" [disabled]="fetching">
-        <span *ngIf="fetching" class="icon-spinner"></span>
+        <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Retry</ng-container>
       </button>
-      <button class="button" (click)="lostConnectionPopupVisible = false">Close</button>
+      <button class="button" (click)="lostConnectionModalVisible = false; modalVisible.emit(false)">Close</button>
     </div>
   </div>
 
-  <form #form="ngForm" class="popup" [class.open]="loginPopupVisible">
-    <div class="popup-header">
+  <form #form="ngForm" class="modal" [class.open]="loginModalVisible">
+    <div class="modal-header">
       Log in to Jira
     </div>
-    <div class="popup-body">
+    <div class="modal-body">
       <p class="error" *ngIf="error">
         <ng-container *ngIf="error.status === 403">
           Jira denied authentication to this client. <u [plaidExtHref]="authInfo.jiraUrl + '/login.jsp'">Log in to Jira in your browser</u> to see the details. You will likely need to solve CAPTCHA. If you are stuck on CAPTCHA and can't log in, clear your browser cookies.
@@ -53,12 +53,12 @@
       <label>Password <small>(for Jira Cloud use an <u plaidExtHref="https://id.atlassian.com/manage/api-tokens">API token</u> instead)</small></label>
       <input name="password" type="password" [(ngModel)]="authInfo.password" required>
     </div>
-    <div class="popup-footer">
+    <div class="modal-footer">
       <button class="button primary" (click)="submit()" [disabled]="form.invalid || fetching">
-        <span *ngIf="fetching" class="icon-spinner"></span>
+        <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Log in</ng-container>
       </button>
-      <button class="button" (click)="loginPopupVisible = false">Cancel</button>
+      <button class="button" (click)="loginModalVisible = false; modalVisible.emit(false)">Cancel</button>
     </div>
   </form>
 </div>

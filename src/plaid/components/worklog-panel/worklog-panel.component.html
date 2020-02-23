@@ -14,8 +14,8 @@
     class="panel-inner"
     [ngStyle]="{
       maxHeight: panelHeight + 1 + 'px',
-      backgroundColor: 'hsl(' + panelHue + ', 50%, 95%)',
-      borderColor: 'hsl(' + panelHue + ', 50%, 60%)'
+      backgroundColor: 'hsl(' + panelHue + ', ' + (darkMode ? 30 : 50 ) + '%, ' + (darkMode ? 15 : 95 ) + '%)',
+      borderColor: 'hsl(' + panelHue + ', 50%, ' + (darkMode ? 40 : 60 ) + '%)'
     }"
   >
     <div class="panel-content">
@@ -23,14 +23,14 @@
         class="button edit-button"
         [plaidExtHref]="jiraURL + '/secure/UpdateWorklog!default.jspa?id=' + worklog.issueId + '&worklogId=' + worklog.id"
       >
-        <span class="icon-edit"></span>
+        <svg class="icon"><use href="assets/icons.svg#edit"></use></svg>
       </a>
       <p
         class="parent-name"
         *ngIf="worklog.issue.fields.parent"
         [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.fields.parent.key"
       >
-        <span class="icon-parent"></span>
+        <svg class="icon-parent"><use href="assets/icons.svg#parent"></use></svg>
         <b>{{ worklog.issue.fields.parent.key }}</b>
         {{ worklog.issue.fields.parent.fields.summary }}
       </p>

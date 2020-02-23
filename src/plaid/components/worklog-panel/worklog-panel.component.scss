@@ -15,6 +15,10 @@ p {
         z-index: 1;
         background: #fff !important;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+        @media (prefers-color-scheme: dark) {
+          background: #000 !important;
+        }
       }
 
       &.too-low {
@@ -28,7 +32,7 @@ p {
       }
     }
 
-    .edit-button {
+    .button.edit-button {
       opacity: 1;
     }
   }
@@ -48,6 +52,10 @@ p {
   b {
     font-weight: 600;
   }
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
+  }
 }
 
 .panel-content {
@@ -63,7 +71,7 @@ p {
   opacity: 0.5;
 
   .icon-parent {
-    margin-right: 8px;
+    margin-right: 4px;
   }
 }
 
@@ -98,7 +106,7 @@ p {
   opacity: 0.8;
 }
 
-.edit-button {
+.button.edit-button {
   opacity: 0;
   position: absolute;
   bottom: 0;
@@ -106,7 +114,17 @@ p {
   z-index: 1;
   cursor: default!important;
 
-  &:not(:hover):not(:active) {
-    background: rgba(255, 255, 255, 0.8);
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+    }
   }
 }

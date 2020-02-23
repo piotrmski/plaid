@@ -14,7 +14,7 @@ export class ExtHrefDirective {
   }
 
   @HostListener('click')
-  onClick() {
+  onClick(): void {
     this.electron.shell.openExternal(this.plaidExtHref);
   }
 

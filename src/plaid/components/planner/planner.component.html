@@ -9,6 +9,10 @@
     [pixelsPerMinute]="pixelsPerMinute"
     [numberOfWeekdays]="days.length || 0"
   ></plaid-planner-grid-background>
+  <plaid-current-time-marker
+    [pixelsPerMinute]="pixelsPerMinute"
+    [dateRange]="dateRange"
+  ></plaid-current-time-marker>
   <div class="worklog-panels-area">
     <div
       class="worklog-panels-area-column"
@@ -32,5 +36,5 @@
   </div>
 </div>
 <div class="loading-overlay" [class.visible]="loading">
-  <span class="icon-spinner"></span>
+  <span class="spinner"></span>
 </div>
