@@ -9,6 +9,9 @@ export class ZoomControlsComponent {
   zoomLevelIndex = 1; // index of pixelsPerMinuteValues
 
   @Input()
+  shortcutDisabled = false;
+
+  @Input()
   set pixelsPerMinute(value: number) {
    const index = this.pixelsPerMinuteValues.findIndex(v => v === value);
    if (index >= 0) {

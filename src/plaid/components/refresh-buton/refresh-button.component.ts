@@ -8,6 +8,8 @@ import * as Mousetrap from 'mousetrap';
 export class RefreshButtonComponent implements OnInit {
   @Input()
   disabled = false;
+  @Input()
+  shortcutDisabled = false;
   @Output()
   refresh = new EventEmitter<void>();
   @ViewChild('button', {static: true})
@@ -17,9 +19,11 @@ export class RefreshButtonComponent implements OnInit {
   ngOnInit(): void {
     // Singleton component, no need to unbind
     Mousetrap.bind(['f5', 'ctrl+r'], () => {
-      this.buttonActive = true;
-      this.button.nativeElement.click();
-      setTimeout(() => this.buttonActive = false, 50);
+      if (!this.shortcutDisabled) {
+        this.buttonActive = true;
+        this.button.nativeElement.click();
+        setTimeout(() => this.buttonActive = false, 50);
+      }
     });
   }
 
