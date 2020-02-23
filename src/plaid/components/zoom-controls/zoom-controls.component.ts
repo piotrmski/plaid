@@ -1,15 +1,17 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'plaid-zoom-controls',
   templateUrl: './zoom-controls.component.html'
 })
-export class ZoomControlsComponent {
+export class ZoomControlsComponent implements OnInit {
   readonly pixelsPerMinuteValues: number[] = [1, 2, 3, 4, 6, 8, 12, 16];
   zoomLevelIndex = 1; // index of pixelsPerMinuteValues
+  zoomInButtonActive = false;
+  zoomOutButtonActive = false;
 
   @Input()
-  shortcutDisabled = false;
+  shortcutsDisabled = false;
 
   @Input()
   set pixelsPerMinute(value: number) {
@@ -21,6 +23,32 @@ export class ZoomControlsComponent {
 
   @Output()
   pixelsPerMinuteChange = new EventEmitter<number>();
+
+  ngOnInit(): void {
+    // Singleton component, no need to unbind events
+    addEventListener('mousewheel', (e: WheelEvent) => {
+      if (!this.shortcutsDisabled && e.ctrlKey) {
+        if (e.deltaY > 0) {
+          this.zoomOut();
+        } else if (e.deltaY < 0) {
+          this.zoomIn();
+        }
+      }
+    });
+    addEventListener('keydown', (e: KeyboardEvent) => {
+      if (!this.shortcutsDisabled && e.ctrlKey) {
+        if (e.key === '-') {
+          this.zoomOutButtonActive = true;
+          this.zoomOut();
+          setTimeout(() => this.zoomOutButtonActive = false, 50);
+        } else if (e.key === '+' || e.key === '=') {
+          this.zoomInButtonActive = true;
+          this.zoomIn();
+          setTimeout(() => this.zoomInButtonActive = false, 50);
+        }
+      }
+    });
+  }
 
   zoomIn(): void {
     if (this.isAbleToZoomIn) {
