@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {WorklogPanelComponent} from './worklog-panel.component';
 import {fromEvent, Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
-import {SystemPreferencesService} from '../../core/system-preferences/system-preferences.service';
+import {PlaidFacade} from '../../plaid.facade';
 
 @Injectable({providedIn: 'root'})
 export class WorklogPanelsManagerService {
@@ -10,12 +10,12 @@ export class WorklogPanelsManagerService {
   private scheduler = new Subject<void>();
   private darkMode: boolean;
 
-  constructor(private systemPreferences: SystemPreferencesService) {
+  constructor(private facade: PlaidFacade) {
     this.scheduler.asObservable().pipe(debounceTime(250)).subscribe(() => {
       this.panels.forEach(panel => panel.checkSizeAndPosition());
     });
     fromEvent(window, 'resize').subscribe(() => this.scheduler.next());
-    systemPreferences.darkMode$().subscribe(darkMode => {
+    facade.getDarkMode$().subscribe(darkMode => {
       this.darkMode = darkMode;
       this.panels.forEach(panel => panel.darkMode = this.darkMode);
     });

@@ -9,7 +9,8 @@ import {AuthInfo} from './models/auth-info';
 import {HttpErrorResponse, HttpEvent} from '@angular/common/http';
 import {DateRange} from './models/date-range';
 import {User} from './models/user';
-import {debounceTime, filter, mergeMap, skip, take} from 'rxjs/operators';
+import {filter, mergeMap, skip, take} from 'rxjs/operators';
+import {SystemPreferencesService} from './core/system-preferences/system-preferences.service';
 
 @Injectable({ providedIn: 'root' })
 export class PlaidFacade {
@@ -19,7 +20,8 @@ export class PlaidFacade {
     private worklogApi: WorklogApi,
     private worklogState: WorklogState,
     private authApi: AuthApi,
-    private authState: AuthState
+    private authState: AuthState,
+    private systemPreferencesService: SystemPreferencesService
   ) { }
 
   getWorklogsFetching$(): Observable<boolean> {
@@ -89,5 +91,9 @@ export class PlaidFacade {
 
   getAuthenticatedUser$(): Observable<User> {
     return this.authState.getAuthenticatedUser$();
+  }
+
+  getDarkMode$(): Observable<boolean> {
+    return this.systemPreferencesService.darkMode$();
   }
 }
