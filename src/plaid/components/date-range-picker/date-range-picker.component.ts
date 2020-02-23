@@ -1,4 +1,12 @@
-import {Component, ElementRef, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output
+} from '@angular/core';
 import {DateRange} from '../../models/date-range';
 import {DatePipe} from '@angular/common';
 
@@ -6,6 +14,7 @@ import {DatePipe} from '@angular/common';
   selector: 'plaid-date-range-picker',
   templateUrl: './date-range-picker.component.html',
   styleUrls: ['./date-range-picker.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateRangePickerComponent implements OnInit {
   @Output()
@@ -86,6 +95,8 @@ export class DateRangePickerComponent implements OnInit {
         this._selectedDateRange.start.getFullYear(),
         this._selectedDateRange.start.getMonth()
       );
+      const curTime: Date = new Date();
+      this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
     }
   }
 

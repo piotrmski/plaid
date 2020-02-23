@@ -4,38 +4,57 @@ p {
 
 .panel-outer {
   position: absolute;
-  padding: 0 5px 0 4px;
   display: flex;
   flex-direction: column;
+
+  &:hover {
+    &.undersized {
+      .panel-inner {
+        max-height: none !important;
+        overflow: visible;
+        z-index: 1;
+        background: #fff !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+        @media (prefers-color-scheme: dark) {
+          background: #000 !important;
+        }
+      }
+
+      &.too-low {
+        top: auto !important;
+        bottom: -1px;
+
+        .panel-inner {
+          position: absolute;
+          bottom: 0;
+        }
+      }
+    }
+
+    .button.edit-button {
+      opacity: 1;
+    }
+  }
 }
 
 .panel-inner {
   position: relative;
   flex: 1;
   border-radius: 5px;
-  border-top: 2px solid;
+  border: 1px solid;
   overflow: hidden;
   padding: 2px 5px 5px;
-  transition: 0.2s all;
+  transition: 0.2s background-color, 0.2s box-shadow;
   display: flex;
   flex-direction: column;
 
-  &:hover {
-    &.float {
-      max-height: none!important;
-      overflow: visible;
-      z-index: 1;
-      background: #fff!important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    .edit-button {
-      opacity: 1;
-    }
-  }
-
   b {
     font-weight: 600;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
   }
 }
 
@@ -52,7 +71,7 @@ p {
   opacity: 0.5;
 
   .icon-parent {
-    margin-right: 8px;
+    margin-right: 4px;
   }
 }
 
@@ -87,7 +106,7 @@ p {
   opacity: 0.8;
 }
 
-.edit-button {
+.button.edit-button {
   opacity: 0;
   position: absolute;
   bottom: 0;
@@ -95,7 +114,17 @@ p {
   z-index: 1;
   cursor: default!important;
 
-  &:not(:hover):not(:active) {
-    background: rgba(255, 255, 255, 0.8);
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+    }
   }
 }

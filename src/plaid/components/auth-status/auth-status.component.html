@@ -1,6 +1,6 @@
 <a class="button" (click)="dropdownOpen = !dropdownOpen" [class.active]="dropdownOpen">
   <img [src]="currentUserAvatarUrl" *ngIf="currentUserAvatarUrl">
-  <span class="icon-user" *ngIf="!currentUserAvatarUrl"></span>
+  <svg class="icon-user" *ngIf="!currentUserAvatarUrl"><use href="assets/icons.svg#user"></use></svg>
 </a>
 <div class="dropdown" [class.open]="dropdownOpen">
   <ng-container *ngIf="user">

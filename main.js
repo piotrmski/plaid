@@ -1,7 +1,7 @@
 const {app, BrowserWindow, Menu} = require('electron');
-const url = require("url");
-const path = require("path");
-const {autoUpdater} = require("electron-updater");
+const url = require('url');
+const path = require('path');
+const {autoUpdater} = require('electron-updater');
 
 let window;
 
@@ -34,17 +34,17 @@ function createWindow () {
     })
   );
 
-  window.on('closed', function () {
+  window.on('closed', () => {
     window = null;
-  })
+  });
 }
 
 app.on('ready', createWindow);
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-app.on('activate', function () {
+app.on('activate', () => {
   if (window === null) createWindow();
 });

@@ -8,6 +8,7 @@
 .top-bar {
   display: flex;
   padding: 3px;
+  background: #fff;
 
   & > * {
     margin: 0 10px;
@@ -23,5 +24,11 @@
 
   plaid-auth-status {
     margin-left: auto;
+  }
+}
+
+@media (max-width: 450px) {
+  .top-bar > plaid-zoom-controls {
+    display: none;
   }
 }

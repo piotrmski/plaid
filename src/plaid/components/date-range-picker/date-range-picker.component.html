@@ -1,22 +1,22 @@
 <a class="button" (click)="decrementWeek()">
-  <span class="icon-arrow-left"></span>
+  <svg class="icon"><use href="assets/icons.svg#arrow-left"></use></svg>
 </a>
 <a class="button toggle-button" [class.active]="calendarOpen" (click)="calendarOpen = !calendarOpen">
   {{ buttonText }}
 </a>
 <a class="button" (click)="incrementWeek()">
-  <span class="icon-arrow-right"></span>
+  <svg class="icon"><use href="assets/icons.svg#arrow-right"></use></svg>
 </a>
 <div class="calendar" [class.open]="calendarOpen">
   <div class="month-changer">
     <a class="button" (click)="decrementMonth()">
-      <span class="icon-arrow-left"></span>
+      <svg class="icon"><use href="assets/icons.svg#arrow-left"></use></svg>
     </a>
     <div class="month-label">
       {{ months[month.getMonth()] }} {{ month.getFullYear() }}
     </div>
     <a class="button" (click)="incrementMonth()">
-      <span class="icon-arrow-right"></span>
+      <svg class="icon"><use href="assets/icons.svg#arrow-right"></use></svg>
     </a>
   </div>
   <div class="weekdays">
