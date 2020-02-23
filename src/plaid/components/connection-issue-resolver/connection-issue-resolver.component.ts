@@ -19,6 +19,7 @@ export class ConnectionIssueResolverComponent implements OnInit {
   fetching = false;
   _currentUser: User = null;
   submittedAuthInfo: AuthInfo = null;
+  httpNoticeVisible = false;
 
   @Input()
   changeCredentials: EventEmitter<void>;
@@ -74,14 +75,23 @@ export class ConnectionIssueResolverComponent implements OnInit {
     return this._currentUser;
   }
 
-  stripUrl(): void {
-    if (this.authInfo.jiraUrl && this.authInfo.jiraUrl.length > 0 && this.authInfo.jiraUrl[this.authInfo.jiraUrl.length - 1] === '/') {
-      this.authInfo.jiraUrl = this.authInfo.jiraUrl.substr(0, this.authInfo.jiraUrl.length - 1);
+  onUrlChange(): void {
+    if (this.authInfo.jiraUrl && this.authInfo.jiraUrl.length > 0) {
+      // Remove trailing slash
+      if (this.authInfo.jiraUrl[this.authInfo.jiraUrl.length - 1] === '/') {
+        this.authInfo.jiraUrl = this.authInfo.jiraUrl.substr(0, this.authInfo.jiraUrl.length - 1);
+      }
+      // Add protocol if missing
+      if (this.authInfo.jiraUrl.substr(0, 7) !== 'http://' && this.authInfo.jiraUrl.substr(0, 8) !== 'https://') {
+        this.authInfo.jiraUrl = 'https://' + this.authInfo.jiraUrl;
+      }
+      // Display http notice if applicable
+      this.httpNoticeVisible = this.authInfo.jiraUrl.substr(0, 7) === 'http://';
     }
   }
 
   submit(): void {
-    this.stripUrl();
+    this.onUrlChange();
     this.submittedAuthInfo = {...this.authInfo};
     this.facade.setAuthInfo(this.submittedAuthInfo);
     this.facade.discardAuthenticatedUser();
