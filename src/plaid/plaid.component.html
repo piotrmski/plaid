@@ -9,11 +9,11 @@
   <plaid-refresh-button
     (refresh)="refresh()"
     [disabled]="!currentUser"
-    [shortcutDisabled]="connectionIssueResolverModalVisible"
+    [shortcutsDisabled]="connectionIssueResolverModalVisible"
   ></plaid-refresh-button>
   <plaid-zoom-controls
     [(pixelsPerMinute)]="pixelsPerMinute"
-    [shortcutDisabled]="connectionIssueResolverModalVisible"
+    [shortcutsDisabled]="connectionIssueResolverModalVisible"
   ></plaid-zoom-controls>
   <plaid-auth-status
     [user]="currentUser"
