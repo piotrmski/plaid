@@ -9,25 +9,20 @@ import {AuthInfo} from './models/auth-info';
 import {HttpErrorResponse, HttpEvent} from '@angular/common/http';
 import {DateRange} from './models/date-range';
 import {User} from './models/user';
-import {debounceTime, filter, mergeMap, skip, take} from 'rxjs/operators';
+import {filter, mergeMap, skip, take} from 'rxjs/operators';
+import {SystemPreferencesService} from './core/system-preferences/system-preferences.service';
 
 @Injectable({ providedIn: 'root' })
 export class PlaidFacade {
   private fetchWorklogsSubscription: Subscription;
-  private windowResize = new Subject<void>();
 
   constructor(
     private worklogApi: WorklogApi,
     private worklogState: WorklogState,
     private authApi: AuthApi,
-    private authState: AuthState
-  ) {
-    fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe(() => this.windowResize.next());
-  }
-
-  windowResize$(): Observable<void> {
-    return this.windowResize.asObservable();
-  }
+    private authState: AuthState,
+    private systemPreferencesService: SystemPreferencesService
+  ) { }
 
   getWorklogsFetching$(): Observable<boolean> {
     return this.worklogState.getFetching$();
@@ -59,8 +54,8 @@ export class PlaidFacade {
     return this.authState.getAuthInfo();
   }
 
-  getJiraURL$(): Observable<string> {
-    return this.authState.getJiraURL$();
+  getJiraURL(): string {
+    return this.authState.getJiraURL();
   }
 
   setAuthError(error: HttpErrorResponse): void {
@@ -96,5 +91,9 @@ export class PlaidFacade {
 
   getAuthenticatedUser$(): Observable<User> {
     return this.authState.getAuthenticatedUser$();
+  }
+
+  getDarkMode$(): Observable<boolean> {
+    return this.systemPreferencesService.darkMode$();
   }
 }

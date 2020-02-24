@@ -1,8 +1,10 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  Input,
+  Input
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
@@ -10,7 +12,8 @@ import {DateRange} from '../../models/date-range';
 @Component({
   selector: 'plaid-planner',
   templateUrl: './planner.component.html',
-  styleUrls: ['./planner.component.scss']
+  styleUrls: ['./planner.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlannerComponent implements AfterViewInit {
   days: Date[];
@@ -18,9 +21,35 @@ export class PlannerComponent implements AfterViewInit {
   _worklogs: Worklog[];
   worklogsSplitByDays: Worklog[][];
   timeSums: string[];
+  _pixelsPerMinute: number;
+  forcedHeight: number = null;
 
   @Input()
-  pixelsPerMinute;
+  loading: boolean;
+
+  @Input()
+  set pixelsPerMinute(ppm: number) {
+    const change = ppm / this._pixelsPerMinute;
+    const newScrollTop = change * this.hostElement.nativeElement.scrollTop
+      + (change - 1) * this.hostElement.nativeElement.clientHeight * 0.5;
+    if (newScrollTop + this.hostElement.nativeElement.clientHeight > this.hostElement.nativeElement.scrollHeight) {
+      this.forcedHeight = newScrollTop + this.hostElement.nativeElement.clientHeight;
+      setTimeout(() => {
+        this.hostElement.nativeElement.scrollTop = newScrollTop;
+        this.forcedHeight = null;
+        this._pixelsPerMinute = ppm;
+        this.cdr.detectChanges();
+      });
+    } else {
+      this.hostElement.nativeElement.scrollTop = newScrollTop;
+      this._pixelsPerMinute = ppm;
+    }
+
+  }
+  get pixelsPerMinute(): number {
+    return this._pixelsPerMinute;
+  }
+
   @Input()
   set worklogs(worklogs: Worklog[]) {
     if (worklogs) {
@@ -87,6 +116,7 @@ export class PlannerComponent implements AfterViewInit {
   get worklogs(): Worklog[] {
     return this._worklogs;
   }
+
   @Input()
   set dateRange(range: DateRange) {
     this._dateRange = range;
@@ -102,10 +132,8 @@ export class PlannerComponent implements AfterViewInit {
   get dateRange(): DateRange {
     return this._dateRange;
   }
-  @Input()
-  loading: boolean;
 
-  constructor(private hostElement: ElementRef) {}
+  constructor(private hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     const curTime: Date = new Date();

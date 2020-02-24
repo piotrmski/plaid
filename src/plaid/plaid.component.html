@@ -1,5 +1,6 @@
 <plaid-connection-issue-resolver
   [changeCredentials]="changeCredentials"
+  (modalVisible)="connectionIssueResolverModalVisible = $event"
 ></plaid-connection-issue-resolver>
 <div class="top-bar">
   <plaid-date-range-picker
@@ -8,7 +9,12 @@
   <plaid-refresh-button
     (refresh)="refresh()"
     [disabled]="!currentUser"
+    [shortcutsDisabled]="connectionIssueResolverModalVisible"
   ></plaid-refresh-button>
+  <plaid-zoom-controls
+    [(pixelsPerMinute)]="pixelsPerMinute"
+    [shortcutsDisabled]="connectionIssueResolverModalVisible"
+  ></plaid-zoom-controls>
   <plaid-auth-status
     [user]="currentUser"
     (changeCredentials)="changeCredentials.emit()"

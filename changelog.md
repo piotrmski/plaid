@@ -1,5 +1,20 @@
 # Change log
 
+## 0.3
+
+**0.3.0**
+
+![Dark mode, current time marker](https://raw.githubusercontent.com/piotrmski/plaid/master/changelog-screenshots/0.3.png)
+
+- added zooming (with buttons, Ctrl +, Ctrl -, or Ctrl mousewheel)
+- added current time marker
+- added dark theme (on Windows available by setting default app mode to dark in personalization settings, on GNU/Linux currently unavailable)
+- on login screen now https:// is prepended to URL if protocol was not specified
+- added warning to the login screen not to use http
+- minor visual tweaks
+- improved performance
+- updated dependencies
+
 ## 0.2
 
 **0.2.1**

@@ -1,4 +1,4 @@
-.popup-background {
+.modal-background {
   position: fixed;
   top: 0;
   left: 0;
@@ -19,7 +19,7 @@
   }
 }
 
-.popup {
+.modal {
   width: 400px;
   background: #fff;
   border-radius: 30px;
@@ -39,14 +39,14 @@
   }
 }
 
-.popup-header {
+.modal-header {
   font-family: var(--font-display);
   font-size: 32px;
   border-bottom: 2px solid var(--color-gray-1);
   padding: 15px 20px;
 }
 
-.popup-body {
+.modal-body {
   padding: 10px 20px;
   word-wrap: break-word;
 
@@ -59,7 +59,7 @@
   }
 }
 
-.popup-footer {
+.modal-footer {
   border-top: 2px solid var(--color-gray-1);
   padding: 15px 20px;
   text-align: right;
@@ -67,4 +67,60 @@
 
 .error {
   color: var(--color-red);
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+input.http-notice-visible {
+  padding-right: 30px;
+}
+
+.http-notice-icon {
+  background: var(--color-orange);
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 20px;
+  line-height: 20px;
+  text-align: center;
+  font-weight: 800;
+  border-radius: 10px;
+  font-size: 15px;
+  padding-left: 1px;
+  display: none;
+  color: #fff;
+
+  &.visible {
+    display: block;
+
+    &:hover + .http-notice {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+}
+
+.http-notice {
+  position: absolute;
+  max-width: 360px;
+  font-size: 12px;
+  color: #fff;
+  background: var(--color-orange);
+  padding: 8px 10px;
+  border-radius: 15px;
+  opacity: 0;
+  transition: 0.1s opacity;
+  pointer-events: none;
+
+  &::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    bottom: 100%;
+    right: 15px;
+    border-bottom: 8px solid var(--color-orange);
+    border-left: 16px solid transparent;
+  }
 }

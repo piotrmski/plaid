@@ -4,11 +4,11 @@
 
 Plaid lets you get a better overview of your Jira work logs. See your work logs laid out on a weekly calendar and never struggle searching for gaps in your hours again.
 
-## New in 0.2
+## New in 0.3
 
-- overlapping logs now appear side by side
-- changed appearance of logs for better clarity and contrast
-- F5 and Ctrl+R now refresh work logs
+- added zooming,
+- added dark theme,
+- added current time marker.
 
 See full change log in `changelog.md`
 
@@ -71,10 +71,8 @@ npm run package
 ## Roadmap
 
 Planned functionality includes:
-- changing first day of the week,
+- **adding and editing work logs within the application**,
+- hiding weekends,
 - viewing single days,
-- changing zoom level
 - setting hour markers for beginnings and ends of work days,
-- automatic refreshing,
-- dark mode,
-- adding and editing work logs within the application.
+- periodic refreshing.
