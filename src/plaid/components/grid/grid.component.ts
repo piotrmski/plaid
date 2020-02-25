@@ -9,13 +9,16 @@ import {
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
 
+/**
+ * Dumb container for the entire grid including header, background, footer, time marker, and work log entries.
+ */
 @Component({
-  selector: 'plaid-planner',
-  templateUrl: './planner.component.html',
-  styleUrls: ['./planner.component.scss'],
+  selector: 'plaid-grid',
+  templateUrl: './grid.component.html',
+  styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PlannerComponent implements AfterViewInit {
+export class GridComponent implements AfterViewInit {
   days: Date[];
   _dateRange: DateRange;
   _worklogs: Worklog[];
@@ -24,11 +27,23 @@ export class PlannerComponent implements AfterViewInit {
   _pixelsPerMinute: number;
   forcedHeight: number = null;
 
+  /**
+   * Whether an overlay with a spinner should be visible
+   */
   @Input()
   loading: boolean;
 
+  /**
+   * In how many vertical pixels is one minute represented. The component will try its best to keep the center of the
+   * visible area of the grid on the same hour.
+   */
   @Input()
   set pixelsPerMinute(ppm: number) {
+    // For smoothness of interaction, the scrollable area height and scrollTop should change in the same event loop
+    // cycle. If current scrollable area height is high enough to immediately apply new scrollTop, this is trivial.
+    // Otherwise the scrollable content needs to first be stretched high enough, and in the next event loop cycle new
+    // scrollTop and new pixelsPerMinute value can be applied. Visually this manifests only on the scroll bar, which
+    // isn't in the center of attention.
     const change = ppm / this._pixelsPerMinute;
     const newScrollTop = change * this.hostElement.nativeElement.scrollTop
       + (change - 1) * this.hostElement.nativeElement.clientHeight * 0.5;
@@ -44,12 +59,15 @@ export class PlannerComponent implements AfterViewInit {
       this.hostElement.nativeElement.scrollTop = newScrollTop;
       this._pixelsPerMinute = ppm;
     }
-
   }
   get pixelsPerMinute(): number {
     return this._pixelsPerMinute;
   }
 
+  /**
+   * Work log entries displayed on the grid. Entries outside dateRange are discarded. Entries in sections of overlapping
+   * logs are displayed side by side in columns.
+   */
   @Input()
   set worklogs(worklogs: Worklog[]) {
     if (worklogs) {
@@ -117,6 +135,9 @@ export class PlannerComponent implements AfterViewInit {
     return this._worklogs;
   }
 
+  /**
+   * Range of displayed days. Setting the date range also invokes the worklogs setter to remove logs outside the range.
+   */
   @Input()
   set dateRange(range: DateRange) {
     this._dateRange = range;
@@ -135,6 +156,9 @@ export class PlannerComponent implements AfterViewInit {
 
   constructor(private hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
 
+  /**
+   * Scroll vertically into current time and horizontally into current day.
+   */
   ngAfterViewInit(): void {
     const curTime: Date = new Date();
     this.hostElement.nativeElement.scrollTop =

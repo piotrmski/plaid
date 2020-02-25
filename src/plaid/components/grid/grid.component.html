@@ -1,14 +1,14 @@
-<div class="planner" [style.min-width.px]="30 + days.length * 180" [style.min-height.px]="forcedHeight">
-  <div class="planner-header">
+<div class="grid" [style.min-width.px]="30 + days.length * 180" [style.min-height.px]="forcedHeight">
+  <div class="grid-header">
     <div class="header-over-labels"></div>
     <div class="header-over-content" *ngFor="let weekday of days">
       {{ weekday | date:'EEE, LLL d' }}
     </div>
   </div>
-  <plaid-planner-grid-background
+  <plaid-grid-background
     [pixelsPerMinute]="pixelsPerMinute"
     [numberOfWeekdays]="days.length || 0"
-  ></plaid-planner-grid-background>
+  ></plaid-grid-background>
   <plaid-current-time-marker
     [pixelsPerMinute]="pixelsPerMinute"
     [dateRange]="dateRange"
@@ -26,7 +26,7 @@
       ></plaid-worklog-panel>
     </div>
   </div>
-  <div class="planner-footer">
+  <div class="grid-footer">
     <div class="footer-under-labels">
       &Sigma;
     </div>

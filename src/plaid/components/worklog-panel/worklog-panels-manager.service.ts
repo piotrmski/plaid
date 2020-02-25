@@ -4,6 +4,12 @@ import {fromEvent, Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 import {PlaidFacade} from '../../plaid.facade';
 
+/**
+ * Service for managing visual aspects of all panels at once - their size and position and whether dark theme is active.
+ * Size and position checks are called for all panels after 250 ms after scheduleCheckSizeAndPosition was last called.
+ * Additionally, window resize event causes scheduleCheckSizeAndPosition call. State of dark mode from facade is applied
+ * to all panels initially and after change.
+ */
 @Injectable({providedIn: 'root'})
 export class WorklogPanelsManagerService {
   private panels: WorklogPanelComponent[] = [];
@@ -14,7 +20,7 @@ export class WorklogPanelsManagerService {
     this.scheduler.asObservable().pipe(debounceTime(250)).subscribe(() => {
       this.panels.forEach(panel => panel.checkSizeAndPosition());
     });
-    fromEvent(window, 'resize').subscribe(() => this.scheduler.next());
+    fromEvent(window, 'resize').subscribe(() => this.scheduleCheckSizeAndPosition());
     facade.getDarkMode$().subscribe(darkMode => {
       this.darkMode = darkMode;
       this.panels.forEach(panel => panel.darkMode = this.darkMode);

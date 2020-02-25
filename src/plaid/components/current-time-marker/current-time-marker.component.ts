@@ -25,7 +25,7 @@ export class CurrentTimeMarkerComponent implements OnInit {
   timeout: Timeout = null;
 
   /**
-   * In how many vertical pixels is one minute represented. Changing will immediately update the marker.
+   * In how many vertical pixels is one minute represented. Changing it will immediately update the marker.
    */
   @Input()
   set pixelsPerMinute(value: number) {
@@ -37,7 +37,7 @@ export class CurrentTimeMarkerComponent implements OnInit {
   }
 
   /**
-   * What date range is presented. Changing will immediately update the marker.
+   * What date range is presented. Changing it will immediately update the marker.
    */
   @Input()
   set dateRange(value: DateRange) {
