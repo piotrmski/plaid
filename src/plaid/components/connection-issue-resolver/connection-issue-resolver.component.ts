@@ -5,6 +5,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {skip} from 'rxjs/operators';
 import {User} from '../../models/user';
 
+// TODO move some logic to facade
 @Component({
   selector: 'plaid-connection-issue-resolver',
   templateUrl: './connection-issue-resolver.component.html',
@@ -18,7 +19,6 @@ export class ConnectionIssueResolverComponent implements OnInit {
   _error: HttpErrorResponse;
   fetching = false;
   _currentUser: User = null;
-  submittedAuthInfo: AuthInfo = null;
   httpNoticeVisible = false;
 
   @Input()
@@ -92,8 +92,7 @@ export class ConnectionIssueResolverComponent implements OnInit {
 
   submit(): void {
     this.onUrlChange();
-    this.submittedAuthInfo = {...this.authInfo};
-    this.facade.setAuthInfo(this.submittedAuthInfo);
+    this.facade.setAuthInfo(this.authInfo);
     this.facade.discardAuthenticatedUser();
     this.facade.fetchAuthenticatedUser();
     this.fetching = true;
