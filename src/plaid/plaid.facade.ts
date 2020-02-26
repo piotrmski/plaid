@@ -1,20 +1,23 @@
 import {Injectable} from '@angular/core';
 import {WorklogApi} from './core/worklog/worklog.api';
 import {WorklogState} from './core/worklog/worklog.state';
-import {fromEvent, Observable, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Worklog} from './models/worklog';
 import {AuthApi} from './core/auth/auth.api';
 import {AuthState} from './core/auth/auth.state';
 import {AuthInfo} from './models/auth-info';
-import {HttpErrorResponse, HttpEvent} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {DateRange} from './models/date-range';
 import {User} from './models/user';
-import {filter, mergeMap, skip, take} from 'rxjs/operators';
 import {SystemPreferencesService} from './core/system-preferences/system-preferences.service';
+import {ConnectionIssueModalVisible} from './components/connection-issue-resolver/connection-issue-modal-visible';
+import {skip} from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class PlaidFacade {
   private fetchWorklogsSubscription: Subscription;
+  private connectionIssueModalVisible: BehaviorSubject<ConnectionIssueModalVisible> =
+    new BehaviorSubject<ConnectionIssueModalVisible>(ConnectionIssueModalVisible.NONE);
 
   constructor(
     private worklogApi: WorklogApi,
@@ -22,7 +25,19 @@ export class PlaidFacade {
     private authApi: AuthApi,
     private authState: AuthState,
     private systemPreferencesService: SystemPreferencesService
-  ) { }
+  ) {
+    // Handle connection issues
+    this.authState.getAuthError$().pipe(skip(1)).subscribe(error => {
+      if (!this.authState.getAuthenticatedUser() || error && [401, 403].includes(error.status)) { // Authentication error
+        this.authState.setAuthenticatedUser(null);
+        this.connectionIssueModalVisible.next(ConnectionIssueModalVisible.LOGIN);
+      } else if (error && error.status === 0) { // Network connection issue
+        this.connectionIssueModalVisible.next(ConnectionIssueModalVisible.LOST_CONNECTION);
+      } else if (error) { // Unknown error
+        this.connectionIssueModalVisible.next(ConnectionIssueModalVisible.ERROR);
+      }
+    });
+  }
 
   getWorklogsFetching$(): Observable<boolean> {
     return this.worklogState.getFetching$();
@@ -46,54 +61,75 @@ export class PlaidFacade {
     return this.worklogState.getWorklogs$();
   }
 
-  setAuthInfo(authInfo: AuthInfo) {
-    this.authState.setAuthInfo(authInfo);
-  }
-
-  getAuthInfo(): AuthInfo {
-    return this.authState.getAuthInfo();
+  getAuthInfo$(): Observable<AuthInfo> {
+    return this.authState.getAuthInfo$();
   }
 
   getJiraURL(): string {
     return this.authState.getJiraURL();
   }
 
-  setAuthError(error: HttpErrorResponse): void {
-    this.authState.setAuthError(error);
-  }
-
   getAuthError$(): Observable<HttpErrorResponse> {
     return this.authState.getAuthError$();
   }
 
-  retryAfterAuthenticated(event$fn: () => Observable<HttpEvent<any>>): Observable<HttpEvent<any>> {
-    return this.authState.getAuthenticatedUser$().pipe(
-      skip<User>(1),
-      filter<User>((user: User) => user != null),
-      take<User>(1),
-      mergeMap<User, Observable<HttpEvent<any>>>(() => event$fn())
-    );
-  }
-
-  getAuthHeader(): string {
-    return this.authState.getAuthHeader();
-  }
-
-  fetchAuthenticatedUser(): void {
-    this.authApi.getAuthenticatedUser$().subscribe(user => {
-      this.authState.setAuthenticatedUser(user);
-    });
-  }
-
-  discardAuthenticatedUser(): void {
-    this.authState.setAuthenticatedUser(null);
-  }
-
+  /**
+   * Get the user who's currently authenticated. This value can be relied upon to determine whether the user is logged
+   * in.
+   */
   getAuthenticatedUser$(): Observable<User> {
     return this.authState.getAuthenticatedUser$();
   }
 
+  /**
+   * Save credentials and try to authenticate by fetching the user.
+   */
+  login(authInfo: AuthInfo): void {
+    this.authState.setAuthenticatedUser(null);
+    this.authState.setAuthInfo(authInfo);
+    this.fetchAuthenticatedUser();
+  }
+
+  /**
+   * Attempt to fetch current user and if successful then retry requests which failed due to connection loss.
+   */
+  reconnect(): void {
+    this.fetchAuthenticatedUser();
+  }
+
+  /**
+   * Forget saved credentials and the user fetched in the authentication process.
+   */
+  logout(): void {
+    this.authState.setAuthenticatedUser(null);
+    this.authState.setAuthInfo(null);
+  }
+
+  /**
+   * Shows login modal without losing authentication
+   */
+  showLoginModal(): void {
+    this.connectionIssueModalVisible.next(ConnectionIssueModalVisible.LOGIN);
+  }
+
+  closeConnectionIssueModal(): void {
+    this.connectionIssueModalVisible.next(ConnectionIssueModalVisible.NONE);
+  }
+
+  getConnectionIssueModalVisible$(): Observable<ConnectionIssueModalVisible> {
+    return this.connectionIssueModalVisible.asObservable();
+  }
+
   getDarkMode$(): Observable<boolean> {
     return this.systemPreferencesService.darkMode$();
+  }
+
+  private fetchAuthenticatedUser(): void {
+    this.authApi.getAuthenticatedUser$().subscribe(user => {
+      this.authState.setAuthenticatedUser(user);
+      if (user) {
+        this.connectionIssueModalVisible.next(ConnectionIssueModalVisible.NONE);
+      }
+    });
   }
 }

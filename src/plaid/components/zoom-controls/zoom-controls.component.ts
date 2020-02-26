@@ -1,5 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
+/**
+ * Dumb component, presents two buttons, handles zoom change shortcuts, and delegates change in pixelsPerMinute value.
+ */
 @Component({
   selector: 'plaid-zoom-controls',
   templateUrl: './zoom-controls.component.html'
@@ -26,7 +29,7 @@ export class ZoomControlsComponent implements OnInit {
 
   ngOnInit(): void {
     // Singleton component, no need to unbind events
-    addEventListener('mousewheel', (e: WheelEvent) => {
+    addEventListener('mousewheel', (e: WheelEvent) => { // Ctrl mousewheel
       if (!this.shortcutsDisabled && e.ctrlKey) {
         if (e.deltaY > 0) {
           this.zoomOut();
@@ -37,11 +40,11 @@ export class ZoomControlsComponent implements OnInit {
     });
     addEventListener('keydown', (e: KeyboardEvent) => {
       if (!this.shortcutsDisabled && e.ctrlKey) {
-        if (e.key === '-') {
+        if (e.key === '-') { // Ctrl -
           this.zoomOutButtonActive = true;
           this.zoomOut();
           setTimeout(() => this.zoomOutButtonActive = false, 50);
-        } else if (e.key === '+' || e.key === '=') {
+        } else if (e.key === '+' || e.key === '=') { // Ctrl +, Ctrl =
           this.zoomInButtonActive = true;
           this.zoomIn();
           setTimeout(() => this.zoomInButtonActive = false, 50);

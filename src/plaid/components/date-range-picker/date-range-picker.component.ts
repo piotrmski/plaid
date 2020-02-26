@@ -10,6 +10,10 @@ import {
 import {DateRange} from '../../models/date-range';
 import {DatePipe} from '@angular/common';
 
+/**
+ * Dumb component, responsible for presenting current date on a dropdown calendar, currently selected week and
+ * delegating week selection change.
+ */
 @Component({
   selector: 'plaid-date-range-picker',
   templateUrl: './date-range-picker.component.html',
@@ -39,6 +43,19 @@ export class DateRangePickerComponent implements OnInit {
     'December'
   ];
 
+  readonly weekdays: string[] = [
+    'Sun',
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat'
+  ];
+
+  /**
+   * Initialize by selecting current week.
+   */
   constructor(private ref: ElementRef) {
     const curTime: Date = new Date();
     this.month = new Date(curTime.getFullYear(), curTime.getMonth());
@@ -52,6 +69,9 @@ export class DateRangePickerComponent implements OnInit {
     this.selectedDateRange.emit(this._selectedDateRange);
   }
 
+  /**
+   * Closes the calendar dropdown, if user clicked anywhere outside it.
+   */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
@@ -59,6 +79,11 @@ export class DateRangePickerComponent implements OnInit {
     }
   }
 
+  /**
+   * Array of 7-element arrays of days visible on the presented calendar. The structure contains all days of the month
+   * presented on the calendar, split into full weeks. First and last week may contain days from previous and next
+   * months to keep the week length constant.
+   */
   get days(): Date[][] {
     const maxDate: number = new Date(this.month.getFullYear(), this.month.getMonth() + 1, 0).getDate();
     const days: Date[][] = [];
@@ -72,29 +97,23 @@ export class DateRangePickerComponent implements OnInit {
     return days;
   }
 
-  get weekdays(): string[] {
-    return [
-      'Sun',
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat'
-    ];
-  }
-
   get calendarOpen(): boolean {
     return this._calendarOpen;
   }
 
+  /**
+   * Open or close the calendar. Opening it will set the month to one which the monday of the selected date range
+   * belongs to, assuming only full weeks starting on sunday can be selectable.
+   */
   set calendarOpen(open: boolean) {
     this._calendarOpen = open;
     if (open) {
       this.month = new Date(
         this._selectedDateRange.start.getFullYear(),
-        this._selectedDateRange.start.getMonth()
+        this._selectedDateRange.start.getMonth(),
+        this._selectedDateRange.start.getDate() + 1
       );
+      this.month.setDate(1);
       const curTime: Date = new Date();
       this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
     }
@@ -149,5 +168,4 @@ export class DateRangePickerComponent implements OnInit {
     this.selectedDateRange.emit(dateRange);
     this.calendarOpen = false;
   }
-
 }

@@ -14,6 +14,7 @@ export class AuthState {
     : null;
   private authError = new BehaviorSubject<HttpErrorResponse>(null);
   private authenticatedUser = new BehaviorSubject<User>(null);
+  private authInfo = new BehaviorSubject<AuthInfo>(this.getAuthInfo());
 
   static getAuthHeaderKey(authInfo: AuthInfo): string {
     return 'Basic ' + btoa(authInfo.username + ':' + authInfo.password);
@@ -30,11 +31,16 @@ export class AuthState {
       localStorage.removeItem(this.AUTH_HEADER);
       this.jiraURL = null;
     }
+    this.authInfo.next(this.getAuthInfo());
   }
 
   getAuthInfo(): AuthInfo {
     const infoJson: string = localStorage.getItem(this.AUTH_INFO);
     return infoJson ? JSON.parse(infoJson) : null;
+  }
+
+  getAuthInfo$(): Observable<AuthInfo> {
+    return this.authInfo.asObservable();
   }
 
   getAuthHeader(): string {
@@ -55,6 +61,10 @@ export class AuthState {
 
   getAuthenticatedUser$(): Observable<User> {
     return this.authenticatedUser.asObservable();
+  }
+
+  getAuthenticatedUser(): User {
+    return this.authenticatedUser.value;
   }
 
   setAuthenticatedUser(user: User): void {

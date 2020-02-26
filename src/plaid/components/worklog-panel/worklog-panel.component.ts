@@ -11,6 +11,10 @@ import {Worklog} from '../../models/worklog';
 import {PlaidFacade} from '../../plaid.facade';
 import {WorklogPanelsManagerService} from './worklog-panels-manager.service';
 
+/**
+ * Somewhat dumb component, present a panel representing a work log entry, makes use of its own service to manage
+ * visual aspects of all class instances at once.
+ */
 @Component({
   selector: 'plaid-worklog-panel',
   templateUrl: './worklog-panel.component.html',
@@ -35,6 +39,11 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   timeRange: string;
   _darkMode: boolean;
 
+  /**
+   * Presented work log entry. Setting it will set the panel's initial size and position on the grid as well as its
+   * color. Color is determined by a hash function applied to the log's issue's parent's ID (or log's issue's ID if it
+   * does not have a parent). It will also schedule size and position check (see checkSizeAndPosition).
+   */
   @Input()
   set worklog(worklog: Worklog) {
     this._worklog = worklog;
@@ -55,6 +64,10 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     return this._worklog;
   }
 
+  /**
+   * In how many vertical pixels is one minute represented. Changing it will update panel's position and size, and
+   * schedule size and position check (see checkSizeAndPosition).
+   */
   @Input()
   set pixelsPerMinute(pixelsPerMinute: number) {
     this._pixelsPerMinute = pixelsPerMinute;
@@ -65,6 +78,9 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     return this._pixelsPerMinute;
   }
 
+  /**
+   * This setter is executed asynchronously by the manager and therefore needs to invoke change detector.
+   */
   set darkMode(value: boolean) {
     this._darkMode = value;
     this.cdr.markForCheck();
@@ -88,6 +104,9 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     this.viewDestroyed = true;
   }
 
+  /**
+   * Update human readable time range string.
+   */
   computeTimeRange(): void {
     const startTime = new Date(this.worklog.started);
     const endTime = new Date(startTime);
@@ -118,6 +137,10 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     this.panelHeight = Math.min(this.worklog.timeSpentSeconds / 60 * this.pixelsPerMinute, this.maxHeight);
   }
 
+  /**
+   * Check if the panel's content overflows and if the panel is too low to display overflowing content by stretching it
+   * down. This method is executed asynchronously by the manager and therefore needs to invoke change detector.
+   */
   checkSizeAndPosition(): void {
     if (!this.viewDestroyed) {
       this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
