@@ -113,7 +113,7 @@ export class DateRangePickerComponent implements OnInit {
         this._selectedDateRange.start.getMonth(),
         this._selectedDateRange.start.getDate() + 1
       );
-      this.month.setDate(0);
+      this.month.setDate(1);
       const curTime: Date = new Date();
       this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
     }
@@ -168,5 +168,4 @@ export class DateRangePickerComponent implements OnInit {
     this.selectedDateRange.emit(dateRange);
     this.calendarOpen = false;
   }
-
 }

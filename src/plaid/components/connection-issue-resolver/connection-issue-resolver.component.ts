@@ -1,62 +1,41 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PlaidFacade} from '../../plaid.facade';
 import {AuthInfo} from '../../models/auth-info';
 import {HttpErrorResponse} from '@angular/common/http';
-import {skip} from 'rxjs/operators';
 import {User} from '../../models/user';
+import {ConnectionIssueModalVisible} from './connection-issue-modal-visible';
 
-// TODO move some logic to facade
+/**
+ * Smart component, presents login, lost connection, and error modals and handles login and reconnect actions.
+ */
 @Component({
   selector: 'plaid-connection-issue-resolver',
   templateUrl: './connection-issue-resolver.component.html',
   styleUrls: ['./connection-issue-resolver.component.scss']
 })
 export class ConnectionIssueResolverComponent implements OnInit {
-  loginModalVisible = false;
-  lostConnectionModalVisible = false;
-  errorModalVisible = false;
+  modalVisible: ConnectionIssueModalVisible = ConnectionIssueModalVisible.NONE;
   authInfo: AuthInfo = { jiraUrl: null, username: null, password: null };
   _error: HttpErrorResponse;
   fetching = false;
   _currentUser: User = null;
   httpNoticeVisible = false;
 
-  @Input()
-  changeCredentials: EventEmitter<void>;
-
-  @Output()
-  modalVisible = new EventEmitter<boolean>();
+  readonly ConnectionIssueModalVisible = ConnectionIssueModalVisible;
 
   constructor(private facade: PlaidFacade) {}
 
   ngOnInit(): void {
     // Singleton component, no need to unsubscribe
-    this.facade.getAuthError$().pipe(skip(1)).subscribe((authError: HttpErrorResponse) => this.error = authError);
-    this.facade.getAuthenticatedUser$().pipe(skip(1)).subscribe(user => this.currentUser = user);
-    this.changeCredentials.subscribe(() => {
-      this.loginModalVisible = true;
-      this._error = null;
-      this.fetching = false;
-      this.authInfo = this.facade.getAuthInfo() ? this.facade.getAuthInfo() : { jiraUrl: null, username: null, password: null };
-      this.modalVisible.emit(true);
-    });
+    this.facade.getAuthError$().subscribe((authError: HttpErrorResponse) => this.error = authError);
+    this.facade.getAuthenticatedUser$().subscribe(user => this.currentUser = user);
+    this.facade.getConnectionIssueModalVisible$().subscribe(val => this.modalVisible = val);
+    this.facade.getAuthInfo$().subscribe(authInfo => this.authInfo = authInfo || { jiraUrl: null, username: null, password: null });
   }
 
   set error(error: HttpErrorResponse) {
     this._error = error;
     this.fetching = false;
-    if (!this.currentUser || error && [401, 403].indexOf(error.status) !== -1) { // Authentication error
-      this.facade.discardAuthenticatedUser();
-      this.loginModalVisible = true;
-      this.authInfo = this.facade.getAuthInfo() ? this.facade.getAuthInfo() : { jiraUrl: null, username: null, password: null };
-      this.modalVisible.emit(true);
-    } else if (error && error.status === 0) { // Network connection issue
-      this.lostConnectionModalVisible = true;
-      this.modalVisible.emit(true);
-    } else if (error) { // Unknown error
-      this.errorModalVisible = true;
-      this.modalVisible.emit(true);
-    }
   }
   get error(): HttpErrorResponse {
     return this._error;
@@ -64,11 +43,9 @@ export class ConnectionIssueResolverComponent implements OnInit {
 
   set currentUser(user: User) {
     this._currentUser = user;
+    this.fetching = false;
     if (user) {
-      this.loginModalVisible = false;
-      this.lostConnectionModalVisible = false;
-      this.errorModalVisible = false;
-      this.modalVisible.emit(false);
+      this._error = null;
     }
   }
   get currentUser(): User {
@@ -90,16 +67,18 @@ export class ConnectionIssueResolverComponent implements OnInit {
     }
   }
 
-  submit(): void {
+  login(): void {
     this.onUrlChange();
-    this.facade.setAuthInfo(this.authInfo);
-    this.facade.discardAuthenticatedUser();
-    this.facade.fetchAuthenticatedUser();
+    this.facade.login(this.authInfo);
     this.fetching = true;
   }
 
-  resubmit(): void {
-    this.facade.fetchAuthenticatedUser();
+  reconnect(): void {
+    this.facade.reconnect();
     this.fetching = true;
+  }
+
+  closeModal(): void {
+    this.facade.closeConnectionIssueModal();
   }
 }

@@ -1,18 +1,19 @@
 import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {EMPTY, Observable} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {PlaidFacade} from '../../plaid.facade';
+import {catchError, filter, mergeMap, skip, take} from 'rxjs/operators';
+import {AuthState} from './auth.state';
+import {User} from '../../models/user';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private facade: PlaidFacade) {}
+  constructor(private authState: AuthState) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const authInfo = this.facade.getAuthInfo();
+    const authInfo = this.authState.getAuthInfo();
     if (authInfo) {
       const newRequest: HttpRequest<any> = request.clone({
-        setHeaders: {Authorization: this.facade.getAuthHeader()},
+        setHeaders: {Authorization: this.authState.getAuthHeader()},
         url: authInfo.jiraUrl + request.url
       });
       return next.handle(newRequest).pipe(
@@ -24,11 +25,20 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleError(request: HttpRequest<any>, next: HttpHandler, error: HttpErrorResponse): Observable<HttpEvent<any>> {
-    this.facade.setAuthError(error);
+    this.authState.setAuthError(error);
     // Retry the request after authentication, except /rest/api/2/user and /rest/auth/1/session, because requests to these end points will
     // be retried in the process of authentication.
     return request.url.substr(0, 16) === '/rest/api/2/user' || request.url === '/rest/auth/1/session'
       ? EMPTY
-      : this.facade.retryAfterAuthenticated(() => this.intercept(request, next));
+      : this.retryAfterAuthenticated(() => this.intercept(request, next));
+  }
+
+  private retryAfterAuthenticated(event$fn: () => Observable<HttpEvent<any>>): Observable<HttpEvent<any>> {
+    return this.authState.getAuthenticatedUser$().pipe(
+      skip<User>(1),
+      filter<User>((user: User) => user != null),
+      take<User>(1),
+      mergeMap<User, Observable<HttpEvent<any>>>(() => event$fn())
+    );
   }
 }
