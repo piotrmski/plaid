@@ -20,6 +20,7 @@ export class WorklogEditorComponent {
   panelOffsetLeft: number;
   panelWidth: number;
   editedPanelInRange: boolean;
+  panelHue: number;
 
   @Output()
   cancelEdit = new EventEmitter<void>();
@@ -59,6 +60,9 @@ export class WorklogEditorComponent {
       this.startDate.setHours(0, 0, 0, 0);
       this.durationSeconds = worklog.timeSpentSeconds;
       this.editedPanelInRange = this.startDate >= this.dateRange.start && this.startDate <= this.dateRange.end;
+      this.panelHue = Math.round((Number(this.worklog.issue.fields.parent
+        ? this.worklog.issue.fields.parent.id
+        : this.worklog.issue.id) * 360 / 1.61803)) % 360;
       if (this.editedPanelInRange) {
         this.computeSizeAndOffset();
       }
