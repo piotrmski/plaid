@@ -7,15 +7,12 @@
 }
 
 .loading-overlay {
-  position: fixed;
-  top: 36px;
+  position: absolute;
+  top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   background: rgba(200, 200, 200, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   color: var(--color-primary-4);
   z-index: -1;
   opacity: 0;
@@ -26,8 +23,14 @@
     background: rgba(50, 50, 50, 0.5);
   }
 
+  .spinner {
+    position: fixed;
+    top: calc(50% - 0.5em);
+    left: calc(50% - 0.5em);
+  }
+
   &.visible {
-    z-index: 3;
+    z-index: 1;
     opacity: 1;
     transition: 0.2s opacity, 0s z-index 0s;
   }

@@ -21,7 +21,7 @@
     <div class="panel-content">
       <a
         class="button edit-button"
-        [plaidExtHref]="jiraURL + '/secure/UpdateWorklog!default.jspa?id=' + worklog.issueId + '&worklogId=' + worklog.id"
+        (click)="edit.emit(worklog)"
       >
         <svg class="icon"><use href="assets/icons.svg#edit"></use></svg>
       </a>

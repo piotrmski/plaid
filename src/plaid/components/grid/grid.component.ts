@@ -26,6 +26,7 @@ export class GridComponent implements AfterViewInit {
   timeSums: string[];
   _pixelsPerMinute: number;
   forcedHeight: number = null;
+  editedWorklog: Worklog;
 
   /**
    * Whether an overlay with a spinner should be visible

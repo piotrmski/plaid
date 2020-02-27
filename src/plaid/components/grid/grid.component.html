@@ -23,6 +23,7 @@
         *ngFor="let worklog of logs"
         [worklog]="worklog"
         [pixelsPerMinute]="pixelsPerMinute"
+        (edit)="editedWorklog = $event"
       ></plaid-worklog-panel>
     </div>
   </div>
@@ -34,7 +35,13 @@
       {{ timeSum }}
     </div>
   </div>
-</div>
-<div class="loading-overlay" [class.visible]="loading">
-  <span class="spinner"></span>
+  <div class="loading-overlay" [class.visible]="loading">
+    <span class="spinner"></span>
+  </div>
+  <plaid-worklog-editor
+    [pixelsPerMinute]="pixelsPerMinute"
+    [dateRange]="dateRange"
+    [worklog]="editedWorklog"
+    (cancelEdit)="editedWorklog = null"
+  ></plaid-worklog-editor>
 </div>

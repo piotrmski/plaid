@@ -1,10 +1,13 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
@@ -38,6 +41,9 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   components: string;
   timeRange: string;
   _darkMode: boolean;
+
+  @Output()
+  edit = new EventEmitter<Worklog>();
 
   /**
    * Presented work log entry. Setting it will set the panel's initial size and position on the grid as well as its
