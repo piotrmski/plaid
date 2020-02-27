@@ -1,16 +1,27 @@
 .wrapper {
   z-index: 1;
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  top: 35px;
+  left: 30px;
+  bottom: 25px;
   right: 0;
   pointer-events: none;
-  background: transparent;
-  transition: 0.1s background-color;
+  background: rgba(50,50,50,0.2);
+  opacity: 0;
+  transition: 0.1s opacity;
 
   &.visible {
     pointer-events: all;
-    background: rgba(50,50,50,0.2);
+    opacity: 1;
+  }
+}
+
+.panel {
+  position: absolute;
+  background: #fff;
+  display: none;
+
+  &.visible {
+    display: block;
   }
 }

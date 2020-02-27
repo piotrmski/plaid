@@ -1,7 +1,11 @@
 <div class="wrapper" [class.visible]="worklog" (click)="cancelEdit.emit()">
   <div
     class="panel"
-
+    [style.left.%]="panelOffsetLeft * 100"
+    [style.top.px]="panelOffsetTop"
+    [style.width.%]="panelWidth * 100"
+    [style.height.px]="panelHeight"
+    [class.visible]="editedPanelInRange"
   >
     <div class="handle-top"></div>
     <div class="handle-bottom"></div>
