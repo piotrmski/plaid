@@ -155,7 +155,7 @@ export class GridComponent implements AfterViewInit {
     return this._dateRange;
   }
 
-  constructor(private hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(public hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
 
   /**
    * Scroll vertically into current time and horizontally into current day.

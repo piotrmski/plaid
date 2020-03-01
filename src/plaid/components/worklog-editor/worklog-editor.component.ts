@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {DateRange} from '../../models/date-range';
 import {Worklog} from '../../models/worklog';
 
@@ -8,7 +16,7 @@ import {Worklog} from '../../models/worklog';
   styleUrls: ['./worklog-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorklogEditorComponent {
+export class WorklogEditorComponent implements OnInit {
   _pixelsPerMinute: number;
   _dateRange: DateRange;
   _worklog: Worklog;
@@ -21,9 +29,15 @@ export class WorklogEditorComponent {
   panelWidth: number;
   editedPanelInRange: boolean;
   panelHue: number;
+  dragStartYOffset: number;
+  dragEventListener: (e: MouseEvent) => void;
+  mouseupEventListener: () => void;
 
   @Output()
   cancelEdit = new EventEmitter<void>();
+
+  @Input()
+  scrollableAncestor: HTMLDivElement;
 
   @Input()
   set pixelsPerMinute(value: number) {
@@ -72,6 +86,15 @@ export class WorklogEditorComponent {
     return this._worklog;
   }
 
+  constructor(private cdr: ChangeDetectorRef) {
+  }
+
+  ngOnInit(): void {
+    this.mouseupEventListener = () => this.dragEnd();
+    // Singleton component, no need to unbind.
+    document.addEventListener('mouseup', () => this.dragEnd());
+  }
+
   computeSizeAndOffset(): void {
     this.panelOffsetTop = (this.start.getHours() * 60 + this.start.getMinutes()) * this.pixelsPerMinute;
     this.panelHeight = Math.min(
@@ -80,5 +103,34 @@ export class WorklogEditorComponent {
     );
     this.panelWidth = 1 / (Math.round((this.dateRange.end.getTime() - this.dateRange.start.getTime()) / 86400000) + 1);
     this.panelOffsetLeft = this.panelWidth * Math.round((this.startDate.getTime() - this.dateRange.start.getTime()) / 86400000);
+  }
+
+  dragStart(event: MouseEvent): void {
+    this.dragStartYOffset = this.scrollableAncestor.scrollTop + event.clientY;
+    this.dragEventListener = e => this.handleDragEvent(e);
+    document.addEventListener('mousemove', this.dragEventListener);
+  }
+
+  dragEnd(): void {
+    if (this.dragEventListener) {
+      document.removeEventListener('mousemove', this.dragEventListener);
+    }
+  }
+
+  handleDragEvent(event: MouseEvent): void {
+    // TODO:
+    //  prevent dragging above and below the grid
+    //  handle changing zoom while dragging
+    //  keep the cursor from changing while dragging outside the bounds of the panel
+    //  handle horizontal dragging (across days)
+    //  handle changing dragging precision
+    const dragEndYOffset: number = this.scrollableAncestor.scrollTop + event.clientY;
+    const minutesOffset: number = Math.round((dragEndYOffset - this.dragStartYOffset) / this.pixelsPerMinute / 5) * 5;
+    if (minutesOffset !== 0) {
+      this.start.setMinutes(this.start.getMinutes() + minutesOffset);
+      this.computeSizeAndOffset();
+      this.dragStartYOffset += minutesOffset * this.pixelsPerMinute;
+      this.cdr.detectChanges();
+    }
   }
 }

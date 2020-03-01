@@ -1,4 +1,4 @@
-<div class="wrapper" [class.visible]="worklog" (click)="cancelEdit.emit()">
+<div class="wrapper" [class.visible]="worklog" (mousedown)="cancelEdit.emit()">
   <div
     class="panel-wrapper"
     [style.left.%]="panelOffsetLeft * 100"
@@ -10,6 +10,7 @@
     <div
       class="panel"
       [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      (mousedown)="dragStart($event); $event.stopPropagation()"
     >
 
       <div class="handle-top" [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"></div>
