@@ -13,6 +13,14 @@
   &.visible {
     pointer-events: all;
     opacity: 1;
+
+    &.dragging {
+      cursor: move;
+
+      * {
+        pointer-events: none;
+      }
+    }
   }
 }
 

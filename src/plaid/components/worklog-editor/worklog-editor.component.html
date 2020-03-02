@@ -1,4 +1,4 @@
-<div class="wrapper" [class.visible]="worklog" (mousedown)="cancelEdit.emit()">
+<div class="wrapper" [class.visible]="worklog" (mousedown)="cancelEdit.emit()" [class.dragging]="dragging">
   <div
     class="panel-wrapper"
     [style.left.%]="panelOffsetLeft * 100"
@@ -11,6 +11,11 @@
       class="panel"
       [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
       (mousedown)="dragStart($event); $event.stopPropagation()"
+      title="Hold:
+Alt to snap to 1 minute,
+nothing to snap to 5 minutes,
+Shift to snap to 15 minutes,
+Ctrl to snap to 60 minutes."
     >
 
       <div class="handle-top" [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"></div>

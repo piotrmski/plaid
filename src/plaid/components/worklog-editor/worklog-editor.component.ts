@@ -29,6 +29,8 @@ export class WorklogEditorComponent implements OnInit {
   panelWidth: number;
   editedPanelInRange: boolean;
   panelHue: number;
+  dragging = false;
+  dragStartXOffset: number;
   dragStartYOffset: number;
   dragEventListener: (e: MouseEvent) => void;
   mouseupEventListener: () => void;
@@ -41,6 +43,9 @@ export class WorklogEditorComponent implements OnInit {
 
   @Input()
   set pixelsPerMinute(value: number) {
+    if (this.dragStartYOffset != null) {
+      this.dragStartYOffset *= value / this._pixelsPerMinute;
+    }
     this._pixelsPerMinute = value;
     if (this.worklog && this.editedPanelInRange) {
       this.computeSizeAndOffset();
@@ -106,30 +111,71 @@ export class WorklogEditorComponent implements OnInit {
   }
 
   dragStart(event: MouseEvent): void {
+    this.dragging = true;
+    this.dragStartXOffset = this.scrollableAncestor.scrollLeft + event.clientX;
     this.dragStartYOffset = this.scrollableAncestor.scrollTop + event.clientY;
     this.dragEventListener = e => this.handleDragEvent(e);
     document.addEventListener('mousemove', this.dragEventListener);
   }
 
   dragEnd(): void {
+    this.dragging = false;
+    this.cdr.detectChanges();
     if (this.dragEventListener) {
       document.removeEventListener('mousemove', this.dragEventListener);
     }
   }
 
   handleDragEvent(event: MouseEvent): void {
-    // TODO:
-    //  prevent dragging above and below the grid
-    //  handle changing zoom while dragging
-    //  keep the cursor from changing while dragging outside the bounds of the panel
-    //  handle horizontal dragging (across days)
-    //  handle changing dragging precision
+    // How many minutes to snap to
+    let snapTo = 5;
+    if (event.altKey && !event.ctrlKey && !event.shiftKey) {
+      snapTo = 1;
+    } else if (!event.altKey && event.ctrlKey && !event.shiftKey) {
+      snapTo = 60;
+    } else if (!event.altKey && !event.ctrlKey && event.shiftKey) {
+      snapTo = 15;
+    }
+
+    // Handle dragging vertically
     const dragEndYOffset: number = this.scrollableAncestor.scrollTop + event.clientY;
-    const minutesOffset: number = Math.round((dragEndYOffset - this.dragStartYOffset) / this.pixelsPerMinute / 5) * 5;
-    if (minutesOffset !== 0) {
-      this.start.setMinutes(this.start.getMinutes() + minutesOffset);
+    const minutesOffset: number = Math.round((dragEndYOffset - this.dragStartYOffset) / this.pixelsPerMinute);
+    const oldStartTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
+    const newStartTimeMinutes: number = Math.round((oldStartTimeMinutes + minutesOffset) / snapTo) * snapTo;
+    if (oldStartTimeMinutes !== newStartTimeMinutes) {
+      if (newStartTimeMinutes < 0) { // Prevent dragging above the grid
+        this.start.setHours(0, 0, 0, 0);
+      } else if (newStartTimeMinutes + this.worklog.timeSpentSeconds / 60 > 1440) { // Prevent dragging below the grid
+        this.start.setHours(0, 1440 - this.worklog.timeSpentSeconds / 60, 0, 0);
+      } else {
+        this.start.setHours(0, newStartTimeMinutes, 0, 0);
+        this.dragStartYOffset += (newStartTimeMinutes - oldStartTimeMinutes) * this.pixelsPerMinute;
+      }
+    }
+
+    // Handle dragging horizontally
+    const pixelsPerDay: number = (this.scrollableAncestor.scrollWidth - 30) * this.panelWidth;
+    const dragEndXOffset: number = this.scrollableAncestor.scrollLeft + event.clientX;
+    const daysOffset: number = Math.round((dragEndXOffset - this.dragStartXOffset) / pixelsPerDay);
+    const oldDate: Date = new Date(this.startDate);
+    const newDate: Date = new Date(this.startDate);
+    newDate.setDate(newDate.getDate() + daysOffset);
+    if (oldDate.getTime() !== newDate.getTime()) {
+      if (newDate < this.dateRange.start) { // Prevent dragging to before the visible date range
+        this.start.setFullYear(this.dateRange.start.getFullYear(), this.dateRange.start.getMonth(), this.dateRange.start.getDate());
+        this.startDate.setFullYear(this.dateRange.start.getFullYear(), this.dateRange.start.getMonth(), this.dateRange.start.getDate());
+      } else if (newDate > this.dateRange.end) { // Prevent dragging to after the visible date range
+        this.start.setFullYear(this.dateRange.end.getFullYear(), this.dateRange.end.getMonth(), this.dateRange.end.getDate());
+        this.startDate.setFullYear(this.dateRange.end.getFullYear(), this.dateRange.end.getMonth(), this.dateRange.end.getDate());
+      } else {
+        this.start.setDate(this.start.getDate() + daysOffset);
+        this.startDate.setDate(this.startDate.getDate() + daysOffset);
+        this.dragStartXOffset += (newDate.getTime() - oldDate.getTime()) / 86400000 * pixelsPerDay;
+      }
+    }
+
+    if (oldStartTimeMinutes !== newStartTimeMinutes || oldDate.getTime() !== newDate.getTime()) {
       this.computeSizeAndOffset();
-      this.dragStartYOffset += minutesOffset * this.pixelsPerMinute;
       this.cdr.detectChanges();
     }
   }
