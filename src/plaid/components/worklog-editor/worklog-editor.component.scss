@@ -21,6 +21,14 @@
         pointer-events: none;
       }
     }
+
+    &.stretching {
+      cursor: row-resize;
+
+      * {
+        pointer-events: none;
+      }
+    }
   }
 }
 
