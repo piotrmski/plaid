@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {WorklogPanelComponent} from './worklog-panel.component';
-import {fromEvent, Subject} from 'rxjs';
-import {debounceTime} from 'rxjs/operators';
+import {fromEvent} from 'rxjs';
 import {PlaidFacade} from '../../plaid.facade';
+import Timeout = NodeJS.Timeout;
 
 /**
  * Service for managing visual aspects of all panels at once - their size and position and whether dark theme is active.
@@ -13,13 +13,11 @@ import {PlaidFacade} from '../../plaid.facade';
 @Injectable({providedIn: 'root'})
 export class WorklogPanelsManagerService {
   private panels: WorklogPanelComponent[] = [];
-  private scheduler = new Subject<void>();
+  private timeout: Timeout = null;
+  private timeoutSetTime = 0;
   private darkMode: boolean;
 
   constructor(private facade: PlaidFacade) {
-    this.scheduler.asObservable().pipe(debounceTime(250)).subscribe(() => {
-      this.panels.forEach(panel => panel.checkSizeAndPosition());
-    });
     fromEvent(window, 'resize').subscribe(() => this.scheduleCheckSizeAndPosition());
     facade.getDarkMode$().subscribe(darkMode => {
       this.darkMode = darkMode;
@@ -40,6 +38,13 @@ export class WorklogPanelsManagerService {
   }
 
   scheduleCheckSizeAndPosition(): void {
-    this.scheduler.next();
+    const now: number = new Date().getTime();
+    if (Math.abs(now - this.timeoutSetTime) > 10) {
+      this.timeoutSetTime = now;
+      if (this.timeout != null) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = setTimeout(() => this.panels.forEach(panel => panel.checkSizeAndPosition()), 250);
+    }
   }
 }
