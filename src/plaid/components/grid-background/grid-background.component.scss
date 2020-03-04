@@ -6,6 +6,7 @@
   flex: 0;
   min-width: 30px;
   max-width: 30px;
+  border-right: var(--separator-60min);
   position: sticky;
   left: 0;
   z-index: 2;
@@ -32,13 +33,18 @@
 }
 
 .weekday-label {
-  border-right: var(--separator-60min);
+  position: absolute;
+  left: 0;
   border-top: var(--separator-60min);
   width: 30px;
   text-align: center;
 }
 
 .weekday-tenmin {
+  position: absolute;
+  left: 0;
+  width: 100%;
+
   &:nth-child(6n+1) {
     border-top: var(--separator-60min);
     border-bottom: var(--separator-5min);

@@ -8,14 +8,13 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   templateUrl: './zoom-controls.component.html'
 })
 export class ZoomControlsComponent implements OnInit {
-  static readonly PIXELS_PER_MINUTE_VALUES: number[] = [1, 2, 3, 4, 6, 8, 12, 16];
+  static readonly PIXELS_PER_MINUTE_VALUES: number[] = [1, 1.5, 2, 3, 4, 6, 8, 10, 13, 16];
   static readonly MIN_PIXELS_PER_MINUTE = 1;
   static readonly MAX_PIXELS_PER_MINUTE = 16;
 
   pixelsPerMinute = 2;
   zoomInButtonActive = false;
   zoomOutButtonActive = false;
-  lastScrollAbsDeltaY: number;
 
   @Input()
   shortcutsDisabled = false;
@@ -25,30 +24,21 @@ export class ZoomControlsComponent implements OnInit {
 
   ngOnInit(): void {
     // Singleton component, no need to unbind events
-    addEventListener('wheel', (e: WheelEvent) => { // Ctrl mouse wheel
+    addEventListener('wheel', (e: WheelEvent) => { // Ctrl mouse wheel, Ctrl two finger swipe, pinch
       if (!this.shortcutsDisabled && e.ctrlKey) {
-        if (this.lastScrollAbsDeltaY == null) {
-          this.lastScrollAbsDeltaY = Math.abs(e.deltaY);
-        }
-        if (Math.abs(e.deltaY) < 10 || this.lastScrollAbsDeltaY !== Math.abs(e.deltaY)) {
-          // High precision zooming as determined by rapidly changing or very low delta
-          this.pixelsPerMinute = Math.min(
-            ZoomControlsComponent.MAX_PIXELS_PER_MINUTE,
-            Math.max(
-              this.pixelsPerMinute - e.deltaY * this.pixelsPerMinute / 100,
-              ZoomControlsComponent.MIN_PIXELS_PER_MINUTE
-            )
-          );
-          this.pixelsPerMinuteChange.emit(this.pixelsPerMinute);
+        if (e.deltaY > 0) {
+          this.pixelsPerMinute /= 1 + e.deltaY / 300;
         } else {
-          // Regular mouse wheel zooming
-          if (e.deltaY > 0) {
-            this.zoomOut();
-          } else if (e.deltaY < 0) {
-            this.zoomIn();
-          }
+          this.pixelsPerMinute *= 1 - e.deltaY / 300;
         }
-        this.lastScrollAbsDeltaY = Math.abs(e.deltaY);
+
+        if (this.pixelsPerMinute < ZoomControlsComponent.MIN_PIXELS_PER_MINUTE) {
+          this.pixelsPerMinute = ZoomControlsComponent.MIN_PIXELS_PER_MINUTE;
+        } else if (this.pixelsPerMinute > ZoomControlsComponent.MAX_PIXELS_PER_MINUTE) {
+          this.pixelsPerMinute = ZoomControlsComponent.MAX_PIXELS_PER_MINUTE;
+        }
+        // Emitting a value with reasonably reduced binary and decimal precision
+        this.pixelsPerMinuteChange.emit(Math.round(this.pixelsPerMinute * 128) / 128);
         e.preventDefault();
       }
     }, {passive: false});

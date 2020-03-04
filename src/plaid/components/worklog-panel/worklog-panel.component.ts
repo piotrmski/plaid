@@ -72,9 +72,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   set pixelsPerMinute(pixelsPerMinute: number) {
     this._pixelsPerMinute = pixelsPerMinute;
     this.computeHeightAndOffset();
-    if (pixelsPerMinute % 1 === 0) {
-      this.manager.scheduleCheckSizeAndPosition();
-    }
+    this.manager.scheduleCheckSizeAndPosition();
   }
   get pixelsPerMinute(): number {
     return this._pixelsPerMinute;
