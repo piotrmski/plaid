@@ -23,8 +23,18 @@ export class ZoomControlsComponent implements OnInit {
   @Input()
   shortcutsDisabled = false;
 
+  /**
+   * Pixels per minute value emitted only after animation is done or if there was no animation. Distinguished to enable
+   * performance optimizations.
+   */
   @Output()
-  pixelsPerMinuteChange = new EventEmitter<number>();
+  pixelsPerMinuteFinalChange = new EventEmitter<number>();
+
+  /**
+   * Pixels per minute value emitted only during easing animation. Distinguished to enable performance optimizations.
+   */
+  @Output()
+  pixelsPerMinuteIntermediateChange = new EventEmitter<number>();
 
   ngOnInit(): void {
     this.pixelsPerMinuteBase = 1.25;
@@ -65,19 +75,19 @@ export class ZoomControlsComponent implements OnInit {
       this._pixelsPerMinuteBase = val;
       this.animatedPixelsPerMinuteBase = val;
       // Emitted value has reduced binary and decimal precision not to brake layout.
-      this.pixelsPerMinuteChange.emit(Math.round(this._pixelsPerMinuteBase * this._pixelsPerMinuteBase * 128) / 128);
+      this.pixelsPerMinuteFinalChange.emit(Math.round(this._pixelsPerMinuteBase * this._pixelsPerMinuteBase * 128) / 128);
     } else if (this._pixelsPerMinuteBase !== val) { // If this is a subsequent change of pixelsPerMinuteBase
       const change = this.animatedPixelsPerMinuteBase - val;
       if (Math.abs(change) < 0.05) { // If change was minimal (less than 0.05), emit final value immediately.
         this.animatedPixelsPerMinuteBase = val;
         this.animatedPixelsPerMinuteBaseRateOfChange = 0;
-        this.pixelsPerMinuteChange.emit(Math.round(val * val * 128) / 128);
+        this.pixelsPerMinuteFinalChange.emit(Math.round(val * val * 128) / 128);
       } else {
         // If new animation was started during previous animation, change animation starting value to previous animation
         // final value and emit it immediately.
         if (this.animatedPixelsPerMinuteBase !== this._pixelsPerMinuteBase) {
           this.animatedPixelsPerMinuteBase = this._pixelsPerMinuteBase;
-          this.pixelsPerMinuteChange.emit(Math.round(this._pixelsPerMinuteBase * this._pixelsPerMinuteBase * 128) / 128);
+          this.pixelsPerMinuteFinalChange.emit(Math.round(this._pixelsPerMinuteBase * this._pixelsPerMinuteBase * 128) / 128);
         }
         // If change is over 0.15, animate change over 100 ms. Otherwise interpolate the animation duration linearly.
         const animationDuration: number = Math.abs(change) > 0.15 ? 100 : (Math.abs(change) * 1000 - 50);
@@ -105,7 +115,7 @@ export class ZoomControlsComponent implements OnInit {
       this.animatedPixelsPerMinuteBase = this._pixelsPerMinuteBase;
       this.requestAnimationFrameHandle = null;
       // Emitted value has reduced binary and decimal precision not to brake layout.
-      this.pixelsPerMinuteChange.emit(Math.round(this._pixelsPerMinuteBase * this._pixelsPerMinuteBase * 128) / 128);
+      this.pixelsPerMinuteFinalChange.emit(Math.round(this._pixelsPerMinuteBase * this._pixelsPerMinuteBase * 128) / 128);
     } else { // If animation is in progress
       // Animation progress, from 0 to 1.
       const x: number = (now - animationStartTime) / animationDuration;
@@ -118,7 +128,9 @@ export class ZoomControlsComponent implements OnInit {
           (newAnimatedPixelsPerMinuteBase - this.animatedPixelsPerMinuteBase) / (now - lastExecutionTime);
       }
       this.animatedPixelsPerMinuteBase = newAnimatedPixelsPerMinuteBase;
-      this.pixelsPerMinuteChange.emit(Math.round(this.animatedPixelsPerMinuteBase * this.animatedPixelsPerMinuteBase * 128) / 128);
+      this.pixelsPerMinuteIntermediateChange.emit(
+        Math.round(this.animatedPixelsPerMinuteBase * this.animatedPixelsPerMinuteBase * 128) / 128
+      );
       this.requestAnimationFrameHandle = requestAnimationFrame(
         () => this.animatePixelsPerMinuteBase(animationStartTime, animationDuration, A, B, now)
       );

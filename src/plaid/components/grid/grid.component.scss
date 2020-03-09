@@ -84,6 +84,7 @@
   left: 30px;
   width: calc(100% - 30px);
   display: flex;
+  transform-origin: top;
 
   .worklog-panels-area-column {
     flex: 1;

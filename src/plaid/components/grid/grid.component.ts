@@ -26,6 +26,7 @@ export class GridComponent implements AfterViewInit {
   timeSums: string[];
   _pixelsPerMinute: number;
   forcedHeight: number = null;
+  timeout: number;
 
   /**
    * Whether an overlay with a spinner should be visible
@@ -49,11 +50,15 @@ export class GridComponent implements AfterViewInit {
       + (change - 1) * this.hostElement.nativeElement.clientHeight * 0.5;
     if (newScrollTop + this.hostElement.nativeElement.clientHeight > this.hostElement.nativeElement.scrollHeight) {
       this.forcedHeight = newScrollTop + this.hostElement.nativeElement.clientHeight;
-      setTimeout(() => {
+      if (this.timeout != null) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = setTimeout(() => {
         this.hostElement.nativeElement.scrollTop = newScrollTop;
         this.forcedHeight = null;
         this._pixelsPerMinute = ppm;
         this.cdr.detectChanges();
+        this.timeout = null;
       });
     } else {
       this.hostElement.nativeElement.scrollTop = newScrollTop;
@@ -63,6 +68,13 @@ export class GridComponent implements AfterViewInit {
   get pixelsPerMinute(): number {
     return this._pixelsPerMinute;
   }
+
+  /**
+   * Most of the time pixelsPerMinuteFinal is equal to pixelsPerMinute, except it does not change during zoom easing
+   * animation.
+   */
+  @Input()
+  pixelsPerMinuteFinal: number;
 
   /**
    * Work log entries displayed on the grid. Entries outside dateRange are discarded. Entries in sections of overlapping
