@@ -70,13 +70,6 @@ export class GridComponent implements AfterViewInit {
   }
 
   /**
-   * Most of the time pixelsPerMinuteFinal is equal to pixelsPerMinute, except it does not change during zoom easing
-   * animation.
-   */
-  @Input()
-  pixelsPerMinuteFinal: number;
-
-  /**
    * Work log entries displayed on the grid. Entries outside dateRange are discarded. Entries in sections of overlapping
    * logs are displayed side by side in columns.
    */

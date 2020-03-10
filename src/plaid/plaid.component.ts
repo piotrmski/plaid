@@ -15,7 +15,6 @@ import {ConnectionIssueModalVisible} from './components/connection-issue-resolve
 })
 export class PlaidComponent implements OnInit {
   pixelsPerMinute: number;
-  pixelsPerMinuteFinal: number;
   worklogs: Worklog[];
   loading: boolean;
   _selectedDateRange: DateRange;

@@ -9,8 +9,7 @@
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-refresh-button>
   <plaid-zoom-controls
-    (pixelsPerMinuteFinalChange)="pixelsPerMinute = pixelsPerMinuteFinal = $event"
-    (pixelsPerMinuteIntermediateChange)="pixelsPerMinute = $event"
+    (pixelsPerMinuteChange)="pixelsPerMinute = $event"
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-zoom-controls>
   <plaid-auth-status
@@ -20,7 +19,6 @@
   ></plaid-auth-status>
 </div>
 <plaid-grid
-  [pixelsPerMinuteFinal]="pixelsPerMinuteFinal"
   [pixelsPerMinute]="pixelsPerMinute"
   [worklogs]="worklogs"
   [dateRange]="selectedDateRange"
