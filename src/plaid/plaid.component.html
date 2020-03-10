@@ -9,7 +9,7 @@
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-refresh-button>
   <plaid-zoom-controls
-    [(pixelsPerMinute)]="pixelsPerMinute"
+    (pixelsPerMinuteChange)="pixelsPerMinute = $event"
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-zoom-controls>
   <plaid-auth-status

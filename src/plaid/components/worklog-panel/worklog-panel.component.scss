@@ -44,7 +44,7 @@ p {
   border-radius: 5px;
   border: 1px solid;
   overflow: hidden;
-  padding: 2px 5px 5px;
+  padding: 0 5px;
   transition: 0.2s background-color, 0.2s box-shadow;
   display: flex;
   flex-direction: column;
@@ -61,6 +61,7 @@ p {
 .panel-content {
   flex-grow: 1;
   position: relative;
+  padding: 2px 0;
 }
 
 .parent-name {
@@ -109,7 +110,7 @@ p {
 .button.edit-button {
   opacity: 0;
   position: absolute;
-  bottom: 0;
+  bottom: 5px;
   right: 0;
   z-index: 1;
   cursor: default!important;
