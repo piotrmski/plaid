@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
+  Input,
   OnInit,
   Output
 } from '@angular/core';
@@ -21,12 +23,17 @@ import {DatePipe} from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateRangePickerComponent implements OnInit {
-  @Output()
-  selectedDateRange = new EventEmitter<DateRange>();
   _selectedDateRange: DateRange;
   month: Date;
   today: Date;
   _calendarOpen = false;
+  decrementWeekButtonActive = false;
+  incrementWeekButtonActive = false;
+
+  @Output()
+  selectedDateRange = new EventEmitter<DateRange>();
+  @Input()
+  shortcutsDisabled = false;
 
   readonly months: string[] = [
     'January',
@@ -56,7 +63,7 @@ export class DateRangePickerComponent implements OnInit {
   /**
    * Initialize by selecting current week.
    */
-  constructor(private ref: ElementRef) {
+  constructor(private ref: ElementRef, private cdr: ChangeDetectorRef) {
     const curTime: Date = new Date();
     this.month = new Date(curTime.getFullYear(), curTime.getMonth());
     this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
@@ -67,6 +74,26 @@ export class DateRangePickerComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedDateRange.emit(this._selectedDateRange);
+    // Singleton component, no need to unbind events
+    addEventListener('keydown', (e: KeyboardEvent) => {
+      if (!this.shortcutsDisabled) {
+        if (e.key === 'F4') {
+          this.decrementWeekButtonActive = true;
+          this.decrementWeek();
+          setTimeout(() => {
+            this.decrementWeekButtonActive = false;
+            this.cdr.detectChanges();
+          }, 50);
+        } else if (e.key === 'F6') {
+          this.incrementWeekButtonActive = true;
+          this.incrementWeek();
+          setTimeout(() => {
+            this.incrementWeekButtonActive = false;
+            this.cdr.detectChanges();
+          }, 50);
+        }
+      }
+    });
   }
 
   /**
