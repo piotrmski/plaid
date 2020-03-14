@@ -1,29 +1,27 @@
-<plaid-connection-issue-resolver
-  [changeCredentials]="changeCredentials"
-  (modalVisible)="connectionIssueResolverModalVisible = $event"
-></plaid-connection-issue-resolver>
+<plaid-connection-issue-resolver></plaid-connection-issue-resolver>
 <div class="top-bar">
   <plaid-date-range-picker
     (selectedDateRange)="selectedDateRange = $event"
+    [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-date-range-picker>
   <plaid-refresh-button
     (refresh)="refresh()"
     [disabled]="!currentUser"
-    [shortcutsDisabled]="connectionIssueResolverModalVisible"
+    [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-refresh-button>
   <plaid-zoom-controls
-    [(pixelsPerMinute)]="pixelsPerMinute"
-    [shortcutsDisabled]="connectionIssueResolverModalVisible"
+    (pixelsPerMinuteChange)="pixelsPerMinute = $event"
+    [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-zoom-controls>
   <plaid-auth-status
     [user]="currentUser"
-    (changeCredentials)="changeCredentials.emit()"
+    (changeCredentials)="changeCredentials()"
     (forgetAccount)="forgetAccount()"
   ></plaid-auth-status>
 </div>
-<plaid-planner
+<plaid-grid
   [pixelsPerMinute]="pixelsPerMinute"
   [worklogs]="worklogs"
   [dateRange]="selectedDateRange"
   [loading]="loading"
-></plaid-planner>
+></plaid-grid>

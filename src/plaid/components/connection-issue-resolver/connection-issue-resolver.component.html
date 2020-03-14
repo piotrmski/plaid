@@ -1,5 +1,5 @@
-<div class="modal-background" [class.visible]="errorModalVisible || lostConnectionModalVisible || loginModalVisible">
-  <div class="modal" [class.open]="errorModalVisible">
+<div class="modal-background" [class.visible]="modalVisible !== ConnectionIssueModalVisible.NONE">
+  <div class="modal" [class.open]="modalVisible === ConnectionIssueModalVisible.ERROR">
     <div class="modal-header">
       Application error
     </div>
@@ -7,11 +7,11 @@
       {{ error ? error.message : null }}
     </div>
     <div class="modal-footer">
-      <button class="button" (click)="errorModalVisible = false; modalVisible.emit(false)">Close</button>
+      <button class="button" (click)="closeModal()">Close</button>
     </div>
   </div>
 
-  <div class="modal" [class.open]="lostConnectionModalVisible">
+  <div class="modal" [class.open]="modalVisible === ConnectionIssueModalVisible.LOST_CONNECTION">
     <div class="modal-header">
       Connection error
     </div>
@@ -19,15 +19,14 @@
       Could not connect to Jira. Verify your internet connection and retry.
     </div>
     <div class="modal-footer">
-      <button class="button primary" (click)="resubmit()" [disabled]="fetching">
+      <button class="button primary" (click)="reconnect()" [disabled]="fetching">
         <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Retry</ng-container>
       </button>
-      <button class="button" (click)="lostConnectionModalVisible = false; modalVisible.emit(false)">Close</button>
     </div>
   </div>
 
-  <form #form="ngForm" class="modal" [class.open]="loginModalVisible">
+  <form #form="ngForm" class="modal" [class.open]="modalVisible === ConnectionIssueModalVisible.LOGIN">
     <div class="modal-header">
       Log in to Jira
     </div>
@@ -42,7 +41,7 @@
         <ng-container *ngIf="error.status === 0">
           Could not connect to Jira. Verify the URL and your internet connection.
         </ng-container>
-        <ng-container *ngIf="[0, 401, 403].indexOf(error.status) === -1">
+        <ng-container *ngIf="![0, 401, 403].includes(error.status)">
           {{ error.message }}
         </ng-container>
       </p>
@@ -58,11 +57,11 @@
       <input name="password" type="password" [(ngModel)]="authInfo.password" required>
     </div>
     <div class="modal-footer">
-      <button class="button primary" (click)="submit()" [disabled]="form.invalid || fetching">
+      <button class="button primary" (click)="login()" [disabled]="form.invalid || fetching">
         <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Log in</ng-container>
       </button>
-      <button class="button" (click)="loginModalVisible = false; modalVisible.emit(false)">Cancel</button>
+      <button class="button" (click)="closeModal()" [disabled]="fetching">Cancel</button>
     </div>
   </form>
 </div>

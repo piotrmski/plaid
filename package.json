@@ -1,7 +1,7 @@
 {
   "name": "plaid",
   "productName": "Plaid",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": {
     "name": "Piotr Marczyński",
     "email": "piotmski@gmail.com"
@@ -74,8 +74,8 @@
     "@angular/language-service": "^9.0.2",
     "@types/node": "^12.12.28",
     "codelyzer": "^5.1.2",
-    "electron": "^8.0.1",
-    "electron-builder": "^22.3.2",
+    "electron": "^8.1.1",
+    "electron-builder": "^22.4.1",
     "ts-node": "~8.6.2",
     "tslint": "~5.20.1",
     "typescript": "~3.7.5"

@@ -1,0 +1,17 @@
+<div class="weekday-labels" [style.height.px]="pixelsPerMinute * 1440">
+  <div
+    *ngFor="let hour of hoursLabels; index as i"
+    class="weekday-label"
+    [style.height.px]="pixelsPerMinute * 60"
+    [style.top.px]="pixelsPerMinute * 60 * i"
+  >{{ hour }}</div>
+</div>
+<div class="horizontal-dividers">
+  <div
+    *ngFor="let _ of minutesGrid; index as i"
+    class="weekday-tenmin"
+    [style.height.px]="pixelsPerMinute * 5 + 1"
+    [style.top.px]="pixelsPerMinute * 10 * i"
+  ></div>
+</div>
+<div class="weekday" *ngFor="let _ of weekdays"></div>
