@@ -2,6 +2,21 @@
 
 ## 0.3
 
+**0.3.1**
+
+- zooming tweaks:
+  - zooming with buttons and keyboard shortcuts is now by slightly smaller increments,
+  - zooming with low precision mouse wheel is now by significantly smaller increments,
+  - zooming with high precision touch pad is now smooth
+- added shortcuts:
+  - Ctrl _ to zoom out (in addition to Ctrl -),
+  - F4 to go to previous week,
+  - F6 to go to next week,
+- labeled most buttons
+- swapped places of zoom in and out buttons
+- tweaked opening week picker to show the month which monday of current week is in instead of sunday
+- updated dependencies
+
 **0.3.0**
 
 ![Dark mode, current time marker](https://raw.githubusercontent.com/piotrmski/plaid/master/changelog-screenshots/0.3.png)
