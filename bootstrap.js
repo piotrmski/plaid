@@ -1,17 +1,25 @@
 const {app, BrowserWindow} = require('electron');
 const {autoUpdater} = require('electron-updater');
+const windowStateKeeper = require('electron-window-state');
 
 let checkedForUpdate = false;
 
 function createWindow(dev) {
-  if (!checkedForUpdate) {
-    autoUpdater.checkForUpdatesAndNotify();
+  if (!checkedForUpdate) { // Check for update once in the process (if subsequent windows are opened, don't check again)
+    autoUpdater.checkForUpdatesAndNotify(); // Note to self: don't mess that one up!
     checkedForUpdate = true;
   }
 
+  const windowState = windowStateKeeper({
+    defaultWidth: 1400,
+    defaultHeight: 800
+  });
+
   const window = new BrowserWindow({
-    width: 1400,
-    height: 800,
+    width: windowState.width,
+    height: windowState.height,
+    x: windowState.x,
+    y: windowState.y,
     minWidth: 400,
     minHeight: 200,
     show: false,
@@ -35,6 +43,7 @@ function createWindow(dev) {
     window.setMenu(null);
     window.loadFile('build/index.html');
   }
+  windowState.manage(window);
   window.show();
 }
 
