@@ -20,6 +20,7 @@
     "appId": "com.github.piotrmski.plaid",
     "files": [
       "main.js",
+      "bootstrap.js",
       "build"
     ],
     "win": {
