@@ -21,6 +21,7 @@
     "files": [
       "main.js",
       "bootstrap.js",
+      "window-state.js",
       "build"
     ],
     "win": {
@@ -62,7 +63,6 @@
     "@openfonts/comfortaa_latin": "^1.44.3",
     "@openfonts/source-sans-pro_all": "^1.44.0",
     "electron-updater": "^4.2.5",
-    "electron-window-state": "^5.0.3",
     "mousetrap": "^1.6.5",
     "ngx-electron": "~2.2.0",
     "rxjs": "~6.5.4",

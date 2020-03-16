@@ -1,25 +1,25 @@
 const {app, BrowserWindow} = require('electron');
 const {autoUpdater} = require('electron-updater');
-const windowStateKeeper = require('electron-window-state');
+const {getNewWindowRect, getNewWindowMaximized, saveWindowState} = require('./window-state');
 
-let checkedForUpdate = false;
+let firstWindowCreated = false;
 
 function createWindow(dev) {
-  if (!checkedForUpdate) { // Check for update once in the process (if subsequent windows are opened, don't check again)
+  if (!firstWindowCreated) { // Check for update once in the process (if subsequent windows are opened, don't check again)
     autoUpdater.checkForUpdatesAndNotify(); // Note to self: don't mess that one up!
-    checkedForUpdate = true;
   }
 
-  const windowState = windowStateKeeper({
+  const windowRect = getNewWindowRect({
     defaultWidth: 1400,
-    defaultHeight: 800
+    defaultHeight: 800,
+    isFirstWindow: !firstWindowCreated
   });
 
   const window = new BrowserWindow({
-    width: windowState.width,
-    height: windowState.height,
-    x: windowState.x,
-    y: windowState.y,
+    width: windowRect.width,
+    height: windowRect.height,
+    x: windowRect.x,
+    y: windowRect.y,
     minWidth: 400,
     minHeight: 200,
     show: false,
@@ -27,6 +27,10 @@ function createWindow(dev) {
       nodeIntegration: true,
       webSecurity: false
     }
+  });
+
+  window.on('close', () => {
+    saveWindowState(window.getNormalBounds(), window.isFullScreen());
   });
 
   // Strip User-Agent request headers due to restrictions in Jira REST API:
@@ -43,8 +47,11 @@ function createWindow(dev) {
     window.setMenu(null);
     window.loadFile('build/index.html');
   }
-  windowState.manage(window);
+  if (getNewWindowMaximized()) {
+    window.maximize();
+  }
   window.show();
+  firstWindowCreated = true;
 }
 
 module.exports = function(dev) {
