@@ -30,7 +30,7 @@ function createWindow(dev) {
   });
 
   window.on('close', () => {
-    saveWindowState(window.getNormalBounds(), window.isFullScreen());
+    saveWindowState(window.getNormalBounds(), window.isMaximized());
   });
 
   // Strip User-Agent request headers due to restrictions in Jira REST API:
@@ -47,7 +47,7 @@ function createWindow(dev) {
     window.setMenu(null);
     window.loadFile('build/index.html');
   }
-  if (getNewWindowMaximized()) {
+  if (getNewWindowMaximized(!firstWindowCreated)) {
     window.maximize();
   }
   window.show();
