@@ -1,7 +1,7 @@
 {
   "name": "plaid",
   "productName": "Plaid",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": {
     "name": "Piotr Marczyński",
     "email": "piotmski@gmail.com"
@@ -20,6 +20,8 @@
     "appId": "com.github.piotrmski.plaid",
     "files": [
       "main.js",
+      "bootstrap.js",
+      "window-state.js",
       "build"
     ],
     "win": {
@@ -50,29 +52,29 @@
   },
   "private": false,
   "dependencies": {
-    "@angular/animations": "^9.0.2",
-    "@angular/common": "^9.0.2",
-    "@angular/compiler": "^9.0.2",
-    "@angular/core": "^9.0.2",
-    "@angular/forms": "^9.0.2",
-    "@angular/platform-browser": "^9.0.2",
-    "@angular/platform-browser-dynamic": "^9.0.2",
-    "@angular/router": "^9.0.2",
+    "@angular/animations": "^9.0.6",
+    "@angular/common": "^9.0.6",
+    "@angular/compiler": "^9.0.6",
+    "@angular/core": "^9.0.6",
+    "@angular/forms": "^9.0.6",
+    "@angular/platform-browser": "^9.0.6",
+    "@angular/platform-browser-dynamic": "^9.0.6",
+    "@angular/router": "^9.0.6",
     "@openfonts/comfortaa_latin": "^1.44.3",
     "@openfonts/source-sans-pro_all": "^1.44.0",
-    "electron-updater": "^4.2.2",
+    "electron-updater": "^4.2.5",
     "mousetrap": "^1.6.5",
     "ngx-electron": "~2.2.0",
     "rxjs": "~6.5.4",
-    "tslib": "^1.11.0",
+    "tslib": "^1.11.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.900.3",
-    "@angular/cli": "^9.0.3",
-    "@angular/compiler-cli": "^9.0.2",
-    "@angular/language-service": "^9.0.2",
-    "@types/node": "^12.12.28",
+    "@angular-devkit/build-angular": "^0.900.6",
+    "@angular/cli": "^9.0.6",
+    "@angular/compiler-cli": "^9.0.6",
+    "@angular/language-service": "^9.0.6",
+    "@types/node": "^12.12.30",
     "codelyzer": "^5.1.2",
     "electron": "^8.1.1",
     "electron-builder": "^22.4.1",
