@@ -2,6 +2,11 @@
 
 ## 0.3
 
+**0.3.2**
+
+- window size and position is now persistent
+- fixed bug occurring when multiple windows are opened, causing subsequent windows to launch slowly and logged out
+
 **0.3.1**
 
 - zooming tweaks:
