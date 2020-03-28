@@ -21,6 +21,8 @@
     <div class="panel-content">
       <a
         class="button edit-button"
+        [plaidExtHref]="jiraURL + '/secure/UpdateWorklog!default.jspa?id=' + worklog.issueId + '&worklogId=' + worklog.id"
+        title="Edit log"
         (click)="edit.emit(worklog)"
       >
         <svg class="icon"><use href="assets/icons.svg#edit"></use></svg>
@@ -29,6 +31,7 @@
         class="parent-name"
         *ngIf="worklog.issue.fields.parent"
         [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.fields.parent.key"
+        title="Show parent issue"
       >
         <svg class="icon-parent"><use href="assets/icons.svg#parent"></use></svg>
         <b>{{ worklog.issue.fields.parent.key }}</b>
@@ -37,6 +40,7 @@
       <p
         class="name"
         [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.key"
+        title="Show issue"
       >
         <b>{{ worklog.issue.key }}</b>
         {{ worklog.issue.fields.summary }}

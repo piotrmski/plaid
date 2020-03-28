@@ -5,4 +5,4 @@
 # You can see what browsers were selected by your queries by running:
 #   npx browserslist
 
-Electron 6.0.1
+Electron 8.1.1

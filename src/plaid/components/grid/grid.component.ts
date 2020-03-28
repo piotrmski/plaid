@@ -26,6 +26,7 @@ export class GridComponent implements AfterViewInit {
   timeSums: string[];
   _pixelsPerMinute: number;
   forcedHeight: number = null;
+  timeout: number;
   editedWorklog: Worklog;
 
   /**
@@ -45,16 +46,20 @@ export class GridComponent implements AfterViewInit {
     // Otherwise the scrollable content needs to first be stretched high enough, and in the next event loop cycle new
     // scrollTop and new pixelsPerMinute value can be applied. Visually this manifests only on the scroll bar, which
     // isn't in the center of attention.
+    if (this.timeout != null) {
+      clearTimeout(this.timeout);
+    }
     const change = ppm / this._pixelsPerMinute;
     const newScrollTop = change * this.hostElement.nativeElement.scrollTop
       + (change - 1) * this.hostElement.nativeElement.clientHeight * 0.5;
     if (newScrollTop + this.hostElement.nativeElement.clientHeight > this.hostElement.nativeElement.scrollHeight) {
       this.forcedHeight = newScrollTop + this.hostElement.nativeElement.clientHeight;
-      setTimeout(() => {
+      this.timeout = setTimeout(() => {
         this.hostElement.nativeElement.scrollTop = newScrollTop;
         this.forcedHeight = null;
         this._pixelsPerMinute = ppm;
         this.cdr.detectChanges();
+        this.timeout = null;
       });
     } else {
       this.hostElement.nativeElement.scrollTop = newScrollTop;

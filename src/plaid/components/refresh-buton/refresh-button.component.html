@@ -1,3 +1,10 @@
-<a class="button" [class.disabled]="disabled" (click)="doRefresh()" #button [class.active]="buttonActive">
+<a
+  class="button"
+  [class.disabled]="disabled"
+  (click)="doRefresh()"
+  #button
+  [class.active]="buttonActive"
+  title="Refresh (F5)"
+>
   <svg class="icon"><use href="assets/icons.svg#refresh"></use></svg>
 </a>
