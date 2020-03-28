@@ -21,7 +21,6 @@
     <div class="panel-content">
       <a
         class="button edit-button"
-        [plaidExtHref]="jiraURL + '/secure/UpdateWorklog!default.jspa?id=' + worklog.issueId + '&worklogId=' + worklog.id"
         title="Edit log"
         (click)="edit.emit(worklog)"
       >
