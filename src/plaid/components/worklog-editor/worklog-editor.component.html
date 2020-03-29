@@ -1,7 +1,7 @@
 <div
   class="wrapper"
   [class.visible]="worklog"
-  (mousedown)="cancelEdit.emit()"
+  (mousedown)="handleClickOutsideEditor($event)"
   [class.dragging]="dragging"
   [class.stretching]="stretching"
 >
@@ -12,28 +12,46 @@
     [style.width.%]="panelWidth * 100"
     [style.height.px]="panelHeight"
     [class.visible]="editedPanelInRange"
-  >
-    <div
-      class="panel"
-      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
-      (mousedown)="dragStart($event); $event.stopPropagation()"
-      title="Hold:
+    title="Hold:
 Alt to snap to 1 minute,
 nothing to snap to 5 minutes,
 Shift to snap to 15 minutes,
 Ctrl to snap to 60 minutes."
+  >
+    <div
+      #panel
+      class="panel"
+      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      (mousedown)="dragStart($event); $event.stopPropagation()"
     >
-
-      <div
-        class="handle-top"
-        [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
-        (mousedown)="stretchTopStart($event); $event.stopPropagation()"
-      ></div>
-      <div
-        class="handle-bottom"
-        [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
-        (mousedown)="stretchBottomStart($event); $event.stopPropagation()"
-      ></div>
+      <label>Issue</label>
+      <input
+        disabled
+        [value]="issueString"
+        title=""
+      >
+      <label>Date</label>
+      <input
+        disabled
+        [value]="dateString"
+        title=""
+      >
+      <label>Comment</label>
+      <textarea
+        [value]="commentString"
+        title=""
+      ></textarea>
     </div>
+
+    <div
+      class="handle-top"
+      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      (mousedown)="stretchTopStart($event); $event.stopPropagation()"
+    ></div>
+    <div
+      class="handle-bottom"
+      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      (mousedown)="stretchBottomStart($event); $event.stopPropagation()"
+    ></div>
   </div>
 </div>

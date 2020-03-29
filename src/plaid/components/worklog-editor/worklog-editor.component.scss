@@ -52,6 +52,17 @@
   border-style: solid;
   border-radius: 5px;
   cursor: move;
+  padding: 0 10px;
+  overflow-y: hidden;
+
+  & > label {
+    cursor: move;
+    pointer-events: none;
+  }
+
+  &:hover {
+    overflow-y: overlay;
+  }
 }
 
 .handle-top, .handle-bottom {

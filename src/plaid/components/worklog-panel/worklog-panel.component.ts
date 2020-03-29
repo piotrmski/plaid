@@ -13,6 +13,7 @@ import {
 import {Worklog} from '../../models/worklog';
 import {PlaidFacade} from '../../plaid.facade';
 import {WorklogPanelsManagerService} from './worklog-panels-manager.service';
+import {Format} from '../../helpers/format';
 
 /**
  * Somewhat dumb component, present a panel representing a work log entry, makes use of its own service to manage
@@ -117,23 +118,17 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     const startTime = new Date(this.worklog.started);
     const endTime = new Date(startTime);
     endTime.setTime(endTime.getTime() + this.worklog.timeSpentSeconds * 1000);
+    const justBeforeEndTime = new Date(endTime);
+    justBeforeEndTime.setTime(endTime.getTime() - 1);
 
     if (
-      startTime.getFullYear() === endTime.getFullYear() &&
-      startTime.getMonth() === endTime.getMonth() &&
-      startTime.getDate() === endTime.getDate()
+      startTime.getFullYear() === justBeforeEndTime.getFullYear() &&
+      startTime.getMonth() === justBeforeEndTime.getMonth() &&
+      startTime.getDate() === justBeforeEndTime.getDate()
     ) {
-      this.timeRange = startTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) + ' - ' +
-        endTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+      this.timeRange = Format.time(startTime) + ' - ' + Format.time(endTime);
     } else {
-      let sumOfSeconds = this.worklog.timeSpentSeconds;
-      const hours: number = Math.floor(sumOfSeconds / 3600);
-      sumOfSeconds -= hours * 3600;
-      const minutes: number = Math.floor(sumOfSeconds / 60);
-      sumOfSeconds -= minutes * 60;
-      const seconds: number = sumOfSeconds;
-      this.timeRange = 'Since ' + startTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) +
-        ' for ' + (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + (seconds ? seconds + 's' : '');
+      this.timeRange = 'Since ' + Format.time(startTime) + ' for ' + Format.timePeriod(this.worklog.timeSpentSeconds);
     }
   }
 

@@ -2,13 +2,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
-  OnInit,
+  ViewChild,
   Output
 } from '@angular/core';
 import {DateRange} from '../../models/date-range';
 import {Worklog} from '../../models/worklog';
+import {Format} from '../../helpers/format';
 
 @Component({
   selector: 'plaid-worklog-editor',
@@ -38,6 +40,12 @@ export class WorklogEditorComponent {
   mouseEventXOffset: number;
   mouseEventYOffset: number;
   mousemoveEventListener: (e: MouseEvent) => void;
+  issueString: string;
+  dateString: string;
+  commentString: string;
+
+  @ViewChild('panel')
+  panel: ElementRef<HTMLDivElement>;
 
   @Output()
   cancelEdit = new EventEmitter<void>();
@@ -86,6 +94,9 @@ export class WorklogEditorComponent {
       this.panelHue = Math.round((Number(this.worklog.issue.fields.parent
         ? this.worklog.issue.fields.parent.id
         : this.worklog.issue.id) * 360 / 1.61803)) % 360;
+      this.issueString = worklog.issue.key + ' - ' + worklog.issue.fields.summary;
+      this.dateString = Format.date(this.start);
+      this.commentString = worklog.comment;
       if (this.editedPanelInRange) {
         this.computeSizeAndOffset();
       }
@@ -109,12 +120,14 @@ export class WorklogEditorComponent {
   }
 
   dragStart(event: MouseEvent): void {
-    this.dragging = true;
-    this.mouseEventXOffset = event.offsetX;
-    this.mouseEventYOffset = event.offsetY;
-    this.mousemoveEventListener = e => this.handleDragEvent(e);
-    document.addEventListener('mousemove', this.mousemoveEventListener);
-    document.addEventListener('mouseup', () => this.dragEnd(), {once: true});
+    if (event.button === 0 && event.target === this.panel.nativeElement) {
+      this.dragging = true;
+      this.mouseEventXOffset = event.offsetX;
+      this.mouseEventYOffset = event.offsetY;
+      this.mousemoveEventListener = e => this.handleDragEvent(e);
+      document.addEventListener('mousemove', this.mousemoveEventListener);
+      document.addEventListener('mouseup', () => this.dragEnd(), {once: true});
+    }
   }
 
   dragEnd(): void {
@@ -153,6 +166,7 @@ export class WorklogEditorComponent {
         this.date = newDate;
       }
       this.start.setFullYear(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
+      this.dateString = Format.date(this.start);
     }
 
     if (oldStartTimeMinutes !== newStartTimeMinutes || oldDate.getTime() !== newDate.getTime()) {
@@ -162,19 +176,23 @@ export class WorklogEditorComponent {
   }
 
   stretchTopStart(event: MouseEvent): void {
-    this.stretching = true;
-    this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
-    this.mousemoveEventListener = e => this.handleStretchTopEvent(e);
-    document.addEventListener('mousemove', this.mousemoveEventListener);
-    document.addEventListener('mouseup', () => this.stretchEnd(), {once: true});
+    if (event.button === 0) {
+      this.stretching = true;
+      this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
+      this.mousemoveEventListener = e => this.handleStretchTopEvent(e);
+      document.addEventListener('mousemove', this.mousemoveEventListener);
+      document.addEventListener('mouseup', () => this.stretchEnd(), {once: true});
+    }
   }
 
   stretchBottomStart(event: MouseEvent): void {
-    this.stretching = true;
-    this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
-    this.mousemoveEventListener = e => this.handleStretchBottomEvent(e);
-    document.addEventListener('mousemove', this.mousemoveEventListener);
-    document.addEventListener('mouseup', () => this.stretchEnd(), {once: true});
+    if (event.button === 0) {
+      this.stretching = true;
+      this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
+      this.mousemoveEventListener = e => this.handleStretchBottomEvent(e);
+      document.addEventListener('mousemove', this.mousemoveEventListener);
+      document.addEventListener('mouseup', () => this.stretchEnd(), {once: true});
+    }
   }
 
   stretchEnd(): void {
@@ -239,5 +257,11 @@ export class WorklogEditorComponent {
       (event.clientY + this.gridElement.scrollTop - WorklogEditorComponent.GRID_OFFSET_TOP - this.mouseEventYOffset)
       / this.pixelsPerMinute / snapTo
     ) * snapTo;
+  }
+
+  handleClickOutsideEditor(event: MouseEvent) {
+    if (event.button === 0) {
+      this.cancelEdit.emit();
+    }
   }
 }

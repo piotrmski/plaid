@@ -4,10 +4,13 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Input
+  Input,
+  OnInit
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
+import {Format} from '../../helpers/format';
+import {Observable} from 'rxjs';
 
 /**
  * Dumb container for the entire grid including header, background, footer, time marker, and work log entries.
@@ -18,7 +21,7 @@ import {DateRange} from '../../models/date-range';
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GridComponent implements AfterViewInit {
+export class GridComponent implements OnInit, AfterViewInit {
   days: Date[];
   _dateRange: DateRange;
   _worklogs: Worklog[];
@@ -34,6 +37,12 @@ export class GridComponent implements AfterViewInit {
    */
   @Input()
   loading: boolean;
+
+  /**
+   * Parent-to-child event binding to notify change of authenticated user.
+   */
+  @Input()
+  currentUserChanged: Observable<void>;
 
   /**
    * In how many vertical pixels is one minute represented. The component will try its best to keep the center of the
@@ -123,14 +132,7 @@ export class GridComponent implements AfterViewInit {
 
         this.timeSums = this.worklogsSplitByDays
           .map(logs => logs.map(worklog => worklog.timeSpentSeconds).reduce((a, b) => a + b, 0)) // Add up all worklog.timeSpentSeconds
-          .map(sumOfSeconds => { // Translate it to human readable format
-            const hours: number = Math.floor(sumOfSeconds / 3600);
-            sumOfSeconds -= hours * 3600;
-            const minutes: number = Math.floor(sumOfSeconds / 60);
-            sumOfSeconds -= minutes * 60;
-            const seconds: number = sumOfSeconds;
-            return (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + (seconds ? seconds + 's' : '');
-          });
+          .map(sumOfSeconds => Format.timePeriod(sumOfSeconds)); // Translate it to human readable format
       } else {
         this._worklogs = [];
         this.worklogsSplitByDays = [];
@@ -161,6 +163,11 @@ export class GridComponent implements AfterViewInit {
   }
 
   constructor(public hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    // Singleton component, no need to unsubscribe
+    this.currentUserChanged.subscribe(() => this.editedWorklog = null);
+  }
 
   /**
    * Scroll vertically into current time and horizontally into current day.

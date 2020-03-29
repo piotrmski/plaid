@@ -145,7 +145,7 @@ label {
   padding: 5px 0;
 }
 
-input {
+input, .input, textarea {
   display: block;
   width: 100%;
   background: rgba(0, 0, 0, 0.05);
@@ -158,15 +158,24 @@ input {
   margin: 0 0 5px;
   transition: 0.1s all;
   outline: none;
+  resize: none;
+
+  &:not([disabled]) {
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px var(--color-primary-1);
+      background: #fff;
+    }
+  }
 }
 
-input:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-input:focus {
-  box-shadow: 0 0 0 2px var(--color-primary-1);
-  background: #fff;
+textarea {
+  line-height: 16px;
+  height: 62px;
+  padding: 7px 15px;
 }
 
 button {

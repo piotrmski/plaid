@@ -4,6 +4,7 @@ import {Worklog} from './models/worklog';
 import {DateRange} from './models/date-range';
 import {User} from './models/user';
 import {ConnectionIssueModalVisible} from './components/connection-issue-resolver/connection-issue-modal-visible';
+import {Subject} from 'rxjs';
 
 /**
  * Application container.
@@ -20,6 +21,7 @@ export class PlaidComponent implements OnInit {
   _selectedDateRange: DateRange;
   _currentUser: User;
   connectionIssueModalVisible = false;
+  currentUserChanged = new Subject<void>();
 
   constructor(private facade: PlaidFacade) {}
 
@@ -59,6 +61,7 @@ export class PlaidComponent implements OnInit {
     } else {
       this.worklogs = [];
     }
+    this.currentUserChanged.next();
   }
   get currentUser(): User {
     return this._currentUser;

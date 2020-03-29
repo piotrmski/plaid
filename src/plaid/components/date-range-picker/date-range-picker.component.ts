@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import {DateRange} from '../../models/date-range';
 import {DatePipe} from '@angular/common';
+import {Format} from '../../helpers/format';
 
 /**
  * Dumb component, responsible for presenting current date on a dropdown calendar, currently selected week and
@@ -167,27 +168,7 @@ export class DateRangePickerComponent implements OnInit {
   }
 
   get buttonText(): string {
-    if (this._selectedDateRange) {
-      if (this._selectedDateRange.start.valueOf() === this._selectedDateRange.end.valueOf()) {
-        return new DatePipe('en-US').transform(this._selectedDateRange.start, 'MMM d, y');
-      } else if (
-        this._selectedDateRange.start.getMonth() === this._selectedDateRange.end.getMonth()
-        && this._selectedDateRange.start.getFullYear() === this._selectedDateRange.end.getFullYear()
-      ) {
-        return new DatePipe('en-US').transform(this._selectedDateRange.start, 'MMM d - ')
-        + new DatePipe('en-US').transform(this._selectedDateRange.end, 'd, y');
-      } else if (this._selectedDateRange.start.getFullYear() === this._selectedDateRange.end.getFullYear()) {
-        return new DatePipe('en-US').transform(this._selectedDateRange.start, 'MMM d - ')
-          + new DatePipe('en-US').transform(this._selectedDateRange.end, 'MMM d, y');
-      } else {
-        return new DatePipe('en-US').transform(this._selectedDateRange.start, 'MMM d, ') + '\''
-          + new DatePipe('en-US').transform(this._selectedDateRange.start, 'yy - ')
-          + new DatePipe('en-US').transform(this._selectedDateRange.end, 'MMM d, ') + '\''
-          + new DatePipe('en-US').transform(this._selectedDateRange.end, 'yy');
-      }
-    } else {
-      return '';
-    }
+    return this._selectedDateRange ? Format.dateRange(this._selectedDateRange) : '';
   }
 
   selectDateRange(dateRange: DateRange) {
