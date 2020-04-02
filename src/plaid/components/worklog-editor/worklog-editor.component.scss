@@ -29,6 +29,10 @@
         pointer-events: none;
       }
     }
+
+    &:not(.dragging):not(.stretching) .tangible {
+      pointer-events: all;
+    }
   }
 }
 
@@ -38,6 +42,36 @@
 
   &.visible {
     display: block;
+  }
+
+  .buttons-area {
+    padding-bottom: 8px;
+    background: linear-gradient(to top, #fff, transparent);
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    left: 13px;
+    right: 14px;
+    pointer-events: none;
+
+    .button {
+      padding: 0 10px;
+    }
+  }
+
+  &.buttons-outside-container {
+    .buttons-area {
+      bottom: -46px;
+      background: none;
+    }
+
+    .panel .space-under {
+      margin-bottom: 10px;
+    }
+
+    &.tight-under .buttons-area {
+      bottom: 100%;
+    }
   }
 }
 
@@ -55,13 +89,25 @@
   padding: 0 10px;
   overflow-y: hidden;
 
-  & > label {
-    cursor: move;
+  * {
     pointer-events: none;
   }
 
   &:hover {
     overflow-y: overlay;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .space-under {
+    margin-bottom: 48px;
   }
 }
 

@@ -43,8 +43,11 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   timeRange: string;
   _darkMode: boolean;
 
+  /**
+   * Emits when user presses edit button.
+   */
   @Output()
-  edit = new EventEmitter<Worklog>();
+  edit = new EventEmitter<void>();
 
   /**
    * Presented work log entry. Setting it will set the panel's initial size and position on the grid as well as its
@@ -84,6 +87,12 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   get pixelsPerMinute(): number {
     return this._pixelsPerMinute;
   }
+
+  /**
+   * Whether this work log was opened in the editor
+   */
+  @Input()
+  currentlyEdited: boolean;
 
   /**
    * This setter is executed asynchronously by the manager and therefore needs to invoke change detector.

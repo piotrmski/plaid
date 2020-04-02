@@ -49,6 +49,15 @@ p {
   display: flex;
   flex-direction: column;
 
+  &.currently-edited {
+    border-color: rgba(0, 0, 0, 0.2) !important;
+    background: repeating-linear-gradient(45deg, transparent 0, transparent 2.8284px, rgba(0, 0, 0, 0.2) 2.8284px, rgba(0, 0, 0, 0.2) 5.6569px) !important;
+
+    .panel-content {
+      display: none;
+    }
+  }
+
   b {
     font-weight: 600;
   }

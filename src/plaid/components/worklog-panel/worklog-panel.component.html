@@ -12,6 +12,7 @@
   <div
     #panelInner
     class="panel-inner"
+    [class.currently-edited]="currentlyEdited"
     [ngStyle]="{
       maxHeight: panelHeight + 1 + 'px',
       backgroundColor: 'hsl(' + panelHue + ', ' + (darkMode ? 30 : 50 ) + '%, ' + (darkMode ? 15 : 95 ) + '%)',
@@ -22,7 +23,7 @@
       <a
         class="button edit-button"
         title="Edit log"
-        (click)="edit.emit(worklog)"
+        (click)="edit.emit()"
       >
         <svg class="icon"><use href="assets/icons.svg#edit"></use></svg>
       </a>

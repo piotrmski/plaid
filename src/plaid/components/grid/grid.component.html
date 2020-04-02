@@ -23,7 +23,8 @@
         *ngFor="let worklog of logs"
         [worklog]="worklog"
         [pixelsPerMinute]="pixelsPerMinute"
-        (edit)="editedWorklog = $event"
+        [currentlyEdited]="worklog.id === editedWorklog?.id"
+        (edit)="editedWorklog = worklog"
       ></plaid-worklog-panel>
     </div>
   </div>

@@ -33,6 +33,7 @@ export class WorklogEditorComponent {
   panelHeight: number;
   panelOffsetLeft: number;
   panelWidth: number;
+  spaceUnderPanel: number;
   editedPanelInRange: boolean;
   panelHue: number;
   dragging = false;
@@ -43,6 +44,7 @@ export class WorklogEditorComponent {
   issueString: string;
   dateString: string;
   commentString: string;
+  saving = false;
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
@@ -117,6 +119,7 @@ export class WorklogEditorComponent {
     );
     this.panelWidth = 1 / (Math.round((this.dateRange.end.getTime() - this.dateRange.start.getTime()) / 86400000) + 1);
     this.panelOffsetLeft = this.panelWidth * Math.round((this.date.getTime() - this.dateRange.start.getTime()) / 86400000);
+    this.spaceUnderPanel = 1440 * this.pixelsPerMinute - this.panelOffsetTop - this.panelHeight;
   }
 
   dragStart(event: MouseEvent): void {

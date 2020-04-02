@@ -106,8 +106,7 @@ body {
       box-shadow: 0 0 0 2px var(--color-primary-1) inset;
     }
 
-    &:active,
-    &.active {
+    &:active, &.active {
       background: rgba(0, 0, 0, 0.2);
       color: var(--color-gray-7);
       transition: 0.025s all ease-out;
@@ -126,9 +125,20 @@ body {
         background: var(--color-primary-4);
       }
 
-      &:active,
-      &.active {
+      &:active, &.active {
         background: var(--color-primary-3);
+      }
+    }
+
+    &.non-translucent {
+      background: #fff;
+
+      &:hover {
+        background: var(--color-gray-1);
+      }
+
+      &:active, &.active {
+        background: var(--color-gray-2);
       }
     }
   }
@@ -176,6 +186,15 @@ textarea {
   line-height: 16px;
   height: 62px;
   padding: 7px 15px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+  }
 }
 
 button {

@@ -12,6 +12,8 @@
     [style.width.%]="panelWidth * 100"
     [style.height.px]="panelHeight"
     [class.visible]="editedPanelInRange"
+    [class.buttons-outside-container]="panelHeight < 100"
+    [class.tight-under]="spaceUnderPanel < 40"
     title="Hold:
 Alt to snap to 1 minute,
 nothing to snap to 5 minutes,
@@ -29,18 +31,43 @@ Ctrl to snap to 60 minutes."
         disabled
         [value]="issueString"
         title=""
+        class="tangible"
       >
       <label>Date</label>
       <input
         disabled
         [value]="dateString"
         title=""
+        class="tangible"
       >
       <label>Comment</label>
       <textarea
         [value]="commentString"
         title=""
+        class="tangible space-under"
       ></textarea>
+    </div>
+
+    <div class="buttons-area">
+      <button
+        class="button primary tangible"
+        [disabled]="saving"
+        title=""
+        (mousedown)="$event.stopPropagation()"
+      >
+        <span *ngIf="saving" class="spinner"></span>
+        <ng-container *ngIf="!saving">Save</ng-container>
+      </button>
+      <button
+        class="button tangible"
+        [class.non-translucent]="panelHeight < 100"
+        (click)="cancelEdit.emit()"
+        [disabled]="saving"
+        title=""
+        (mousedown)="$event.stopPropagation()"
+      >
+        Cancel
+      </button>
     </div>
 
     <div
