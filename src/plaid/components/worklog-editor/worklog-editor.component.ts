@@ -44,6 +44,8 @@ export class WorklogEditorComponent {
   issueString: string;
   dateString: string;
   commentString: string;
+  startTimeString: string;
+  endTimeString: string;
   saving = false;
 
   @ViewChild('panel')
@@ -92,6 +94,10 @@ export class WorklogEditorComponent {
       this.date = new Date(this.start);
       this.date.setHours(0, 0, 0, 0);
       this.durationMinutes = Math.round(worklog.timeSpentSeconds / 60);
+      const end = new Date(this.start);
+      end.setMinutes(this.start.getMinutes() + this.durationMinutes);
+      this.startTimeString = Format.time(this.start);
+      this.endTimeString = Format.time(end);
       this.editedPanelInRange = this.date >= this.dateRange.start && this.date <= this.dateRange.end;
       this.panelHue = Math.round((Number(this.worklog.issue.fields.parent
         ? this.worklog.issue.fields.parent.id
@@ -152,6 +158,10 @@ export class WorklogEditorComponent {
         newStartTimeMinutes = 1440 - this.durationMinutes;
       }
       this.start.setHours(0, newStartTimeMinutes, 0, 0);
+      const end = new Date(this.start);
+      end.setMinutes(this.start.getMinutes() + this.durationMinutes);
+      this.startTimeString = Format.time(this.start);
+      this.endTimeString = Format.time(end);
     }
 
     // Handle dragging horizontally
@@ -219,6 +229,7 @@ export class WorklogEditorComponent {
       }
       this.start.setHours(0, newStartTimeMinutes, 0, 0);
       this.durationMinutes += oldStartTimeMinutes - newStartTimeMinutes;
+      this.startTimeString = Format.time(this.start);
 
       this.computeSizeAndOffset();
       this.cdr.detectChanges();
@@ -237,6 +248,9 @@ export class WorklogEditorComponent {
         newEndTimeMinutes = 1440;
       }
       this.durationMinutes = newEndTimeMinutes - startTimeMinutes;
+      const end = new Date(this.start);
+      end.setMinutes(this.start.getMinutes() + this.durationMinutes);
+      this.endTimeString = Format.time(end);
 
       this.computeSizeAndOffset();
       this.cdr.detectChanges();

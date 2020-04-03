@@ -54,7 +54,7 @@ p {
     background: repeating-linear-gradient(45deg, transparent 0, transparent 2.8284px, rgba(0, 0, 0, 0.2) 2.8284px, rgba(0, 0, 0, 0.2) 5.6569px) !important;
 
     .panel-content {
-      display: none;
+      visibility: hidden;
     }
   }
 

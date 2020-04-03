@@ -80,5 +80,8 @@ Ctrl to snap to 60 minutes."
       [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
       (mousedown)="stretchBottomStart($event); $event.stopPropagation()"
     ></div>
+
+    <div class="start-time">{{ startTimeString }}</div>
+    <div class="end-time">{{ endTimeString }}</div>
   </div>
 </div>

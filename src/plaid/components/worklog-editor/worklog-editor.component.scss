@@ -14,20 +14,22 @@
     pointer-events: all;
     opacity: 1;
 
-    &.dragging {
-      cursor: move;
-
+    &.dragging, &.stretching {
       * {
         pointer-events: none;
       }
+
+      .start-time, .end-time {
+        opacity: 1;
+      }
+    }
+
+    &.dragging {
+      cursor: move;
     }
 
     &.stretching {
       cursor: row-resize;
-
-      * {
-        pointer-events: none;
-      }
     }
 
     &:not(.dragging):not(.stretching) .tangible {
@@ -144,4 +146,22 @@
 
 .handle-bottom {
   bottom: -5px;
+}
+
+.start-time, .end-time {
+  position: absolute;
+  right: calc(50% + 25px);
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+  line-height: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: 0.1s opacity;
+}
+
+.start-time {
+  top: -9px;
+}
+
+.end-time {
+  bottom: -7px;
 }
