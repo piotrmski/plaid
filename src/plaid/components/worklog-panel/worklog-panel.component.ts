@@ -11,9 +11,9 @@ import {
   ViewChild
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
-import {PlaidFacade} from '../../plaid.facade';
 import {WorklogPanelsManagerService} from './worklog-panels-manager.service';
 import {Format} from '../../helpers/format';
+import {AuthFacade} from '../../core/auth/auth.facade';
 
 /**
  * Somewhat dumb component, present a panel representing a work log entry, makes use of its own service to manage
@@ -108,10 +108,14 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   @ViewChild('panelInner', { static: true })
   panelInner: ElementRef;
 
-  constructor(private facade: PlaidFacade, private cdr: ChangeDetectorRef, private manager: WorklogPanelsManagerService) { }
+  constructor(
+    private authFacade: AuthFacade,
+    private cdr: ChangeDetectorRef,
+    private manager: WorklogPanelsManagerService
+  ) { }
 
   ngOnInit(): void {
-    this.jiraURL = this.facade.getJiraURL();
+    this.jiraURL = this.authFacade.getJiraURL();
     this.manager.addPanel(this);
   }
 

@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {PlaidFacade} from '../../plaid.facade';
 import {AuthInfo} from '../../models/auth-info';
 import {HttpErrorResponse} from '@angular/common/http';
 import {User} from '../../models/user';
 import {ConnectionIssueModalVisible} from './connection-issue-modal-visible';
+import {AuthFacade} from '../../core/auth/auth.facade';
+import {AppStateService} from '../../core/app-state.service';
 
 /**
  * Smart component, presents login, lost connection, and error modals and handles login and reconnect actions.
@@ -23,14 +24,14 @@ export class ConnectionIssueResolverComponent implements OnInit {
 
   readonly ConnectionIssueModalVisible = ConnectionIssueModalVisible;
 
-  constructor(private facade: PlaidFacade) {}
+  constructor(private authFacade: AuthFacade, private appStateService: AppStateService) {}
 
   ngOnInit(): void {
     // Singleton component, no need to unsubscribe
-    this.facade.getAuthError$().subscribe((authError: HttpErrorResponse) => this.error = authError);
-    this.facade.getAuthenticatedUser$().subscribe(user => this.currentUser = user);
-    this.facade.getConnectionIssueModalVisible$().subscribe(val => this.modalVisible = val);
-    this.facade.getAuthInfo$().subscribe(authInfo => this.authInfo = authInfo || { jiraUrl: null, username: null, password: null });
+    this.authFacade.getAuthError$().subscribe((authError: HttpErrorResponse) => this.error = authError);
+    this.authFacade.getAuthenticatedUser$().subscribe(user => this.currentUser = user);
+    this.appStateService.getConnectionIssueModalVisible$().subscribe(val => this.modalVisible = val);
+    this.authFacade.getAuthInfo$().subscribe(authInfo => this.authInfo = authInfo || { jiraUrl: null, username: null, password: null });
   }
 
   set error(error: HttpErrorResponse) {
@@ -69,16 +70,16 @@ export class ConnectionIssueResolverComponent implements OnInit {
 
   login(): void {
     this.onUrlChange();
-    this.facade.login(this.authInfo);
+    this.authFacade.login(this.authInfo);
     this.fetching = true;
   }
 
   reconnect(): void {
-    this.facade.reconnect();
+    this.authFacade.reconnect();
     this.fetching = true;
   }
 
   closeModal(): void {
-    this.facade.closeConnectionIssueModal();
+    this.appStateService.setConnectionIssueModalVisible(ConnectionIssueModalVisible.NONE);
   }
 }

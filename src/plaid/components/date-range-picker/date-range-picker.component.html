@@ -13,7 +13,7 @@
       <svg class="icon"><use href="assets/icons.svg#arrow-left"></use></svg>
     </a>
     <div class="month-label">
-      {{ months[month.getMonth()] }} {{ month.getFullYear() }}
+      {{ months[month?.getMonth()] }} {{ month?.getFullYear() }}
     </div>
     <a class="button" (click)="incrementMonth()" title="Next month">
       <svg class="icon"><use href="assets/icons.svg#arrow-right"></use></svg>
@@ -27,7 +27,7 @@
   <div
     class="week"
     *ngFor="let week of days"
-    [class.selected]="_selectedDateRange.start.valueOf() === week[0].valueOf() && _selectedDateRange.end.valueOf() === week[6].valueOf()"
+    [class.selected]="selectedDateRange.start.valueOf() === week[0].valueOf() && selectedDateRange.end.valueOf() === week[6].valueOf()"
     (click)="selectDateRange({ start: week[0], end: week[6] })"
   >
     <div

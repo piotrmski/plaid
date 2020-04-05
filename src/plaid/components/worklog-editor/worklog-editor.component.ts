@@ -6,11 +6,13 @@ import {
   EventEmitter,
   Input,
   ViewChild,
-  Output
+  Output,
+  OnInit
 } from '@angular/core';
 import {DateRange} from '../../models/date-range';
 import {Worklog} from '../../models/worklog';
 import {Format} from '../../helpers/format';
+import {AuthFacade} from '../../core/auth/auth.facade';
 
 @Component({
   selector: 'plaid-worklog-editor',
@@ -18,7 +20,7 @@ import {Format} from '../../helpers/format';
   styleUrls: ['./worklog-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorklogEditorComponent {
+export class WorklogEditorComponent implements OnInit {
   static readonly GRID_OFFSET_TOP = 71; // top bar height + grid header height
   static readonly GRID_OFFSET_LEFT = 30; // hour labels width
   static readonly STRETCH_HANDLE_OFFSET_TOP = 4; // offset between top of a stretching handle and edge of the panel
@@ -114,7 +116,11 @@ export class WorklogEditorComponent {
     return this._worklog;
   }
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef, private authFacade: AuthFacade) {
+  }
+
+  ngOnInit(): void {
+    this.authFacade.getAuthenticatedUser$().subscribe(() => this.cancelEdit.emit());
   }
 
   computeSizeAndOffset(): void {

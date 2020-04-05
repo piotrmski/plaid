@@ -21,7 +21,7 @@ import {Observable} from 'rxjs';
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GridComponent implements OnInit, AfterViewInit {
+export class GridComponent implements AfterViewInit {
   days: Date[];
   _dateRange: DateRange;
   _worklogs: Worklog[];
@@ -37,12 +37,6 @@ export class GridComponent implements OnInit, AfterViewInit {
    */
   @Input()
   loading: boolean;
-
-  /**
-   * Parent-to-child event binding to notify change of authenticated user.
-   */
-  @Input()
-  currentUserChanged: Observable<void>;
 
   /**
    * In how many vertical pixels is one minute represented. The component will try its best to keep the center of the
@@ -163,11 +157,6 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   constructor(public hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
-
-  ngOnInit(): void {
-    // Singleton component, no need to unsubscribe
-    this.currentUserChanged.subscribe(() => this.editedWorklog = null);
-  }
 
   /**
    * Scroll vertically into current time and horizontally into current day.

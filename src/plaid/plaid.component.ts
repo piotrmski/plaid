@@ -1,10 +1,11 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import {PlaidFacade} from './plaid.facade';
+import {Component, OnInit} from '@angular/core';
 import {Worklog} from './models/worklog';
 import {DateRange} from './models/date-range';
 import {User} from './models/user';
 import {ConnectionIssueModalVisible} from './components/connection-issue-resolver/connection-issue-modal-visible';
-import {Subject} from 'rxjs';
+import {AuthFacade} from './core/auth/auth.facade';
+import {WorklogFacade} from './core/worklog/worklog.facade';
+import {AppStateService} from './core/app-state.service';
 
 /**
  * Application container.
@@ -18,66 +19,37 @@ export class PlaidComponent implements OnInit {
   pixelsPerMinute: number;
   worklogs: Worklog[];
   loading: boolean;
-  _selectedDateRange: DateRange;
-  _currentUser: User;
+  visibleDateRange: DateRange;
+  currentUser: User;
   connectionIssueModalVisible = false;
-  currentUserChanged = new Subject<void>();
 
-  constructor(private facade: PlaidFacade) {}
+  constructor(
+    private authFacade: AuthFacade,
+    private worklogFacade: WorklogFacade,
+    private appStateService: AppStateService
+  ) {}
 
   ngOnInit(): void {
     // Singleton component, no need to unsubscribe
-    this.facade.getAuthenticatedUser$().subscribe(user => this.currentUser = user);
-    this.facade.getWorklogs$().subscribe(worklogs => this.worklogs = worklogs);
-    this.facade.getWorklogsFetching$().subscribe(loading => this.loading = loading);
-    this.facade.getConnectionIssueModalVisible$()
+    this.authFacade.getAuthenticatedUser$().subscribe(user => this.currentUser = user);
+    this.worklogFacade.getWorklogs$().subscribe(worklogs => this.worklogs = worklogs);
+    this.worklogFacade.getWorklogsFetching$().subscribe(loading => this.loading = loading);
+    this.appStateService.getConnectionIssueModalVisible$()
       .subscribe(val => this.connectionIssueModalVisible = val !== ConnectionIssueModalVisible.NONE);
-  }
-
-  /**
-   * Date range visible on the grid. After range change work log entries are fetched for given range.
-   */
-  set selectedDateRange(dateRange: DateRange) {
-    this._selectedDateRange = dateRange;
-    if (this.currentUser) {
-      this.facade.fetchWorklogs(dateRange, this.currentUser);
-    } else {
-      this.facade.reconnect();
-    }
-  }
-  get selectedDateRange(): DateRange {
-    return this._selectedDateRange;
-  }
-
-  /**
-   * Currently authenticated user. After change work log entries for current date range are updated.
-   */
-  set currentUser(user: User) {
-    this._currentUser = user;
-    if (user) {
-      if (this.selectedDateRange) {
-        this.facade.fetchWorklogs(this.selectedDateRange, user);
-      }
-    } else {
-      this.worklogs = [];
-    }
-    this.currentUserChanged.next();
-  }
-  get currentUser(): User {
-    return this._currentUser;
+    this.appStateService.getVisibleDateRange$().subscribe(dateRange => this.visibleDateRange = dateRange);
   }
 
   refresh(): void {
     if (this.currentUser) {
-      this.facade.fetchWorklogs(this.selectedDateRange, this.currentUser);
+      this.worklogFacade.fetchWorklogsVerbose();
     }
   }
 
   changeCredentials(): void {
-    this.facade.showLoginModal();
+    this.appStateService.setConnectionIssueModalVisible(ConnectionIssueModalVisible.LOGIN);
   }
 
   forgetAccount(): void {
-    this.facade.logout();
+    this.authFacade.logout();
   }
 }
