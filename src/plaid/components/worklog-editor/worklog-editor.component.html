@@ -84,4 +84,12 @@ Ctrl to snap to 60 minutes."
     <div class="start-time">{{ startTimeString }}</div>
     <div class="end-time">{{ endTimeString }}</div>
   </div>
+
+  <div
+    class="button non-translucent"
+    id="return-button"
+    [class.visible]="!editedPanelInRange"
+    (click)="returnToEditedWorklog()"
+    (mousedown)="$event.stopPropagation()"
+  >Return to edited worklog</div>
 </div>

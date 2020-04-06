@@ -13,6 +13,7 @@ import {DateRange} from '../../models/date-range';
 import {Worklog} from '../../models/worklog';
 import {Format} from '../../helpers/format';
 import {AuthFacade} from '../../core/auth/auth.facade';
+import {AppStateService} from '../../core/app-state.service';
 
 @Component({
   selector: 'plaid-worklog-editor',
@@ -116,7 +117,11 @@ export class WorklogEditorComponent implements OnInit {
     return this._worklog;
   }
 
-  constructor(private cdr: ChangeDetectorRef, private authFacade: AuthFacade) {
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private authFacade: AuthFacade,
+    private appStateService: AppStateService
+  ) {
   }
 
   ngOnInit(): void {
@@ -286,5 +291,14 @@ export class WorklogEditorComponent implements OnInit {
     if (event.button === 0) {
       this.cancelEdit.emit();
     }
+  }
+
+  returnToEditedWorklog(): void {
+    const start = new Date(this.start);
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - start.getDay());
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6);
+    this.appStateService.setVisibleDateRange({start, end});
   }
 }

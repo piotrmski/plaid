@@ -92,6 +92,10 @@ body {
   outline: none;
   display: inline-block;
 
+  &.padded {
+    padding: 0 15px;
+  }
+
   &.disabled, &[disabled] {
     color: var(--color-gray-2);
   }
@@ -195,8 +199,4 @@ textarea {
     border-radius: 4px;
     background: rgba(0, 0, 0, 0.2);
   }
-}
-
-button {
-  padding: 0 15px;
 }

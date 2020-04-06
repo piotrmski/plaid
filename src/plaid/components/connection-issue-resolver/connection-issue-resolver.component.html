@@ -7,7 +7,7 @@
       {{ error ? error.message : null }}
     </div>
     <div class="modal-footer">
-      <button class="button" (click)="closeModal()">Close</button>
+      <button class="button padded" (click)="closeModal()">Close</button>
     </div>
   </div>
 
@@ -19,7 +19,7 @@
       Could not connect to Jira. Verify your internet connection and retry.
     </div>
     <div class="modal-footer">
-      <button class="button primary" (click)="reconnect()" [disabled]="fetching">
+      <button class="button primary padded" (click)="reconnect()" [disabled]="fetching">
         <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Retry</ng-container>
       </button>
@@ -57,11 +57,11 @@
       <input name="password" type="password" [(ngModel)]="authInfo.password" required>
     </div>
     <div class="modal-footer">
-      <button class="button primary" (click)="login()" [disabled]="form.invalid || fetching">
+      <button class="button primary padded" (click)="login()" [disabled]="form.invalid || fetching">
         <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Log in</ng-container>
       </button>
-      <button class="button" (click)="closeModal()" [disabled]="fetching">Cancel</button>
+      <button class="button padded" (click)="closeModal()" [disabled]="fetching">Cancel</button>
     </div>
   </form>
 </div>
