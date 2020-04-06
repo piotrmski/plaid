@@ -42,7 +42,7 @@ Ctrl to snap to 60 minutes."
       >
       <label>Comment</label>
       <textarea
-        [value]="commentString"
+        [(ngModel)]="commentString"
         title=""
         class="tangible space-under"
       ></textarea>
@@ -53,6 +53,7 @@ Ctrl to snap to 60 minutes."
         class="button primary tangible"
         [disabled]="saving"
         title=""
+        (click)="save()"
         (mousedown)="$event.stopPropagation()"
       >
         <span *ngIf="saving" class="spinner"></span>

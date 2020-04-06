@@ -14,6 +14,7 @@ import {Worklog} from '../../models/worklog';
 import {Format} from '../../helpers/format';
 import {AuthFacade} from '../../core/auth/auth.facade';
 import {AppStateService} from '../../core/app-state.service';
+import {WorklogFacade} from '../../core/worklog/worklog.facade';
 
 @Component({
   selector: 'plaid-worklog-editor',
@@ -120,6 +121,7 @@ export class WorklogEditorComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private authFacade: AuthFacade,
+    private worklogFacade: WorklogFacade,
     private appStateService: AppStateService
   ) {
   }
@@ -300,5 +302,21 @@ export class WorklogEditorComponent implements OnInit {
     const end = new Date(start);
     end.setDate(end.getDate() + 6);
     this.appStateService.setVisibleDateRange({start, end});
+  }
+
+  save() {
+    this.saving = true;
+    this.worklogFacade.updateWorklog(
+      this.worklog,
+      this.start,
+      this.durationMinutes * 60,
+      this.commentString
+    ).subscribe({
+      next: () => {
+        this.saving = false;
+        this.cancelEdit.emit();
+      },
+      error: () => this.saving = false
+    });
   }
 }

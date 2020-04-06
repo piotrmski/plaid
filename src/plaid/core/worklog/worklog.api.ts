@@ -12,8 +12,9 @@ import {DateRange} from '../../models/date-range';
 
 @Injectable({ providedIn: 'root' })
 export class WorklogApi {
-  private searchUrl = '/rest/api/2/search';
-  private issueWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
+  private readonly searchUrl = '/rest/api/2/search';
+  private readonly getWorklogsUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
+  private readonly updateWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog/{id}';
 
   constructor(private http: HttpClient) { }
 
@@ -54,7 +55,7 @@ export class WorklogApi {
    * Emits a page of work logs directly as fetched from API
    */
   private getWorklogsForIssueSearchResults$(issueId: string, startAt = 0): Observable<WorklogWithPagination> {
-    let url = this.issueWorklogUrl.replace('{issueIdOrKey}', issueId);
+    let url = this.getWorklogsUrl.replace('{issueIdOrKey}', issueId);
     if (startAt > 0) {
       url += '?startAt=' + startAt;
     }
@@ -96,5 +97,18 @@ export class WorklogApi {
    */
   getWorklogsForDateRangeQuiet$(dateRange: DateRange, user: User): Observable<Worklog[]> {
     return this.getWorklogsForDateRangeVerbose$(dateRange, user).pipe(takeLast<Worklog[]>(1));
+  }
+
+  /**
+   * Updates work log entry and returns observable emitting updated entry
+   */
+  updateWorklog(issueId: string, worklogId: string, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
+    const url: string = this.updateWorklogUrl.replace('{issueIdOrKey}', issueId).replace('{id}', worklogId);
+    const body = {
+      started: started.toISOString().replace(/Z$/, '+0000'),
+      timeSpentSeconds,
+      comment
+    };
+    return this.http.put<Worklog>(url, body);
   }
 }

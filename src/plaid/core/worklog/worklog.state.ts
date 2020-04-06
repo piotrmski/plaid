@@ -22,4 +22,14 @@ export class WorklogState {
   setWorklogs(worklogs: Worklog[]) {
     this.worklogs.next(worklogs);
   }
+
+  updateWorklog(updatedWorklog: Worklog): void {
+    this.worklogs.next(this.worklogs.getValue().map(worklog => {
+      if (worklog.id === updatedWorklog.id) {
+        return {...worklog, ...updatedWorklog};
+      } else {
+        return worklog;
+      }
+    }));
+  }
 }

@@ -7,6 +7,7 @@ import {WorklogState} from './worklog.state';
 import {WorklogApi} from './worklog.api';
 import {AuthFacade} from '../auth/auth.facade';
 import {AppStateService} from '../app-state.service';
+import {tap} from 'rxjs/operators';
 
 /**
  * Business logic facade for work logs.
@@ -84,5 +85,14 @@ export class WorklogFacade {
 
   getWorklogs$(): Observable<Worklog[]> {
     return this.worklogState.getWorklogs$();
+  }
+
+  /**
+   * Upon subscription updates work log entry, emits response from the server after it acknowledged the update
+   */
+  updateWorklog(worklog: Worklog, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
+    return this.worklogApi.updateWorklog(worklog.issueId, worklog.id, started, timeSpentSeconds, comment).pipe(
+      tap<Worklog>(log => this.worklogState.updateWorklog(log))
+    );
   }
 }
