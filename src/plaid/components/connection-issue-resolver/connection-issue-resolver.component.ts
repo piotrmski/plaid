@@ -28,7 +28,7 @@ export class ConnectionIssueResolverComponent implements OnInit {
 
   ngOnInit(): void {
     // Singleton component, no need to unsubscribe
-    this.authFacade.getAuthError$().subscribe((authError: HttpErrorResponse) => this.error = authError);
+    this.authFacade.getError$().subscribe((authError: HttpErrorResponse) => this.error = authError);
     this.authFacade.getAuthenticatedUser$().subscribe(user => this.currentUser = user);
     this.appStateService.getConnectionIssueModalVisible$().subscribe(val => this.modalVisible = val);
     this.authFacade.getAuthInfo$().subscribe(authInfo => this.authInfo = authInfo || { jiraUrl: null, username: null, password: null });
@@ -81,5 +81,9 @@ export class ConnectionIssueResolverComponent implements OnInit {
 
   closeModal(): void {
     this.appStateService.setConnectionIssueModalVisible(ConnectionIssueModalVisible.NONE);
+  }
+
+  get applicationErrorBody(): string {
+    return JSON.stringify(this.error && this.error.error ? this.error.error : null);
   }
 }

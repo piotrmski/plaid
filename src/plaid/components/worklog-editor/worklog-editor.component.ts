@@ -316,7 +316,10 @@ export class WorklogEditorComponent implements OnInit {
         this.saving = false;
         this.cancelEdit.emit();
       },
-      error: () => this.saving = false
+      error: () => {
+        this.saving = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 }

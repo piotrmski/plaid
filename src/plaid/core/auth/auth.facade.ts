@@ -16,7 +16,7 @@ import {AppStateService} from '../app-state.service';
 export class AuthFacade {
   constructor(private authState: AuthState, private authApi: AuthApi, private appStateService: AppStateService) {
     // Handle connection issues
-    this.authState.getAuthError$().pipe(skip(1)).subscribe(error => {
+    this.authState.getError$().pipe(skip(1)).subscribe(error => {
       if (!this.authState.getAuthenticatedUser() || error && [401, 403].includes(error.status)) { // Authentication error
         this.authState.setAuthenticatedUser(null);
         this.appStateService.setConnectionIssueModalVisible(ConnectionIssueModalVisible.LOGIN);
@@ -36,8 +36,8 @@ export class AuthFacade {
     return this.authState.getJiraURL();
   }
 
-  getAuthError$(): Observable<HttpErrorResponse> {
-    return this.authState.getAuthError$();
+  getError$(): Observable<HttpErrorResponse> {
+    return this.authState.getError$();
   }
 
   /**

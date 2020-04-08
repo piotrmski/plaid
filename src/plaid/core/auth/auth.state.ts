@@ -12,7 +12,7 @@ export class AuthState {
   private jiraURL: string = localStorage.getItem(this.AUTH_INFO)
     ? JSON.parse(localStorage.getItem(this.AUTH_INFO)).jiraUrl
     : null;
-  private authError = new BehaviorSubject<HttpErrorResponse>(null);
+  private error = new BehaviorSubject<HttpErrorResponse>(null);
   private authenticatedUser = new BehaviorSubject<User>(null);
   private authInfo = new BehaviorSubject<AuthInfo>(this.getAuthInfo());
 
@@ -47,12 +47,12 @@ export class AuthState {
     return localStorage.getItem(this.AUTH_HEADER);
   }
 
-  setAuthError(authorized: HttpErrorResponse): void {
-    this.authError.next(authorized);
+  setError(authorized: HttpErrorResponse): void {
+    this.error.next(authorized);
   }
 
-  getAuthError$(): Observable<HttpErrorResponse> {
-    return this.authError.asObservable();
+  getError$(): Observable<HttpErrorResponse> {
+    return this.error.asObservable();
   }
 
   getJiraURL(): string {
