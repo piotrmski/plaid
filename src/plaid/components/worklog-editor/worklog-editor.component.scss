@@ -177,3 +177,13 @@
     display: block;
   }
 }
+
+#date-input {
+  text-align: left;
+  cursor: default;
+}
+
+plaid-date-picker-cloud {
+  max-width: 179px;
+  left: calc(50% - 90px);
+}

@@ -1,6 +1,7 @@
-<plaid-connection-issue-resolver></plaid-connection-issue-resolver>
 <div class="top-bar">
   <plaid-date-range-picker
+    [selectedDateRange]="visibleDateRange"
+    (selectedDateRangeChange)="setVisibleDateRange($event)"
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-date-range-picker>
   <plaid-refresh-button
@@ -24,3 +25,4 @@
   [dateRange]="visibleDateRange"
   [loading]="loading"
 ></plaid-grid>
+<plaid-connection-issue-resolver></plaid-connection-issue-resolver>

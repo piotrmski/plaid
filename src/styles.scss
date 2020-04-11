@@ -173,6 +173,11 @@ input, .input, textarea {
   transition: 0.1s all;
   outline: none;
   resize: none;
+  color: var(--color-gray-7);
+
+  &[disabled] {
+    color: var(--color-gray-4);
+  }
 
   &:not([disabled]) {
     &:hover {

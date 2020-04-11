@@ -2,6 +2,23 @@
   display: flex;
   flex-flow: row;
   position: relative;
+  pointer-events: none;
+
+  &.flip .calendar {
+    top: unset;
+    bottom: 20px;
+
+    &::before {
+      bottom: unset;
+      top: 100%;
+      border-bottom: none;
+      border-top: 10px solid #fff;
+    }
+
+    &.open {
+      bottom: 40px;
+    }
+  }
 }
 
 .calendar {
@@ -13,8 +30,8 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   padding: 5px 0 20px;
-  top: 20px;
-  transition: 0.25s opacity, 0.25s top;
+  top: -10px;
+  transition: 0.25s opacity, 0.25s top, 0.25s bottom;
 
   &::before {
     content: ' ';
@@ -30,11 +47,8 @@
 
   &.open {
     opacity: 1;
-    top: 40px;
-  }
-
-  &:not(.open) {
-    pointer-events: none;
+    top: 10px;
+    pointer-events: all;
   }
 }
 
@@ -52,6 +66,7 @@
 
 .weekdays {
   display: flex;
+  justify-content: center;
 }
 
 .weekday {
@@ -59,13 +74,23 @@
   font-size: 11px;
   font-weight: 600;
   color: var(--color-gray-3);
-  line-height: 30px;
+  line-height: 20px;
+  max-width: 25px;
 }
 
 .week {
   display: flex;
+  justify-content: center;
+}
+
+.day {
+  flex: 1;
+  color: inherit;
+  line-height: 24px;
+  max-width: 25px;
+  padding-bottom: 1px;
   transition: 0.1s all;
-  justify-content: space-around;
+  border-radius: 100%;
 
   &:hover,
   &:focus {
@@ -83,27 +108,13 @@
     background: var(--color-primary-1);
     color: var(--color-primary-5);
   }
-}
-
-.day {
-  flex: 1;
-  color: inherit;
-  line-height: 29px;
-  max-width: 30px;
-  padding-bottom: 1px;
 
   &.today {
     border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 100%;
-    line-height: 25px;
+    line-height: 20px;
   }
 
   &.other-month {
     opacity: 0.3;
   }
-}
-
-.button.toggle-button {
-  width: 180px;
-  background: rgba(0, 0, 0, 0.05);
 }

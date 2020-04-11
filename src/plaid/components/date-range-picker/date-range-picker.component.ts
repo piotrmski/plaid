@@ -3,18 +3,18 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  HostListener,
+  EventEmitter,
   Input,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import {DateRange} from '../../models/date-range';
-import {DatePipe} from '@angular/common';
 import {Format} from '../../helpers/format';
-import {AppStateService} from '../../core/app-state.service';
+import {Calendar} from '../../helpers/calendar';
 
 /**
- * Smart component, responsible for presenting current date on a dropdown calendar, currently selected week and changing
- * selected week.
+ * Dumb component, responsible for presenting current date on a dropdown calendar, currently selected week and
+ * delegating change in week selection.
  */
 @Component({
   selector: 'plaid-date-range-picker',
@@ -23,57 +23,34 @@ import {AppStateService} from '../../core/app-state.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateRangePickerComponent implements OnInit {
-  selectedDateRange: DateRange;
   _month: Date;
   today: Date;
-  /**
-   * Array of 7-element arrays of days visible on the presented calendar. The structure contains all days of the month
-   * presented on the calendar, split into full weeks. First and last week may contain days from previous and next
-   * months to keep the week length constant.
-   */
   days: Date[][];
   _calendarOpen = false;
   decrementWeekButtonActive = false;
   incrementWeekButtonActive = false;
 
+  /**
+   * Disables F4 and F6 shortcuts for date range changing (by default these keys decrement and increment selected week)
+   */
   @Input()
   shortcutsDisabled = false;
 
-  readonly months: string[] = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
+  @Input()
+  selectedDateRange: DateRange;
 
-  readonly weekdays: string[] = [
-    'Sun',
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat'
-  ];
+  @Output()
+  selectedDateRangeChange = new EventEmitter<DateRange>();
 
-  /**
-   * Initialize by selecting current week.
-   */
-  constructor(private ref: ElementRef, private cdr: ChangeDetectorRef, private appStateService: AppStateService) {
+  readonly months: string[] = Calendar.months;
+
+  readonly weekdays: string[] = Calendar.weekdays;
+
+  constructor(private ref: ElementRef, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    // Singleton component, no need to unsubscribe or unbind events
-    this.appStateService.getVisibleDateRange$().subscribe(dateRange => this.selectedDateRange = dateRange);
-
+    // Singleton component, no need to unbind events
     addEventListener('keydown', (e: KeyboardEvent) => {
       if (!this.shortcutsDisabled) {
         if (e.key === 'F4') {
@@ -95,29 +72,9 @@ export class DateRangePickerComponent implements OnInit {
     });
   }
 
-  /**
-   * Closes the calendar dropdown, if user clicked anywhere outside it.
-   */
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
-      this.calendarOpen = false;
-    }
-  }
-
   set month(month: Date) {
     this._month = month;
-
-    const maxDate: number = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
-    const days: Date[][] = [];
-    for (let i = -month.getDay(); i < maxDate; i += 7) {
-      days.push(
-        Array
-          .from<number>({ length: 7 })
-          .map((_, j: number) => new Date(month.getFullYear(), month.getMonth(), i + j + 1))
-      );
-    }
-    this.days = days;
+    this.days = Calendar.getDaysOfMonth(month);
   }
   get month(): Date {
     return this._month;
@@ -143,6 +100,17 @@ export class DateRangePickerComponent implements OnInit {
       this.month = month;
       const curTime: Date = new Date();
       this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
+
+      const mousedownOutsideCalendarEventListener = (event: MouseEvent) => {
+        if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
+          this.calendarOpen = false;
+          document.removeEventListener('mousedown', mousedownOutsideCalendarEventListener);
+
+          this.cdr.detectChanges();
+        }
+      };
+
+      document.addEventListener('mousedown', mousedownOutsideCalendarEventListener);
     }
   }
 
@@ -157,13 +125,13 @@ export class DateRangePickerComponent implements OnInit {
   decrementWeek(): void {
     this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() - 7);
     this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() - 7);
-    this.appStateService.setVisibleDateRange({...this.selectedDateRange});
+    this.selectedDateRangeChange.emit({...this.selectedDateRange});
   }
 
   incrementWeek(): void {
     this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() + 7);
     this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() + 7);
-    this.appStateService.setVisibleDateRange({...this.selectedDateRange});
+    this.selectedDateRangeChange.emit({...this.selectedDateRange});
   }
 
   get buttonText(): string {
@@ -172,7 +140,7 @@ export class DateRangePickerComponent implements OnInit {
 
   selectDateRange(dateRange: DateRange) {
     this.selectedDateRange = dateRange;
-    this.appStateService.setVisibleDateRange(dateRange);
+    this.selectedDateRangeChange.emit(dateRange);
     this.calendarOpen = false;
   }
 }

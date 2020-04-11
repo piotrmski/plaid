@@ -16,6 +16,7 @@ import {AuthStatusComponent} from './components/auth-status/auth-status.componen
 import {ZoomControlsComponent} from './components/zoom-controls/zoom-controls.component';
 import {CurrentTimeMarkerComponent} from './components/current-time-marker/current-time-marker.component';
 import {WorklogEditorComponent} from './components/worklog-editor/worklog-editor.component';
+import {DatePickerCloudComponent} from './components/date-picker-cloud/date-picker-cloud.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import {WorklogEditorComponent} from './components/worklog-editor/worklog-editor
     WorklogPanelComponent,
     ConnectionIssueResolverComponent,
     DateRangePickerComponent,
+    DatePickerCloudComponent,
     GridBackgroundComponent,
     RefreshButtonComponent,
     ExtHrefDirective,

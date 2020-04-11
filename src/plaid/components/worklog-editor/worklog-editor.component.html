@@ -1,4 +1,5 @@
 <div
+  #wrapper
   class="wrapper"
   [class.visible]="worklog"
   (mousedown)="handleClickOutsideEditor($event)"
@@ -24,7 +25,7 @@ Ctrl to snap to 60 minutes."
       #panel
       class="panel"
       [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
-      (mousedown)="dragStart($event); $event.stopPropagation()"
+      (mousedown)="dragStart($event)"
     >
       <label>Issue</label>
       <input
@@ -34,12 +35,14 @@ Ctrl to snap to 60 minutes."
         class="tangible"
       >
       <label>Date</label>
-      <input
-        disabled
-        [value]="dateString"
+      <a
+        #calendarToggle
+        id="date-input"
+        class="button input tangible"
+        [class.active]="calendarOpen"
         title=""
-        class="tangible"
-      >
+        (click)="toggleCalendar()"
+      >{{ dateString }}</a>
       <label>Comment</label>
       <textarea
         [(ngModel)]="commentString"
@@ -54,7 +57,6 @@ Ctrl to snap to 60 minutes."
         [disabled]="saving"
         title=""
         (click)="save()"
-        (mousedown)="$event.stopPropagation()"
       >
         <span *ngIf="saving" class="spinner"></span>
         <ng-container *ngIf="!saving">Save</ng-container>
@@ -65,32 +67,37 @@ Ctrl to snap to 60 minutes."
         (click)="cancelEdit.emit()"
         [disabled]="saving"
         title=""
-        (mousedown)="$event.stopPropagation()"
-      >
-        Cancel
-      </button>
+      >Cancel</button>
     </div>
 
     <div
       class="handle-top"
       [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
-      (mousedown)="stretchTopStart($event); $event.stopPropagation()"
+      (mousedown)="stretchTopStart($event)"
     ></div>
     <div
       class="handle-bottom"
       [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
-      (mousedown)="stretchBottomStart($event); $event.stopPropagation()"
+      (mousedown)="stretchBottomStart($event)"
     ></div>
 
     <div class="start-time">{{ startTimeString }}</div>
     <div class="end-time">{{ endTimeString }}</div>
+
+    <plaid-date-picker-cloud
+      [(calendarOpen)]="calendarOpen"
+      [style.top.px]="calendarOffsetTop"
+      [class.flip]="tightUnderForCalendar"
+      [selectedDate]="date"
+      (selectedDateChange)="selectDate($event)"
+      title=""
+    ></plaid-date-picker-cloud>
   </div>
 
-  <div
+  <a
     class="button non-translucent"
     id="return-button"
     [class.visible]="!editedPanelInRange"
     (click)="returnToEditedWorklog()"
-    (mousedown)="$event.stopPropagation()"
-  >Return to edited worklog</div>
+  >Return to edited worklog</a>
 </div>

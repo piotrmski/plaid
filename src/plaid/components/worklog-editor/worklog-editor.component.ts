@@ -7,7 +7,8 @@ import {
   Input,
   ViewChild,
   Output,
-  OnInit
+  OnInit,
+  ViewContainerRef
 } from '@angular/core';
 import {DateRange} from '../../models/date-range';
 import {Worklog} from '../../models/worklog';
@@ -15,6 +16,7 @@ import {Format} from '../../helpers/format';
 import {AuthFacade} from '../../core/auth/auth.facade';
 import {AppStateService} from '../../core/app-state.service';
 import {WorklogFacade} from '../../core/worklog/worklog.facade';
+import {DatePickerCloudComponent} from '../date-picker-cloud/date-picker-cloud.component';
 
 @Component({
   selector: 'plaid-worklog-editor',
@@ -51,9 +53,21 @@ export class WorklogEditorComponent implements OnInit {
   startTimeString: string;
   endTimeString: string;
   saving = false;
+  calendarOpen = false;
+  calendarOffsetTop = 0;
+  tightUnderForCalendar = false;
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
+
+  @ViewChild('wrapper')
+  wrapper: ElementRef<HTMLDivElement>;
+
+  @ViewChild('calendarToggle')
+  calendarToggle: ElementRef<HTMLAnchorElement>;
+
+  @ViewChild(DatePickerCloudComponent, {read: ViewContainerRef})
+  calendarCloud: ViewContainerRef;
 
   @Output()
   cancelEdit = new EventEmitter<void>();
@@ -289,22 +303,54 @@ export class WorklogEditorComponent implements OnInit {
     ) * snapTo;
   }
 
-  handleClickOutsideEditor(event: MouseEvent) {
-    if (event.button === 0) {
+  handleClickOutsideEditor(event: MouseEvent): void {
+    if (event.button === 0 && event.target === this.wrapper.nativeElement && !this.calendarOpen) {
       this.cancelEdit.emit();
     }
   }
 
+  selectDate(date: Date): void {
+    this.date = date;
+    this.start.setFullYear(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
+    this.dateString = Format.date(this.start);
+    this.editedPanelInRange = this.date >= this.dateRange.start && this.date <= this.dateRange.end;
+    this.computeSizeAndOffset();
+  }
+
   returnToEditedWorklog(): void {
-    const start = new Date(this.start);
-    start.setHours(0, 0, 0, 0);
+    const start = new Date(this.date);
     start.setDate(start.getDate() - start.getDay());
     const end = new Date(start);
     end.setDate(end.getDate() + 6);
     this.appStateService.setVisibleDateRange({start, end});
   }
 
-  save() {
+  toggleCalendar(): void {
+    if (!this.calendarOpen) {
+      this.calendarOpen = true;
+      this.calendarOffsetTop = this.calendarToggle.nativeElement.offsetTop
+        + this.calendarToggle.nativeElement.offsetHeight
+        - this.panel.nativeElement.scrollTop;
+
+      this.tightUnderForCalendar = this.panelOffsetTop + this.calendarOffsetTop + 240 > 1440 * this.pixelsPerMinute;
+
+      const mousedownOutsideCalendarEventListener = (event: MouseEvent) => {
+        if (!(this.calendarCloud.element.nativeElement as Node).contains(event.target as Node)
+          && event.target !== this.calendarToggle.nativeElement) {
+          this.calendarOpen = false;
+          document.removeEventListener('mousedown', mousedownOutsideCalendarEventListener);
+
+          this.cdr.detectChanges();
+        }
+      };
+
+      document.addEventListener('mousedown', mousedownOutsideCalendarEventListener);
+    } else {
+      this.calendarOpen = false;
+    }
+  }
+
+  save(): void {
     this.saving = true;
     this.worklogFacade.updateWorklog(
       this.worklog,

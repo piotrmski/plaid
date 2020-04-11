@@ -39,6 +39,10 @@ export class PlaidComponent implements OnInit {
     this.appStateService.getVisibleDateRange$().subscribe(dateRange => this.visibleDateRange = dateRange);
   }
 
+  setVisibleDateRange(dateRange: DateRange): void {
+    this.appStateService.setVisibleDateRange(dateRange);
+  }
+
   refresh(): void {
     if (this.currentUser) {
       this.worklogFacade.fetchWorklogsVerbose();
