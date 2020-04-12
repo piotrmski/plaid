@@ -10,6 +10,7 @@
 - fixed Jira Cloud integration
 - fixed potential crash at launch
 - minor style tweaks
+- updated dependencies
 
 ## 0.3
 
