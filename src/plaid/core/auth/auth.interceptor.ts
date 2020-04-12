@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {EMPTY, Observable} from 'rxjs';
+import {EMPTY, Observable, throwError} from 'rxjs';
 import {catchError, filter, mergeMap, skip, take} from 'rxjs/operators';
 import {AuthState} from './auth.state';
 import {User} from '../../models/user';
@@ -25,12 +25,17 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleError(request: HttpRequest<any>, next: HttpHandler, error: HttpErrorResponse): Observable<HttpEvent<any>> {
-    this.authState.setAuthError(error);
-    // Retry the request after authentication, except /rest/api/2/user and /rest/auth/1/session, because requests to these end points will
-    // be retried in the process of authentication.
-    return request.url.substr(0, 16) === '/rest/api/2/user' || request.url === '/rest/auth/1/session'
-      ? EMPTY
-      : this.retryAfterAuthenticated(() => this.intercept(request, next));
+    this.authState.setError(error);
+
+    if (!error || [0, 401, 403].includes(error.status)) { // If the error is related to lack of connection or authorization:
+      // Retry the request after authentication, except /rest/api/2/user and /rest/auth/1/session, because requests to
+      // these end points will be retried in the process of authentication.
+      return request.url.substr(0, 16) === '/rest/api/2/user' || request.url === '/rest/auth/1/session'
+        ? EMPTY
+        : this.retryAfterAuthenticated(() => this.intercept(request, next));
+    } else { // Otherwise let the error propagate
+      return throwError(error);
+    }
   }
 
   private retryAfterAuthenticated(event$fn: () => Observable<HttpEvent<any>>): Observable<HttpEvent<any>> {

@@ -8,14 +8,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: -1;
   opacity: 0;
-  transition: 0.25s opacity, 0.25s z-index step-end;
+  transition: 0.25s opacity;
+  z-index: 4;
 
   &.visible {
-    z-index: 4;
     opacity: 1;
-    transition: 0.25s opacity, 0.25s z-index step-start;
+  }
+
+  &:not(.visible) {
+    pointer-events: none;
   }
 }
 
@@ -28,14 +30,16 @@
   position: relative;
   top: 40px;
   opacity: 0;
-  z-index: 0;
   transition: 0.25s top, 0s opacity 0.25s;
 
   &.open {
     top: 0;
     opacity: 1;
-    z-index: 1;
     transition: 0.25s top, 0s opacity 0s;
+  }
+
+  &:not(.open) {
+    pointer-events: none;
   }
 }
 

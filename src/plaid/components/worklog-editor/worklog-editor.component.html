@@ -1,0 +1,103 @@
+<div
+  #wrapper
+  class="wrapper"
+  [class.visible]="worklog"
+  (mousedown)="handleClickOutsideEditor($event)"
+  [class.dragging]="dragging"
+  [class.stretching]="stretching"
+>
+  <div
+    class="panel-wrapper"
+    [style.left.%]="panelOffsetLeft * 100"
+    [style.top.px]="panelOffsetTop"
+    [style.width.%]="panelWidth * 100"
+    [style.height.px]="panelHeight"
+    [class.visible]="editedPanelInRange"
+    [class.buttons-outside-container]="panelHeight < 200"
+    [class.tight-under]="spaceUnderPanel < 40"
+    title="Hold:
+Alt to snap to 1 minute,
+nothing to snap to 5 minutes,
+Shift to snap to 15 minutes,
+Ctrl to snap to 60 minutes."
+  >
+    <div
+      #panel
+      class="panel"
+      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      (mousedown)="dragStart($event)"
+    >
+      <label>Issue</label>
+      <input
+        disabled
+        [value]="issueString"
+        title=""
+        class="tangible"
+      >
+      <label>Date</label>
+      <a
+        #calendarToggle
+        id="date-input"
+        class="button input tangible"
+        [class.active]="calendarOpen"
+        title=""
+        (click)="toggleCalendar()"
+      >{{ dateString }}</a>
+      <label>Comment</label>
+      <textarea
+        [(ngModel)]="commentString"
+        title=""
+        class="tangible space-under"
+      ></textarea>
+    </div>
+
+    <div class="buttons-area">
+      <button
+        class="button primary tangible"
+        [disabled]="saving"
+        title=""
+        (click)="save()"
+      >
+        <span *ngIf="saving" class="spinner"></span>
+        <ng-container *ngIf="!saving">Save</ng-container>
+      </button>
+      <button
+        class="button tangible"
+        [class.non-translucent]="panelHeight < 200"
+        (click)="cancelEdit.emit()"
+        [disabled]="saving"
+        title=""
+      >Cancel</button>
+    </div>
+
+    <div
+      class="handle-top"
+      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      (mousedown)="stretchTopStart($event)"
+    ></div>
+    <div
+      class="handle-bottom"
+      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      (mousedown)="stretchBottomStart($event)"
+    ></div>
+
+    <div class="start-time">{{ startTimeString }}</div>
+    <div class="end-time">{{ endTimeString }}</div>
+
+    <plaid-date-picker-cloud
+      [(calendarOpen)]="calendarOpen"
+      [style.top.px]="calendarOffsetTop"
+      [class.flip]="flipCalendar"
+      [selectedDate]="date"
+      (selectedDateChange)="selectDate($event)"
+      title=""
+    ></plaid-date-picker-cloud>
+  </div>
+
+  <a
+    class="button non-translucent"
+    id="return-button"
+    [class.visible]="!editedPanelInRange"
+    (click)="returnToEditedWorklog()"
+  >Return to edited worklog</a>
+</div>
