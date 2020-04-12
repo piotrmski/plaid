@@ -30,7 +30,7 @@ export class WorklogApi {
       + '?fields=components,issuetype,parent,priority,summary'
       + '&startAt=' + startAt
       + '&jql=' + encodeURIComponent(
-        'worklogAuthor = ' + encodeURIComponent(user.name) + ' && worklogDate >= "'
+        'worklogAuthor = currentUser() && worklogDate >= "'
           + formatDate(dateRange.start, 'yyyy-MM-dd', 'en-US') + '" && worklogDate <= "'
           + formatDate(dateRange.end, 'yyyy-MM-dd', 'en-US') + '"'
       );
@@ -84,7 +84,7 @@ export class WorklogApi {
     return this.streamWorklogIssuesForDateRange$(dateRange, user).pipe(
       mergeAll<Issue>(),
       mergeMap<Issue, Observable<Worklog[]>>(issue => this.streamWorklogsForIssue$(issue)),
-      map<Worklog[], Worklog[]>(worklogs => worklogs.filter(worklog => worklog.author.name === user.name
+      map<Worklog[], Worklog[]>(worklogs => worklogs.filter(worklog => worklog.author.self === user.self
         && new Date(worklog.started).valueOf() >= dateRange.start.valueOf()
         && new Date(worklog.started).valueOf() < dateRange.end.valueOf() + 86400000
       )),

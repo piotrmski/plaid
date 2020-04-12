@@ -14,7 +14,9 @@ export class AuthInterceptor implements HttpInterceptor {
     if (authInfo) {
       const newRequest: HttpRequest<any> = request.clone({
         setHeaders: {Authorization: this.authState.getAuthHeader()},
-        url: authInfo.jiraUrl + request.url
+        url: request.url.substr(0, 7) !== 'http://' && request.url.substr(0, 8) !== 'https://'
+          ? authInfo.jiraUrl + request.url
+          : request.url
       });
       return next.handle(newRequest).pipe(
         catchError((error: HttpErrorResponse) => this.handleError(request, next, error))
