@@ -55,7 +55,7 @@ export class WorklogEditorComponent implements OnInit {
   saving = false;
   calendarOpen = false;
   calendarOffsetTop = 0;
-  tightUnderForCalendar = false;
+  flipCalendar = false;
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
@@ -153,6 +153,8 @@ export class WorklogEditorComponent implements OnInit {
     this.panelWidth = 1 / (Math.round((this.dateRange.end.getTime() - this.dateRange.start.getTime()) / 86400000) + 1);
     this.panelOffsetLeft = this.panelWidth * Math.round((this.date.getTime() - this.dateRange.start.getTime()) / 86400000);
     this.spaceUnderPanel = 1440 * this.pixelsPerMinute - this.panelOffsetTop - this.panelHeight;
+    this.calendarOffsetTop = this.calendarToggle.nativeElement.offsetTop + 30 - this.panel.nativeElement.scrollTop;
+    this.flipCalendar = this.panelOffsetTop + this.calendarOffsetTop + 240 > 1440 * this.pixelsPerMinute;
   }
 
   dragStart(event: MouseEvent): void {
@@ -314,6 +316,7 @@ export class WorklogEditorComponent implements OnInit {
     this.start.setFullYear(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
     this.dateString = Format.date(this.start);
     this.editedPanelInRange = this.date >= this.dateRange.start && this.date <= this.dateRange.end;
+    this.returnToEditedWorklog();
     this.computeSizeAndOffset();
   }
 
@@ -322,17 +325,15 @@ export class WorklogEditorComponent implements OnInit {
     start.setDate(start.getDate() - start.getDay());
     const end = new Date(start);
     end.setDate(end.getDate() + 6);
-    this.appStateService.setVisibleDateRange({start, end});
+    if (start.getTime() !== this.dateRange.start.getTime() || end.getTime() !== this.dateRange.end.getTime()) {
+      this.appStateService.setVisibleDateRange({start, end});
+    }
   }
 
   toggleCalendar(): void {
     if (!this.calendarOpen) {
       this.calendarOpen = true;
-      this.calendarOffsetTop = this.calendarToggle.nativeElement.offsetTop
-        + this.calendarToggle.nativeElement.offsetHeight
-        - this.panel.nativeElement.scrollTop;
-
-      this.tightUnderForCalendar = this.panelOffsetTop + this.calendarOffsetTop + 240 > 1440 * this.pixelsPerMinute;
+      this.computeSizeAndOffset();
 
       const mousedownOutsideCalendarEventListener = (event: MouseEvent) => {
         if (!(this.calendarCloud.element.nativeElement as Node).contains(event.target as Node)

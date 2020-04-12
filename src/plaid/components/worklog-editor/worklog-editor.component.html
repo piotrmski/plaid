@@ -13,7 +13,7 @@
     [style.width.%]="panelWidth * 100"
     [style.height.px]="panelHeight"
     [class.visible]="editedPanelInRange"
-    [class.buttons-outside-container]="panelHeight < 100"
+    [class.buttons-outside-container]="panelHeight < 200"
     [class.tight-under]="spaceUnderPanel < 40"
     title="Hold:
 Alt to snap to 1 minute,
@@ -63,7 +63,7 @@ Ctrl to snap to 60 minutes."
       </button>
       <button
         class="button tangible"
-        [class.non-translucent]="panelHeight < 100"
+        [class.non-translucent]="panelHeight < 200"
         (click)="cancelEdit.emit()"
         [disabled]="saving"
         title=""
@@ -87,7 +87,7 @@ Ctrl to snap to 60 minutes."
     <plaid-date-picker-cloud
       [(calendarOpen)]="calendarOpen"
       [style.top.px]="calendarOffsetTop"
-      [class.flip]="tightUnderForCalendar"
+      [class.flip]="flipCalendar"
       [selectedDate]="date"
       (selectedDateChange)="selectDate($event)"
       title=""

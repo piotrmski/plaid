@@ -9,6 +9,7 @@
   background: rgba(50,50,50,0.3);
   opacity: 0;
   transition: 0.1s opacity;
+  overflow: hidden;
 
   &.visible {
     pointer-events: all;

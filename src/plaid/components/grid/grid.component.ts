@@ -4,13 +4,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Input,
-  OnInit
+  Input
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
 import {Format} from '../../helpers/format';
-import {Observable} from 'rxjs';
 
 /**
  * Dumb container for the entire grid including header, background, footer, time marker, and work log entries.
@@ -28,7 +26,7 @@ export class GridComponent implements AfterViewInit {
   worklogsSplitByDays: Worklog[][];
   timeSums: string[];
   _pixelsPerMinute: number;
-  forcedHeight: number = null;
+  gridHeight = 0;
   timeout: number;
   editedWorklog: Worklog;
 
@@ -55,11 +53,11 @@ export class GridComponent implements AfterViewInit {
     const change = ppm / this._pixelsPerMinute;
     const newScrollTop = change * this.hostElement.nativeElement.scrollTop
       + (change - 1) * this.hostElement.nativeElement.clientHeight * 0.5;
-    if (newScrollTop + this.hostElement.nativeElement.clientHeight > this.hostElement.nativeElement.scrollHeight) {
-      this.forcedHeight = newScrollTop + this.hostElement.nativeElement.clientHeight;
+    const oldGridHeight = this.gridHeight;
+    this.gridHeight = 1440 * ppm + 60;
+    if (newScrollTop + this.hostElement.nativeElement.clientHeight > oldGridHeight) {
       this.timeout = setTimeout(() => {
         this.hostElement.nativeElement.scrollTop = newScrollTop;
-        this.forcedHeight = null;
         this._pixelsPerMinute = ppm;
         this.cdr.detectChanges();
         this.timeout = null;
@@ -156,7 +154,7 @@ export class GridComponent implements AfterViewInit {
     return this._dateRange;
   }
 
-  constructor(public hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
 
   /**
    * Scroll vertically into current time and horizontally into current day.
