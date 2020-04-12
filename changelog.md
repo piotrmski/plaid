@@ -1,5 +1,16 @@
 # Change log
 
+## 0.4
+
+**0.4.0**
+
+![Editor](https://raw.githubusercontent.com/piotrmski/plaid/master/changelog-screenshots/editor.png)
+
+- added work log editor
+- fixed Jira Cloud integration
+- fixed potential crash at launch
+- minor style tweaks
+
 ## 0.3
 
 **0.3.2**
