@@ -18,6 +18,9 @@ import {AppStateService} from '../../core/app-state.service';
 import {WorklogFacade} from '../../core/worklog/worklog.facade';
 import {DatePickerCloudComponent} from '../date-picker-cloud/date-picker-cloud.component';
 
+/**
+ * Smart component, presenting edited worklog, handling all its interactions and updating worklog on the server
+ */
 @Component({
   selector: 'plaid-worklog-editor',
   templateUrl: './worklog-editor.component.html',
@@ -75,6 +78,9 @@ export class WorklogEditorComponent implements OnInit {
   @Input()
   gridElement: HTMLDivElement;
 
+  /**
+   * In how many vertical pixels is one minute represented
+   */
   @Input()
   set pixelsPerMinute(value: number) {
     if (this.mouseEventYOffset != null) {
@@ -89,6 +95,9 @@ export class WorklogEditorComponent implements OnInit {
     return this._pixelsPerMinute;
   }
 
+  /**
+   * Visible date range
+   */
   @Input()
   set dateRange(range: DateRange) {
     this._dateRange = range;
@@ -103,6 +112,9 @@ export class WorklogEditorComponent implements OnInit {
     return this._dateRange;
   }
 
+  /**
+   * Currently edited worklog
+   */
   @Input()
   set worklog(worklog: Worklog) {
     this._worklog = worklog;
@@ -140,10 +152,18 @@ export class WorklogEditorComponent implements OnInit {
   ) {
   }
 
+  /**
+   * When user changes authentication data, the editor should close.
+   */
   ngOnInit(): void {
+    // Singleton component, no need to unsubscribe
     this.authFacade.getAuthenticatedUser$().subscribe(() => this.cancelEdit.emit());
   }
 
+  /**
+   * Puts the edited panel in the correct offset, gives it correct size and does layout checks according to edited
+   * worklog's start time, end time, date, currently visible date range and pixels per minute.
+   */
   computeSizeAndOffset(): void {
     this.panelOffsetTop = (this.start.getHours() * 60 + this.start.getMinutes()) * this.pixelsPerMinute;
     this.panelHeight = Math.min(
@@ -157,6 +177,9 @@ export class WorklogEditorComponent implements OnInit {
     this.flipCalendar = this.panelOffsetTop + this.calendarOffsetTop + 240 > 1440 * this.pixelsPerMinute;
   }
 
+  /**
+   * Initiates panel dragging, adds event listeners for mouse movement and button release
+   */
   dragStart(event: MouseEvent): void {
     if (event.button === 0 && event.target === this.panel.nativeElement) {
       this.dragging = true;
@@ -176,6 +199,9 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Handles mouse movement during panel dragging calculating change in start time and date
+   */
   handleDragEvent(event: MouseEvent): void {
     // Handle dragging vertically
     const oldStartTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
@@ -217,6 +243,9 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Initiates top stretch handle dragging, adds event listeners for mouse movement and button release
+   */
   stretchTopStart(event: MouseEvent): void {
     if (event.button === 0) {
       this.stretching = true;
@@ -227,6 +256,9 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Initiates bottom stretch handle dragging, adds event listeners for mouse movement and button release
+   */
   stretchBottomStart(event: MouseEvent): void {
     if (event.button === 0) {
       this.stretching = true;
@@ -245,6 +277,9 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Handles mouse movement during top stretch handle dragging calculating change in start time and work duration
+   */
   handleStretchTopEvent(event: MouseEvent): void {
     const snapTo: number = this.getSnapTo(event);
     const oldStartTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
@@ -265,6 +300,9 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Handles mouse movement during top stretch handle dragging calculating change in work duration
+   */
   handleStretchBottomEvent(event: MouseEvent): void {
     const snapTo: number = this.getSnapTo(event);
     const startTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
@@ -286,6 +324,10 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns what interval of minutes should dragging events snap to according to what modifier keys on keyboard are
+   * pressed.
+   */
   getSnapTo(event: MouseEvent): number {
     if (event.altKey && !event.ctrlKey && !event.shiftKey) {
       return 1;
@@ -298,6 +340,9 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns number of minutes from start of the day according to what the mouse points at, rounded to snapTo interval
+   */
   getPointerTopOffsetMinutes(event: MouseEvent, snapTo: number): number {
     return Math.round(
       (event.clientY + this.gridElement.scrollTop - WorklogEditorComponent.GRID_OFFSET_TOP - this.mouseEventYOffset)
@@ -305,12 +350,18 @@ export class WorklogEditorComponent implements OnInit {
     ) * snapTo;
   }
 
+  /**
+   * Closes the editor if user clicked outside the panel with left mouse button
+   */
   handleClickOutsideEditor(event: MouseEvent): void {
     if (event.button === 0 && event.target === this.wrapper.nativeElement && !this.calendarOpen) {
       this.cancelEdit.emit();
     }
   }
 
+  /**
+   * Handles date selection in the calendar cloud, changing worklog date and changing visible date range to include it
+   */
   selectDate(date: Date): void {
     this.date = date;
     this.start.setFullYear(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
@@ -320,6 +371,9 @@ export class WorklogEditorComponent implements OnInit {
     this.computeSizeAndOffset();
   }
 
+  /**
+   * Changes visible date range to include worklog date
+   */
   returnToEditedWorklog(): void {
     const start = new Date(this.date);
     start.setDate(start.getDate() - start.getDay());
@@ -330,6 +384,9 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Opens or closes calendar cloud and sets event listener to close the calendar if user clicked outside it
+   */
   toggleCalendar(): void {
     if (!this.calendarOpen) {
       this.calendarOpen = true;
@@ -351,6 +408,9 @@ export class WorklogEditorComponent implements OnInit {
     }
   }
 
+  /**
+   * Updates worklog on the server and closes the editor if update was successful
+   */
   save(): void {
     this.saving = true;
     this.worklogFacade.updateWorklog(
