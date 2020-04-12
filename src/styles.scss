@@ -32,6 +32,10 @@ body {
   color: var(--color-gray-7);
 }
 
+img {
+  -webkit-user-drag: none;
+}
+
 /* Icons */
 
 .icon {
