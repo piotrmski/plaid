@@ -49,7 +49,7 @@
       <label>Jira URL</label>
       <div class="input-wrapper">
         <input name="jiraUrl" type="url" [(ngModel)]="authInfo.jiraUrl" required (change)="onUrlChange()" [class.http-notice-visible]="httpNoticeVisible">
-        <div class="http-notice-icon" [class.visible]="httpNoticeVisible">!</div>
+        <svg class="icon-warning" [class.visible]="httpNoticeVisible"><use href="assets/icons.svg#warning"></use></svg>
         <div class="http-notice">By design Plaid does not require administrative actions on the server for the program to work. As a consequence it uses basic authentication, meaning your username and password will be sent to the server in HTTP Authorization header with every request. Therefore HTTPS is strongly recommended to keep your credentials secure.</div>
       </div>
       <label>Username <small>(for Jira Cloud use your email address instead)</small></label>
