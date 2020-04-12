@@ -2,13 +2,12 @@
 
 ![Screenshot](https://raw.githubusercontent.com/piotrmski/plaid/master/screenshot.png)
 
-Plaid lets you get a better overview of your Jira work logs. See your work logs laid out on a weekly calendar and never struggle searching for gaps in your hours again.
+Plaid lets you get a better overview of your Jira work logs. See your work logs neatly laid out and never struggle to search for gaps in your hours again. Edit them by dragging them across the calendar.
 
-## New in 0.3
+## New in 0.4
 
-- added zooming,
-- added dark theme,
-- added current time marker.
+- Work logs can now be edited within Plaid (adding and deleting will come in future versions as well)
+- Fixed Jira Cloud integration
 
 See full change log in `changelog.md`
 
@@ -16,7 +15,7 @@ See full change log in `changelog.md`
 
 ### Windows
 
-Download the installer from the latest [release](https://github.com/piotrmski/plaid/releases). Run the executable and you're good to go. Your application will automatically update to newer releases.
+Download the installer from the latest [release](https://github.com/piotrmski/plaid/releases). Run the executable, and you're good to go. Your application will automatically update to newer releases.
 
 ### GNU/Linux
 
@@ -62,7 +61,7 @@ The built project can then be run without packaging:
 npm run start
 ```
 
-After building you can also package the project for the current platform to `./dist`:
+After building, you can also package the project for the current platform to `./dist`:
 
 ```
 npm run package

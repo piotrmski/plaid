@@ -1,12 +1,12 @@
 {
   "name": "plaid",
   "productName": "Plaid",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": {
     "name": "Piotr Marczyński",
     "email": "piotmski@gmail.com"
   },
-  "description": "Get a better overview of your Jira work log",
+  "description": "Better manage your Jira work log",
   "keywords": [
     "jira",
     "work log",
