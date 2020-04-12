@@ -8,12 +8,12 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   templateUrl: './zoom-controls.component.html'
 })
 export class ZoomControlsComponent implements OnInit {
-  static readonly MIN_PIXELS_PER_MINUTE_BASE = 1;
-  static readonly MAX_PIXELS_PER_MINUTE_BASE = 4;
+  static readonly MIN_PIXELS_PER_MINUTE_EXPONENT = 0;
+  static readonly MAX_PIXELS_PER_MINUTE_EXPONENT = 4;
 
   zoomInButtonActive = false;
   zoomOutButtonActive = false;
-  _pixelsPerMinuteBase: number;
+  _pixelsPerMinuteExponent: number;
 
   @Input()
   shortcutsDisabled = false;
@@ -22,11 +22,11 @@ export class ZoomControlsComponent implements OnInit {
   pixelsPerMinuteChange = new EventEmitter<number>();
 
   ngOnInit(): void {
-    this.pixelsPerMinuteBase = 1.25;
+    this.pixelsPerMinuteExponent = 0.75;
     // Singleton component, no need to unbind events
     addEventListener('wheel', (e: WheelEvent) => { // Ctrl mouse wheel, Ctrl two finger swipe, pinch
       if (!this.shortcutsDisabled && e.ctrlKey) {
-        this.pixelsPerMinuteBase -= e.deltaY / 800;
+        this.pixelsPerMinuteExponent -= e.deltaY / 800;
         e.preventDefault();
       }
     }, {passive: false});
@@ -45,35 +45,35 @@ export class ZoomControlsComponent implements OnInit {
     });
   }
 
-  get pixelsPerMinuteBase(): number {
-    return this._pixelsPerMinuteBase;
+  get pixelsPerMinuteExponent(): number {
+    return this._pixelsPerMinuteExponent;
   }
 
-  set pixelsPerMinuteBase(val: number) {
-    if (val < ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_BASE) {
-      val = ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_BASE;
-    } else if (val > ZoomControlsComponent.MAX_PIXELS_PER_MINUTE_BASE) {
-      val = ZoomControlsComponent.MAX_PIXELS_PER_MINUTE_BASE;
+  set pixelsPerMinuteExponent(val: number) {
+    if (val < ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_EXPONENT) {
+      val = ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_EXPONENT;
+    } else if (val > ZoomControlsComponent.MAX_PIXELS_PER_MINUTE_EXPONENT) {
+      val = ZoomControlsComponent.MAX_PIXELS_PER_MINUTE_EXPONENT;
     }
 
-    this._pixelsPerMinuteBase = val;
+    this._pixelsPerMinuteExponent = val;
     // Emitted value has reduced binary and decimal precision not to brake layout.
-    this.pixelsPerMinuteChange.emit(Math.round(val * val * 128) / 128);
+    this.pixelsPerMinuteChange.emit(Math.round(Math.pow(2, val) * 128) / 128);
   }
 
   zoomIn(): void {
-    this.pixelsPerMinuteBase += 0.25;
+    this.pixelsPerMinuteExponent += 0.25;
   }
 
   zoomOut(): void {
-    this.pixelsPerMinuteBase -= 0.25;
+    this.pixelsPerMinuteExponent -= 0.25;
   }
 
   get isAbleToZoomIn(): boolean {
-    return this.pixelsPerMinuteBase < ZoomControlsComponent.MAX_PIXELS_PER_MINUTE_BASE;
+    return this.pixelsPerMinuteExponent < ZoomControlsComponent.MAX_PIXELS_PER_MINUTE_EXPONENT;
   }
 
   get isAbleToZoomOut(): boolean {
-    return this.pixelsPerMinuteBase > ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_BASE;
+    return this.pixelsPerMinuteExponent > ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_EXPONENT;
   }
 }

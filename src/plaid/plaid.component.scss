@@ -22,8 +22,13 @@
     margin-right: 0;
   }
 
+  plaid-date-range-picker {
+    z-index: 4;
+  }
+
   plaid-auth-status {
     margin-left: auto;
+    z-index: 4;
   }
 }
 

@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} fr
 import {DateRange} from '../../models/date-range';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import Timeout = NodeJS.Timeout;
+import {Format} from '../../helpers/format';
 
 /**
  * Dumb component, responsible for displaying current time and marking current date on the grid.
@@ -65,9 +66,7 @@ export class CurrentTimeMarkerComponent implements OnInit {
     const prevMinute: number = this.now ? this.now.getMinutes() : null;
     this.now = new Date();
     if (prevMinute !== this.now.getMinutes()) { // If current minute changed, update label.
-      this.timeLabel = this.sanitizer.bypassSecurityTrustHtml(
-        this.now.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }).replace(':', '<wbr>:')
-      );
+      this.timeLabel = this.sanitizer.bypassSecurityTrustHtml(Format.time(this.now).replace(':', '<wbr>:'));
       this.today = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
     }
     // Update marker vertical position, whether current minute changed or not.

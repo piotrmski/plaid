@@ -1,4 +1,4 @@
-<div class="grid" [style.min-width.px]="30 + days.length * 180" [style.min-height.px]="forcedHeight">
+<div class="grid" [style.min-width.px]="30 + days.length * 180" [style.min-height.px]="gridHeight">
   <div class="grid-header">
     <div class="header-over-labels"></div>
     <div class="header-over-content" *ngFor="let weekday of days">
@@ -23,6 +23,8 @@
         *ngFor="let worklog of logs"
         [worklog]="worklog"
         [pixelsPerMinute]="pixelsPerMinute"
+        [currentlyEdited]="worklog.id === editedWorklog?.id"
+        (edit)="editedWorklog = worklog"
       ></plaid-worklog-panel>
     </div>
   </div>
@@ -34,7 +36,14 @@
       {{ timeSum }}
     </div>
   </div>
-</div>
-<div class="loading-overlay" [class.visible]="loading">
-  <span class="spinner"></span>
+  <div class="loading-overlay" [class.visible]="loading">
+    <span class="spinner"></span>
+  </div>
+  <plaid-worklog-editor
+    [pixelsPerMinute]="pixelsPerMinute"
+    [dateRange]="dateRange"
+    [worklog]="editedWorklog"
+    [gridElement]="hostElement.nativeElement"
+    (cancelEdit)="editedWorklog = null"
+  ></plaid-worklog-editor>
 </div>

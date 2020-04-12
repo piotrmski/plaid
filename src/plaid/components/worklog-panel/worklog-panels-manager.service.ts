@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {WorklogPanelComponent} from './worklog-panel.component';
 import {fromEvent} from 'rxjs';
-import {PlaidFacade} from '../../plaid.facade';
 import Timeout = NodeJS.Timeout;
+import {SystemPreferencesService} from '../../core/system-preferences.service';
 
 /**
  * Service for managing visual aspects of all panels at once - their size and position and whether dark theme is active.
@@ -17,9 +17,9 @@ export class WorklogPanelsManagerService {
   private timeoutSetTime = 0;
   private darkMode: boolean;
 
-  constructor(private facade: PlaidFacade) {
+  constructor(private systemPreferencesService: SystemPreferencesService) {
     fromEvent(window, 'resize').subscribe(() => this.scheduleCheckSizeAndPosition());
-    facade.getDarkMode$().subscribe(darkMode => {
+    systemPreferencesService.getDarkMode$().subscribe(darkMode => {
       this.darkMode = darkMode;
       this.panels.forEach(panel => panel.darkMode = this.darkMode);
     });

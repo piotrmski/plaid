@@ -1,6 +1,5 @@
 export interface User {
   self?: string;
-  name?: string;
   key?: string;
   emailAddress?: string;
   avatarUrls?: {[key: string]: string};

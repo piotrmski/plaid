@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
+import {Format} from '../../helpers/format';
 
 /**
  * Dumb container for the entire grid including header, background, footer, time marker, and work log entries.
@@ -25,8 +26,9 @@ export class GridComponent implements AfterViewInit {
   worklogsSplitByDays: Worklog[][];
   timeSums: string[];
   _pixelsPerMinute: number;
-  forcedHeight: number = null;
+  gridHeight = 0;
   timeout: number;
+  editedWorklog: Worklog;
 
   /**
    * Whether an overlay with a spinner should be visible
@@ -51,11 +53,11 @@ export class GridComponent implements AfterViewInit {
     const change = ppm / this._pixelsPerMinute;
     const newScrollTop = change * this.hostElement.nativeElement.scrollTop
       + (change - 1) * this.hostElement.nativeElement.clientHeight * 0.5;
-    if (newScrollTop + this.hostElement.nativeElement.clientHeight > this.hostElement.nativeElement.scrollHeight) {
-      this.forcedHeight = newScrollTop + this.hostElement.nativeElement.clientHeight;
+    const oldGridHeight = this.gridHeight;
+    this.gridHeight = 1440 * ppm + 60;
+    if (newScrollTop + this.hostElement.nativeElement.clientHeight > oldGridHeight) {
       this.timeout = setTimeout(() => {
         this.hostElement.nativeElement.scrollTop = newScrollTop;
-        this.forcedHeight = null;
         this._pixelsPerMinute = ppm;
         this.cdr.detectChanges();
         this.timeout = null;
@@ -122,14 +124,7 @@ export class GridComponent implements AfterViewInit {
 
         this.timeSums = this.worklogsSplitByDays
           .map(logs => logs.map(worklog => worklog.timeSpentSeconds).reduce((a, b) => a + b, 0)) // Add up all worklog.timeSpentSeconds
-          .map(sumOfSeconds => { // Translate it to human readable format
-            const hours: number = Math.floor(sumOfSeconds / 3600);
-            sumOfSeconds -= hours * 3600;
-            const minutes: number = Math.floor(sumOfSeconds / 60);
-            sumOfSeconds -= minutes * 60;
-            const seconds: number = sumOfSeconds;
-            return (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + (seconds ? seconds + 's' : '');
-          });
+          .map(sumOfSeconds => Format.timePeriod(sumOfSeconds)); // Translate it to human readable format
       } else {
         this._worklogs = [];
         this.worklogsSplitByDays = [];
@@ -159,7 +154,7 @@ export class GridComponent implements AfterViewInit {
     return this._dateRange;
   }
 
-  constructor(private hostElement: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
 
   /**
    * Scroll vertically into current time and horizontally into current day.

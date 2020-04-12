@@ -11,7 +11,7 @@ export class SystemPreferencesService {
     nativeTheme.addListener('updated', () => this.darkModeSubject.next(nativeTheme.shouldUseDarkColors));
   }
 
-  darkMode$(): Observable<boolean> {
+  getDarkMode$(): Observable<boolean> {
     return this.darkModeSubject.asObservable();
   }
 }

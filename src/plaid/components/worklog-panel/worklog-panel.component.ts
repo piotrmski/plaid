@@ -1,15 +1,19 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
-import {PlaidFacade} from '../../plaid.facade';
 import {WorklogPanelsManagerService} from './worklog-panels-manager.service';
+import {Format} from '../../helpers/format';
+import {AuthFacade} from '../../core/auth/auth.facade';
 
 /**
  * Somewhat dumb component, present a panel representing a work log entry, makes use of its own service to manage
@@ -38,6 +42,12 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   components: string;
   timeRange: string;
   _darkMode: boolean;
+
+  /**
+   * Emits when user presses edit button.
+   */
+  @Output()
+  edit = new EventEmitter<void>();
 
   /**
    * Presented work log entry. Setting it will set the panel's initial size and position on the grid as well as its
@@ -79,6 +89,12 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Whether this work log was opened in the editor
+   */
+  @Input()
+  currentlyEdited: boolean;
+
+  /**
    * This setter is executed asynchronously by the manager and therefore needs to invoke change detector.
    */
   set darkMode(value: boolean) {
@@ -92,10 +108,14 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   @ViewChild('panelInner', { static: true })
   panelInner: ElementRef;
 
-  constructor(private facade: PlaidFacade, private cdr: ChangeDetectorRef, private manager: WorklogPanelsManagerService) { }
+  constructor(
+    private authFacade: AuthFacade,
+    private cdr: ChangeDetectorRef,
+    private manager: WorklogPanelsManagerService
+  ) { }
 
   ngOnInit(): void {
-    this.jiraURL = this.facade.getJiraURL();
+    this.jiraURL = this.authFacade.getJiraURL();
     this.manager.addPanel(this);
   }
 
@@ -111,23 +131,17 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     const startTime = new Date(this.worklog.started);
     const endTime = new Date(startTime);
     endTime.setTime(endTime.getTime() + this.worklog.timeSpentSeconds * 1000);
+    const justBeforeEndTime = new Date(endTime);
+    justBeforeEndTime.setTime(endTime.getTime() - 1);
 
     if (
-      startTime.getFullYear() === endTime.getFullYear() &&
-      startTime.getMonth() === endTime.getMonth() &&
-      startTime.getDate() === endTime.getDate()
+      startTime.getFullYear() === justBeforeEndTime.getFullYear() &&
+      startTime.getMonth() === justBeforeEndTime.getMonth() &&
+      startTime.getDate() === justBeforeEndTime.getDate()
     ) {
-      this.timeRange = startTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) + ' - ' +
-        endTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+      this.timeRange = Format.time(startTime) + ' - ' + Format.time(endTime);
     } else {
-      let sumOfSeconds = this.worklog.timeSpentSeconds;
-      const hours: number = Math.floor(sumOfSeconds / 3600);
-      sumOfSeconds -= hours * 3600;
-      const minutes: number = Math.floor(sumOfSeconds / 60);
-      sumOfSeconds -= minutes * 60;
-      const seconds: number = sumOfSeconds;
-      this.timeRange = 'Since ' + startTime.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) +
-        ' for ' + (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + (seconds ? seconds + 's' : '');
+      this.timeRange = 'Since ' + Format.time(startTime) + ' for ' + Format.timePeriod(this.worklog.timeSpentSeconds);
     }
   }
 

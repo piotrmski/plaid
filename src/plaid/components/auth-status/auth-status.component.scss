@@ -22,8 +22,7 @@ img {
   padding: 0 0 20px;
   top: 20px;
   right: 0;
-  transition: 0.25s opacity, 0.25s top, 0.25s z-index step-end;
-  z-index: -1;
+  transition: 0.25s opacity, 0.25s top;
 
   &::before {
     content: ' ';
@@ -38,8 +37,10 @@ img {
   &.open {
     opacity: 1;
     top: 40px;
-    transition: 0.25s opacity, 0.25s top, 0.25s z-index step-start;
-    z-index: 4;
+  }
+
+  &:not(.open) {
+    pointer-events: none;
   }
 
   .headline {
@@ -51,7 +52,6 @@ img {
   .button {
     display: block;
     border-radius: 0;
-    padding: 0 15px;
     margin: 0;
   }
 }

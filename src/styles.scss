@@ -32,12 +32,21 @@ body {
   color: var(--color-gray-7);
 }
 
+img {
+  -webkit-user-drag: none;
+}
+
 /* Icons */
 
 .icon {
   width: 16px;
   height: 16px;
   margin-bottom: -2px;
+}
+
+.icon-warning {
+  width: 20px;
+  height: 20px;
 }
 
 .icon-user {
@@ -92,6 +101,10 @@ body {
   outline: none;
   display: inline-block;
 
+  &.padded {
+    padding: 0 15px;
+  }
+
   &.disabled, &[disabled] {
     color: var(--color-gray-2);
   }
@@ -106,8 +119,7 @@ body {
       box-shadow: 0 0 0 2px var(--color-primary-1) inset;
     }
 
-    &:active,
-    &.active {
+    &:active, &.active {
       background: rgba(0, 0, 0, 0.2);
       color: var(--color-gray-7);
       transition: 0.025s all ease-out;
@@ -126,9 +138,20 @@ body {
         background: var(--color-primary-4);
       }
 
-      &:active,
-      &.active {
+      &:active, &.active {
         background: var(--color-primary-3);
+      }
+    }
+
+    &.non-translucent {
+      background: #fff;
+
+      &:hover {
+        background: var(--color-gray-1);
+      }
+
+      &:active, &.active {
+        background: var(--color-gray-2);
       }
     }
   }
@@ -145,7 +168,7 @@ label {
   padding: 5px 0;
 }
 
-input {
+input, .input, textarea {
   display: block;
   width: 100%;
   background: rgba(0, 0, 0, 0.05);
@@ -158,17 +181,36 @@ input {
   margin: 0 0 5px;
   transition: 0.1s all;
   outline: none;
+  resize: none;
+  color: var(--color-gray-7);
+
+  &[disabled] {
+    color: var(--color-gray-4);
+  }
+
+  &:not([disabled]) {
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px var(--color-primary-1);
+      background: #fff;
+    }
+  }
 }
 
-input:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
+textarea {
+  line-height: 16px;
+  height: 62px;
+  padding: 7px 15px;
 
-input:focus {
-  box-shadow: 0 0 0 2px var(--color-primary-1);
-  background: #fff;
-}
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
 
-button {
-  padding: 0 15px;
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+  }
 }

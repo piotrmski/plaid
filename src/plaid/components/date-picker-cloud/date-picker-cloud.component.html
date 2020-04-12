@@ -1,12 +1,3 @@
-<a class="button" (click)="decrementWeek()" [class.active]="decrementWeekButtonActive" title="Previous week (F4)">
-  <svg class="icon"><use href="assets/icons.svg#arrow-left"></use></svg>
-</a>
-<a class="button toggle-button" [class.active]="calendarOpen" (click)="calendarOpen = !calendarOpen" title="Select week">
-  {{ buttonText }}
-</a>
-<a class="button" (click)="incrementWeek()" [class.active]="incrementWeekButtonActive" title="Next week (F6)">
-  <svg class="icon"><use href="assets/icons.svg#arrow-right"></use></svg>
-</a>
 <div class="calendar" [class.open]="calendarOpen">
   <div class="month-changer">
     <a class="button" (click)="decrementMonth()" title="Previous month">
@@ -27,12 +18,12 @@
   <div
     class="week"
     *ngFor="let week of days"
-    [class.selected]="selectedDateRange.start.valueOf() === week[0].valueOf() && selectedDateRange.end.valueOf() === week[6].valueOf()"
-    (click)="selectDateRange({ start: week[0], end: week[6] })"
   >
     <div
       class="day"
       *ngFor="let day of week"
+      [class.selected]="selectedDate.getTime() === day.getTime()"
+      (click)="selectDate(day)"
       [class.other-month]="day.getMonth() !== month.getMonth()"
       [class.today]="day.getTime() === today.getTime()"
     >
