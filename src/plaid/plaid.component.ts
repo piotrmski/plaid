@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Worklog} from './models/worklog';
 import {DateRange} from './models/date-range';
 import {User} from './models/user';
@@ -17,6 +17,7 @@ import {AppStateService} from './core/app-state.service';
 })
 export class PlaidComponent implements OnInit {
   pixelsPerMinute: number;
+  pixelsPerMinuteExponent: number; // Only for synchronizing internal exponent value between two sets of zoom buttons
   worklogs: Worklog[];
   loading: boolean;
   visibleDateRange: DateRange;

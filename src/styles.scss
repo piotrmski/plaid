@@ -29,7 +29,7 @@
 body {
   margin: 0;
   font-size: 16px;
-  color: var(--color-gray-7);
+  color: #000;
 }
 
 img {
@@ -90,7 +90,7 @@ img {
 .button {
   line-height: 30px;
   min-width: 30px;
-  color: var(--color-gray-5);
+  color: #000;
   text-align: center;
   margin: 0 2px;
   border-radius: 15px;
@@ -112,7 +112,6 @@ img {
   &:not(.disabled):not([disabled]) {
     &:hover {
       background: rgba(0, 0, 0, 0.1);
-      color: var(--color-gray-6);
     }
 
     &:focus:not(:hover):not(:active) {
@@ -121,7 +120,6 @@ img {
 
     &:active, &.active {
       background: rgba(0, 0, 0, 0.2);
-      color: var(--color-gray-7);
       transition: 0.025s all ease-out;
     }
 
@@ -182,7 +180,7 @@ input, .input, textarea {
   transition: 0.1s all;
   outline: none;
   resize: none;
-  color: var(--color-gray-7);
+  color: #000;
 
   &[disabled] {
     color: var(--color-gray-4);

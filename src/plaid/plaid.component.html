@@ -10,9 +10,19 @@
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-refresh-button>
   <plaid-zoom-controls
+    class="outside-settings"
     (pixelsPerMinuteChange)="pixelsPerMinute = $event"
+    [(pixelsPerMinuteExponent)]="pixelsPerMinuteExponent"
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-zoom-controls>
+  <plaid-settings>
+    <plaid-zoom-controls
+      class="inside-settings"
+      (pixelsPerMinuteChange)="pixelsPerMinute = $event"
+      [(pixelsPerMinuteExponent)]="pixelsPerMinuteExponent"
+      [shortcutsDisabled]="true"
+    ></plaid-zoom-controls>
+  </plaid-settings>
   <plaid-auth-status
     [user]="currentUser"
     (changeCredentials)="changeCredentials()"

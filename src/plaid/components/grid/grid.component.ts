@@ -20,6 +20,8 @@ import {Format} from '../../helpers/format';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridComponent implements AfterViewInit {
+  static readonly GRID_HEADER_AND_FOOTER_COMBINED_HEIGHT = 50;
+
   days: Date[];
   _dateRange: DateRange;
   _worklogs: Worklog[];
@@ -54,7 +56,7 @@ export class GridComponent implements AfterViewInit {
     const newScrollTop = change * this.hostElement.nativeElement.scrollTop
       + (change - 1) * this.hostElement.nativeElement.clientHeight * 0.5;
     const oldGridHeight = this.gridHeight;
-    this.gridHeight = 1440 * ppm + 60;
+    this.gridHeight = 1440 * ppm + GridComponent.GRID_HEADER_AND_FOOTER_COMBINED_HEIGHT;
     if (newScrollTop + this.hostElement.nativeElement.clientHeight > oldGridHeight) {
       this.timeout = setTimeout(() => {
         this.hostElement.nativeElement.scrollTop = newScrollTop;

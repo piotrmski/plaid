@@ -1,0 +1,6 @@
+<a class="button" (click)="dropdownOpen = !dropdownOpen" [class.active]="dropdownOpen">
+  <svg class="icon"><use href="assets/icons.svg#cog"></use></svg>
+</a>
+<div class="dropdown" [class.open]="dropdownOpen">
+  <ng-content></ng-content>
+</div>

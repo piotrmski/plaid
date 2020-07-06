@@ -28,7 +28,7 @@ import {DatePickerCloudComponent} from '../date-picker-cloud/date-picker-cloud.c
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorklogEditorComponent implements OnInit {
-  static readonly GRID_OFFSET_TOP = 71; // top bar height + grid header height
+  static readonly GRID_OFFSET_TOP = 62; // top bar height + grid header height
   static readonly GRID_OFFSET_LEFT = 30; // hour labels width
   static readonly STRETCH_HANDLE_OFFSET_TOP = 4; // offset between top of a stretching handle and edge of the panel
 

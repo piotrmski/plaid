@@ -21,12 +21,17 @@ export class ZoomControlsComponent implements OnInit {
   @Output()
   pixelsPerMinuteChange = new EventEmitter<number>();
 
+  @Output()
+  pixelsPerMinuteExponentChange = new EventEmitter<number>();
+
   ngOnInit(): void {
     this.pixelsPerMinuteExponent = 0.75;
+    this.emitChange();
     // Singleton component, no need to unbind events
     addEventListener('wheel', (e: WheelEvent) => { // Ctrl mouse wheel, Ctrl two finger swipe, pinch
       if (!this.shortcutsDisabled && e.ctrlKey) {
         this.pixelsPerMinuteExponent -= e.deltaY / 800;
+        this.emitChange();
         e.preventDefault();
       }
     }, {passive: false});
@@ -49,6 +54,7 @@ export class ZoomControlsComponent implements OnInit {
     return this._pixelsPerMinuteExponent;
   }
 
+  @Input()
   set pixelsPerMinuteExponent(val: number) {
     if (val < ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_EXPONENT) {
       val = ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_EXPONENT;
@@ -57,16 +63,22 @@ export class ZoomControlsComponent implements OnInit {
     }
 
     this._pixelsPerMinuteExponent = val;
-    // Emitted value has reduced binary and decimal precision not to brake layout.
-    this.pixelsPerMinuteChange.emit(Math.round(Math.pow(2, val) * 128) / 128);
   }
 
   zoomIn(): void {
     this.pixelsPerMinuteExponent += 0.25;
+    this.emitChange();
   }
 
   zoomOut(): void {
     this.pixelsPerMinuteExponent -= 0.25;
+    this.emitChange();
+  }
+
+  emitChange(): void {
+    this.pixelsPerMinuteExponentChange.emit(this.pixelsPerMinuteExponent);
+    // Emitted value has reduced binary and decimal precision not to brake layout.
+    this.pixelsPerMinuteChange.emit(Math.round(Math.pow(2, this.pixelsPerMinuteExponent) * 128) / 128);
   }
 
   get isAbleToZoomIn(): boolean {

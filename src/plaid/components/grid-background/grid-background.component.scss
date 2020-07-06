@@ -27,7 +27,7 @@
 
 .horizontal-dividers {
   position: absolute;
-  top: 35px;
+  top: 25px;
   left: 0;
   width: 100%;
 }
@@ -38,6 +38,10 @@
   border-top: var(--separator-60min);
   width: 30px;
   text-align: center;
+
+  &:first-child {
+    border-top: none;
+  }
 }
 
 .weekday-tenmin {
@@ -63,6 +67,10 @@
   &:nth-child(6n+4) {
     border-top: var(--separator-15min);
     border-bottom: var(--separator-5min);
+  }
+
+  &:first-child {
+    border-top: none;
   }
 }
 
