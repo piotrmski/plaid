@@ -25,7 +25,6 @@ export class ZoomControlsComponent implements OnInit {
   pixelsPerMinuteExponentChange = new EventEmitter<number>();
 
   ngOnInit(): void {
-    this.pixelsPerMinuteExponent = 0.75;
     this.emitChange();
     // Singleton component, no need to unbind events
     addEventListener('wheel', (e: WheelEvent) => { // Ctrl mouse wheel, Ctrl two finger swipe, pinch
@@ -54,6 +53,7 @@ export class ZoomControlsComponent implements OnInit {
     return this._pixelsPerMinuteExponent;
   }
 
+  // This is expected to have an initial value.
   @Input()
   set pixelsPerMinuteExponent(val: number) {
     if (val < ZoomControlsComponent.MIN_PIXELS_PER_MINUTE_EXPONENT) {

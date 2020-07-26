@@ -5,13 +5,13 @@
 .dropdown {
   position: absolute;
   opacity: 0;
-  width: 300px;
+  width: 340px;
   background: #fff;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
-  padding: 0 0 20px;
+  padding: 10px 10px 5px;
   top: 20px;
-  right: -10px;
+  right: -30px;
   transition: 0.25s opacity, 0.25s top;
 
   &::before {
@@ -19,7 +19,7 @@
     display: block;
     position: absolute;
     bottom: 100%;
-    right: 18px;
+    right: 37px;
     border-bottom: 10px solid #fff;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
@@ -44,5 +44,27 @@
     display: block;
     border-radius: 0;
     margin: 0;
+  }
+}
+
+.field {
+  display: flex;
+
+  :first-child {
+    flex: 1;
+  }
+
+  .narrow-dropdown {
+    min-width: 80px;
+    max-width: 80px;
+  }
+
+  .wide-dropdown {
+    width: 185px;
+  }
+
+  .input-separator {
+    width: 25px;
+    text-align: center;
   }
 }

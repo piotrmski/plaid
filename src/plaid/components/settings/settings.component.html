@@ -3,4 +3,52 @@
 </a>
 <div class="dropdown" [class.open]="dropdownOpen">
   <ng-content></ng-content>
+
+  <div class="field">
+    <label>Working hours</label>
+    <select class="input narrow-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
+      <option *ngFor="let hour of hours; index as i" [value]="i * 15">{{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}</option>
+    </select>
+    <label class="input-separator">to</label>
+    <select class="input narrow-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
+      <option *ngFor="let hour of hours; index as i" [value]="i * 15">{{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Working days</label>
+    <select class="input narrow-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
+      <option *ngFor="let day of weekdays; index as i" [value]="i">{{ day }}</option>
+    </select>
+    <label class="input-separator">to</label>
+    <select class="input narrow-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
+      <option *ngFor="let day of weekdays; index as i" [value]="i">{{ day }}</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Non-working days</label>
+    <select class="input wide-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
+      <option value="gray">Gray out</option>
+      <option value="hide">Hide</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Periodic refreshing</label>
+    <select class="input wide-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
+      <option value="0">Disabled</option>
+      <option value="1">Every minute</option>
+      <option value="2">Every 2 minutes</option>
+      <option value="5">Every 5 minutes</option>
+      <option value="10">Every 10 minutes</option>
+      <option value="15">Every 15 minutes</option>
+      <option value="30">Every 30 minutes</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Dark mode</label>
+    <select class="input wide-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
+      <option value="default">System default</option>
+      <option value="enabled">Enabled</option>
+      <option value="disabled">Disabled</option>
+    </select>
+  </div>
 </div>

@@ -1,4 +1,5 @@
 import {Component, ElementRef, HostListener} from '@angular/core';
+import {Calendar} from '../../helpers/calendar';
 
 @Component({
   selector: 'plaid-settings',
@@ -7,8 +8,12 @@ import {Component, ElementRef, HostListener} from '@angular/core';
 })
 export class SettingsComponent {
   dropdownOpen = false;
+  readonly hours: Date[];
+  readonly weekdays: string[] = Calendar.weekdays;
 
-  constructor(private ref: ElementRef) {}
+  constructor(private ref: ElementRef) {
+    this.hours = Array.from<Date>({ length: 96 }).map((_, i) => new Date(1970, 0, 1, Math.floor(i / 4), (i % 4) * 15));
+  }
 
   /**
    * Closes dropdown menu, if user clicked anywhere outside it.

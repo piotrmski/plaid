@@ -198,6 +198,15 @@ input, .input, textarea {
   }
 }
 
+select.input {
+  height: 30px;
+  padding: 0 0 0 8px;
+
+  option {
+    background: #fff;
+  }
+}
+
 textarea {
   line-height: 16px;
   height: 62px;

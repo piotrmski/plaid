@@ -17,7 +17,7 @@ import {AppStateService} from './core/app-state.service';
 })
 export class PlaidComponent implements OnInit {
   pixelsPerMinute: number;
-  pixelsPerMinuteExponent: number; // Only for synchronizing internal exponent value between two sets of zoom buttons
+  pixelsPerMinuteExponent = 0.75; // Only for synchronizing internal exponent value between two sets of zoom buttons
   worklogs: Worklog[];
   loading: boolean;
   visibleDateRange: DateRange;
