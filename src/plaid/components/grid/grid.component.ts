@@ -156,6 +156,15 @@ export class GridComponent implements AfterViewInit {
     return this._dateRange;
   }
 
+  @Input()
+  workingHoursStartMinutes: number;
+  @Input()
+  workingHoursEndMinutes: number;
+  @Input()
+  workingDaysStart: number;
+  @Input()
+  workingDaysEnd: number;
+
   constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
 
   /**

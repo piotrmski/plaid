@@ -44,7 +44,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background: #fff;
+  background: var(--color-gray-0);
 
   @media (prefers-color-scheme: dark) {
     background: #000;
@@ -59,6 +59,19 @@
         color: #fff;
       }
     }
+  }
+}
+
+.working-window-wrapper {
+  position: absolute;
+  top: 25px;
+  bottom: 0;
+  left: 30px;
+  right: 0;
+
+  .working-window {
+    position: absolute;
+    background: #fff;
   }
 }
 

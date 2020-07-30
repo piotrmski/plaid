@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Worklog} from './models/worklog';
 import {DateRange} from './models/date-range';
 import {User} from './models/user';
@@ -6,6 +6,7 @@ import {ConnectionIssueModalVisible} from './components/connection-issue-resolve
 import {AuthFacade} from './core/auth/auth.facade';
 import {WorklogFacade} from './core/worklog/worklog.facade';
 import {AppStateService} from './core/app-state.service';
+import {UserPreferencesService} from './core/user-preferences.service';
 
 /**
  * Application container.
@@ -23,11 +24,16 @@ export class PlaidComponent implements OnInit {
   visibleDateRange: DateRange;
   currentUser: User;
   connectionIssueModalVisible = false;
+  workingHoursStartMinutes: number;
+  workingHoursEndMinutes: number;
+  workingDaysStart: number;
+  workingDaysEnd: number;
 
   constructor(
     private authFacade: AuthFacade,
     private worklogFacade: WorklogFacade,
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
+    private userPreferencesService: UserPreferencesService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +44,10 @@ export class PlaidComponent implements OnInit {
     this.appStateService.getConnectionIssueModalVisible$()
       .subscribe(val => this.connectionIssueModalVisible = val !== ConnectionIssueModalVisible.NONE);
     this.appStateService.getVisibleDateRange$().subscribe(dateRange => this.visibleDateRange = dateRange);
+    this.userPreferencesService.getWorkingHoursStartMinutes$().subscribe(value => this.workingHoursStartMinutes = value);
+    this.userPreferencesService.getWorkingHoursEndMinutes$().subscribe(value => this.workingHoursEndMinutes = value);
+    this.userPreferencesService.getWorkingDaysStart$().subscribe(value => this.workingDaysStart = value);
+    this.userPreferencesService.getWorkingDaysEnd$().subscribe(value => this.workingDaysEnd = value);
   }
 
   setVisibleDateRange(dateRange: DateRange): void {
@@ -56,5 +66,21 @@ export class PlaidComponent implements OnInit {
 
   forgetAccount(): void {
     this.authFacade.logout();
+  }
+
+  setWorkingHoursStartMinutes(value: number): void {
+    this.userPreferencesService.setWorkingHoursStartMinutes(value);
+  }
+
+  setWorkingHoursEndMinutes(value: number): void {
+    this.userPreferencesService.setWorkingHoursEndMinutes(value);
+  }
+
+  setWorkingDaysStart(value: number): void {
+    this.userPreferencesService.setWorkingDaysStart(value);
+  }
+
+  setWorkingDaysEnd(value: number): void {
+    this.userPreferencesService.setWorkingDaysEnd(value);
   }
 }

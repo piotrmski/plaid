@@ -1,7 +1,7 @@
-<div class="weekday-labels" [style.height.px]="pixelsPerMinute * 1440">
+<div class="hours-labels" [style.height.px]="pixelsPerMinute * 1440">
   <div
     *ngFor="let hour of hoursLabels; index as i"
-    class="weekday-label"
+    class="hours-label"
     [style.height.px]="pixelsPerMinute * 60"
     [style.top.px]="pixelsPerMinute * 60 * i"
   >{{ hour }}</div>

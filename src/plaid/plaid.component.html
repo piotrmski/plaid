@@ -15,7 +15,16 @@
     [(pixelsPerMinuteExponent)]="pixelsPerMinuteExponent"
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-zoom-controls>
-  <plaid-settings>
+  <plaid-settings
+    [workingHoursStartMinutes]="workingHoursStartMinutes"
+    (workingHoursStartMinutesChange)="setWorkingHoursStartMinutes($event)"
+    [workingHoursEndMinutes]="workingHoursEndMinutes"
+    (workingHoursEndMinutesChange)="setWorkingHoursEndMinutes($event)"
+    [workingDaysStart]="workingDaysStart"
+    (workingDaysStartChange)="setWorkingDaysStart($event)"
+    [workingDaysEnd]="workingDaysEnd"
+    (workingDaysEndChange)="setWorkingDaysEnd($event)"
+  >
     <plaid-zoom-controls
       class="inside-settings"
       (pixelsPerMinuteChange)="pixelsPerMinute = $event"
@@ -34,5 +43,9 @@
   [worklogs]="worklogs"
   [dateRange]="visibleDateRange"
   [loading]="loading"
+  [workingHoursStartMinutes]="workingHoursStartMinutes"
+  [workingHoursEndMinutes]="workingHoursEndMinutes"
+  [workingDaysStart]="workingDaysStart"
+  [workingDaysEnd]="workingDaysEnd"
 ></plaid-grid>
 <plaid-connection-issue-resolver></plaid-connection-issue-resolver>

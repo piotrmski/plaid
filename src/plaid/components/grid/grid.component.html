@@ -5,6 +5,15 @@
       {{ weekday | date:'EEE, LLL d' }}
     </div>
   </div>
+  <div class="working-window-wrapper">
+    <div
+      class="working-window"
+      [style.top.px]="workingHoursStartMinutes * pixelsPerMinute"
+      [style.height.px]="(workingHoursEndMinutes - workingHoursStartMinutes) * pixelsPerMinute + 1"
+      [style.left.%]="workingDaysStart * 100 / 7"
+      [style.width.%]="(workingDaysEnd - workingDaysStart + 1) * 100 / 7"
+    ></div>
+  </div>
   <plaid-grid-background
     [pixelsPerMinute]="pixelsPerMinute"
     [numberOfWeekdays]="days.length || 0"
