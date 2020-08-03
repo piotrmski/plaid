@@ -31,6 +31,11 @@ export class GridComponent implements AfterViewInit {
   gridHeight = 0;
   timeout: number;
   editedWorklog: Worklog;
+  _workingDaysStart: number;
+  _workingDaysEnd: number;
+  _hideWeekend: boolean;
+  visibleDaysStart: number;
+  visibleDaysEnd: number;
 
   /**
    * Whether an overlay with a spinner should be visible
@@ -160,12 +165,33 @@ export class GridComponent implements AfterViewInit {
   workingHoursStartMinutes: number;
   @Input()
   workingHoursEndMinutes: number;
+
   @Input()
-  workingDaysStart: number;
+  set workingDaysStart(value: number) {
+    this._workingDaysStart = value;
+    this.updateVisibleDays();
+  }
+  get workingDaysStart(): number {
+    return this._workingDaysStart;
+  }
+
   @Input()
-  workingDaysEnd: number;
+  set workingDaysEnd(value: number) {
+    this._workingDaysEnd = value;
+    this.updateVisibleDays();
+  }
+  get workingDaysEnd(): number {
+    return this._workingDaysEnd;
+  }
+
   @Input()
-  hideWeekend: boolean;
+  set hideWeekend(value: boolean) {
+    this._hideWeekend = value;
+    this.updateVisibleDays();
+  }
+  get hideWeekend(): boolean {
+    return this._hideWeekend;
+  }
 
   constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
 
@@ -180,5 +206,10 @@ export class GridComponent implements AfterViewInit {
     const weekdayWidth: number = this.hostElement.nativeElement.scrollWidth / 7;
     this.hostElement.nativeElement.scrollLeft = curTime.getDay() * weekdayWidth
       - (this.hostElement.nativeElement.offsetWidth - weekdayWidth) * 0.5;
+  }
+
+  updateVisibleDays(): void {
+    this.visibleDaysStart = this.hideWeekend ? this.workingDaysStart : 0;
+    this.visibleDaysEnd = this.hideWeekend ? this.workingDaysEnd : 6;
   }
 }

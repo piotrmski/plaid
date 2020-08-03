@@ -59,6 +59,8 @@ export class WorklogEditorComponent implements OnInit {
   calendarOpen = false;
   calendarOffsetTop = 0;
   flipCalendar = false;
+  _visibleDaysStart: number;
+  _visibleDaysEnd: number;
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
@@ -142,6 +144,28 @@ export class WorklogEditorComponent implements OnInit {
   }
   get worklog(): Worklog {
     return this._worklog;
+  }
+
+  @Input()
+  set visibleDaysStart(value: number) {
+    this._visibleDaysStart = value;
+    if (this.date && !this.isDateVisible(this.date)) {
+      this.cancelEdit.emit();
+    }
+  }
+  get visibleDaysStart(): number {
+    return this._visibleDaysStart;
+  }
+
+  @Input()
+  set visibleDaysEnd(value: number) {
+    this._visibleDaysEnd = value;
+    if (this.date && !this.isDateVisible(this.date)) {
+      this.cancelEdit.emit();
+    }
+  }
+  get visibleDaysEnd(): number {
+    return this._visibleDaysEnd;
   }
 
   constructor(
@@ -376,9 +400,9 @@ export class WorklogEditorComponent implements OnInit {
    */
   returnToEditedWorklog(): void {
     const start = new Date(this.date);
-    start.setDate(start.getDate() - start.getDay());
+    start.setDate(start.getDate() - start.getDay() + this.visibleDaysStart);
     const end = new Date(start);
-    end.setDate(end.getDate() + 6);
+    end.setDate(end.getDate() + this.visibleDaysEnd - this.visibleDaysStart);
     if (start.getTime() !== this.dateRange.start.getTime() || end.getTime() !== this.dateRange.end.getTime()) {
       this.appStateService.setVisibleDateRange({start, end});
     }
@@ -428,5 +452,9 @@ export class WorklogEditorComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  isDateVisible(date: Date): boolean {
+    return date.getDay() >= this.visibleDaysStart && date.getDay() <= this.visibleDaysEnd;
   }
 }
