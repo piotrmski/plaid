@@ -27,8 +27,8 @@
   <div
     class="week"
     *ngFor="let week of days"
-    [class.selected]="selectedDateRange.start.valueOf() === week[0].valueOf() && selectedDateRange.end.valueOf() === week[6].valueOf()"
-    (click)="selectDateRange({ start: week[0], end: week[6] })"
+    [class.selected]="selectedDateRange.start.valueOf() === week[this.visibleDaysStart].valueOf() && selectedDateRange.end.valueOf() === week[this.visibleDaysEnd].valueOf()"
+    (click)="selectDateRange({ start: week[this.visibleDaysStart], end: week[this.visibleDaysEnd] })"
   >
     <div
       class="day"

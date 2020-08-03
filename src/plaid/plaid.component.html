@@ -1,5 +1,7 @@
 <div class="top-bar">
   <plaid-date-range-picker
+    [visibleDaysStart]="visibleDaysStart"
+    [visibleDaysEnd]="visibleDaysEnd"
     [selectedDateRange]="visibleDateRange"
     (selectedDateRangeChange)="setVisibleDateRange($event)"
     [shortcutsDisabled]="connectionIssueModalVisible"
@@ -24,6 +26,8 @@
     (workingDaysStartChange)="setWorkingDaysStart($event)"
     [workingDaysEnd]="workingDaysEnd"
     (workingDaysEndChange)="setWorkingDaysEnd($event)"
+    [hideWeekend]="hideWeekend"
+    (hideWeekendChange)="setHideWeekend($event)"
   >
     <plaid-zoom-controls
       class="inside-settings"
@@ -47,5 +51,6 @@
   [workingHoursEndMinutes]="workingHoursEndMinutes"
   [workingDaysStart]="workingDaysStart"
   [workingDaysEnd]="workingDaysEnd"
+  [hideWeekend]="hideWeekend"
 ></plaid-grid>
 <plaid-connection-issue-resolver></plaid-connection-issue-resolver>

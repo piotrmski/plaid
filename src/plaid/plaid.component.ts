@@ -7,6 +7,7 @@ import {AuthFacade} from './core/auth/auth.facade';
 import {WorklogFacade} from './core/worklog/worklog.facade';
 import {AppStateService} from './core/app-state.service';
 import {UserPreferencesService} from './core/user-preferences.service';
+import {first} from 'rxjs/operators';
 
 /**
  * Application container.
@@ -28,6 +29,9 @@ export class PlaidComponent implements OnInit {
   workingHoursEndMinutes: number;
   workingDaysStart: number;
   workingDaysEnd: number;
+  visibleDaysStart: number;
+  visibleDaysEnd: number;
+  hideWeekend: boolean;
 
   constructor(
     private authFacade: AuthFacade,
@@ -48,6 +52,9 @@ export class PlaidComponent implements OnInit {
     this.userPreferencesService.getWorkingHoursEndMinutes$().subscribe(value => this.workingHoursEndMinutes = value);
     this.userPreferencesService.getWorkingDaysStart$().subscribe(value => this.workingDaysStart = value);
     this.userPreferencesService.getWorkingDaysEnd$().subscribe(value => this.workingDaysEnd = value);
+    this.userPreferencesService.getVisibleDaysStart$().subscribe(value => this.visibleDaysStart = value);
+    this.userPreferencesService.getVisibleDaysEnd$().subscribe(value => this.visibleDaysEnd = value);
+    this.userPreferencesService.getHideWeekend$().subscribe(value => this.hideWeekend = value);
   }
 
   setVisibleDateRange(dateRange: DateRange): void {
@@ -82,5 +89,9 @@ export class PlaidComponent implements OnInit {
 
   setWorkingDaysEnd(value: number): void {
     this.userPreferencesService.setWorkingDaysEnd(value);
+  }
+
+  setHideWeekend(value: boolean): void {
+    this.userPreferencesService.setHideWeekend(value);
   }
 }

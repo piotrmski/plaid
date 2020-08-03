@@ -10,8 +10,8 @@
       class="working-window"
       [style.top.px]="workingHoursStartMinutes * pixelsPerMinute"
       [style.height.px]="(workingHoursEndMinutes - workingHoursStartMinutes) * pixelsPerMinute + 1"
-      [style.left.%]="workingDaysStart * 100 / 7"
-      [style.width.%]="(workingDaysEnd - workingDaysStart + 1) * 100 / 7"
+      [style.left.%]="hideWeekend ? 0 : workingDaysStart * 100 / 7"
+      [style.width.%]="hideWeekend ? 100 : (workingDaysEnd - workingDaysStart + 1) * 100 / 7"
     ></div>
   </div>
   <plaid-grid-background

@@ -15,6 +15,7 @@ export class SettingsComponent {
   private _workingHoursEndMinutes: number;
   private _workingDaysStart: number;
   private _workingDaysEnd: number;
+  private _hideWeekend: boolean;
 
   constructor(private ref: ElementRef) {
     this.hours = Array.from<Date>({ length: 96 }).map((_, i) => new Date(1970, 0, 1, Math.floor(i / 4), (i % 4) * 15));
@@ -63,6 +64,17 @@ export class SettingsComponent {
   }
   @Output()
   workingDaysEndChange = new EventEmitter<number>();
+
+  @Input()
+  get hideWeekend(): boolean {
+    return this._hideWeekend;
+  }
+  set hideWeekend(value: boolean) {
+    this.hideWeekendChange.emit(value);
+    this._hideWeekend = value;
+  }
+  @Output()
+  hideWeekendChange = new EventEmitter<boolean>();
 
   /**
    * Closes dropdown menu, if user clicked anywhere outside it.

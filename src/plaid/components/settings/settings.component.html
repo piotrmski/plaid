@@ -6,13 +6,23 @@
 
   <div class="field">
     <label>Working hours</label>
-    <select class="input narrow-dropdown" [tabIndex]="dropdownOpen ? 0 : -1" [(ngModel)]="workingHoursStartMinutes">
+    <select
+      class="input narrow-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="workingHoursStartMinutes?.toString()"
+      (ngModelChange)="workingHoursStartMinutes = +$event"
+    >
       <option *ngFor="let hour of hours; index as i" [value]="i * 15" [disabled]="i * 15 >= workingHoursEndMinutes">
         {{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}
       </option>
     </select>
     <label class="input-separator">to</label>
-    <select class="input narrow-dropdown" [tabIndex]="dropdownOpen ? 0 : -1" [(ngModel)]="workingHoursEndMinutes">
+    <select
+      class="input narrow-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="workingHoursEndMinutes?.toString()"
+      (ngModelChange)="workingHoursEndMinutes = +$event"
+    >
       <option *ngFor="let hour of hours; index as i" [value]="i * 15" [disabled]="i * 15 <= workingHoursStartMinutes">
         {{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}
       </option>
@@ -20,19 +30,34 @@
   </div>
   <div class="field">
     <label>Working days</label>
-    <select class="input narrow-dropdown" [tabIndex]="dropdownOpen ? 0 : -1" [(ngModel)]="workingDaysStart">
+    <select
+      class="input narrow-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="workingDaysStart?.toString()"
+      (ngModelChange)="workingDaysStart = +$event"
+    >
       <option *ngFor="let day of weekdays; index as i" [value]="i" [disabled]="i > workingDaysEnd">{{ day }}</option>
     </select>
     <label class="input-separator">to</label>
-    <select class="input narrow-dropdown" [tabIndex]="dropdownOpen ? 0 : -1" [(ngModel)]="workingDaysEnd">
+    <select
+      class="input narrow-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="workingDaysEnd?.toString()"
+      (ngModelChange)="workingDaysEnd = +$event"
+    >
       <option *ngFor="let day of weekdays; index as i" [value]="i" [disabled]="i < workingDaysStart">{{ day }}</option>
     </select>
   </div>
   <div class="field">
     <label>Non-working days</label>
-    <select class="input wide-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
-      <option value="gray">Gray out</option>
-      <option value="hide">Hide</option>
+    <select
+      class="input wide-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="hideWeekend ? 1 : 0"
+      (ngModelChange)="hideWeekend = $event == 1"
+    >
+      <option value="0">Gray out</option>
+      <option value="1">Hide</option>
     </select>
   </div>
   <div class="field">

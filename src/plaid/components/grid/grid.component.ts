@@ -164,6 +164,8 @@ export class GridComponent implements AfterViewInit {
   workingDaysStart: number;
   @Input()
   workingDaysEnd: number;
+  @Input()
+  hideWeekend: boolean;
 
   constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
 

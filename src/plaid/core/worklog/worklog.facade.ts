@@ -8,6 +8,7 @@ import {WorklogApi} from './worklog.api';
 import {AuthFacade} from '../auth/auth.facade';
 import {AppStateService} from '../app-state.service';
 import {tap} from 'rxjs/operators';
+import {Calendar} from '../../helpers/calendar';
 
 /**
  * Business logic facade for work logs.
@@ -26,9 +27,14 @@ export class WorklogFacade {
   ) {
     // Fetch work logs after visible date range change
     this.appStateService.getVisibleDateRange$().subscribe(dateRange => {
-      this.visibleDateRange = dateRange;
+      const oldVisibleDateRange: DateRange = this.visibleDateRange;
+      this.visibleDateRange = Calendar.copyDateRange(dateRange);
       if (this.currentUser) {
-        this.fetchWorklogsVerbose();
+        // Fetching worklogs is omitted when the new date range is a sub-interval of the old date range.
+        if (oldVisibleDateRange.start.getTime() > dateRange.start.getTime() ||
+          oldVisibleDateRange.end.getTime() < dateRange.end.getTime()) {
+          this.fetchWorklogsVerbose();
+        }
       } else {
         // When application launches, authentication data may be present, but the application is in a state of lack of
         // authentication, hence the attempt to reconnect. This is the initial kick to load remote data.
