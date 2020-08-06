@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {Theme} from '../models/theme';
 
 @Injectable({ providedIn: 'root' })
 export class UserPreferencesService {
@@ -8,6 +9,7 @@ export class UserPreferencesService {
   private readonly WORKING_DAYS_START = 'WORKING_DAYS_START';
   private readonly WORKING_DAYS_END = 'WORKING_DAYS_END';
   private readonly HIDE_WEEKEND = 'HIDE_WEEKEND';
+  private readonly THEME = 'THEME';
 
   private workingHoursStartMinutes: BehaviorSubject<number> =
     new BehaviorSubject<number>(Number(localStorage.getItem(this.WORKING_HOURS_START_MINUTES) || 540));
@@ -25,6 +27,8 @@ export class UserPreferencesService {
   private visibleDaysEnd: BehaviorSubject<number> = new BehaviorSubject<number>(
     localStorage.getItem(this.HIDE_WEEKEND) === '1' ? Number(localStorage.getItem(this.WORKING_DAYS_END) || 5) : 6
   );
+  private theme: BehaviorSubject<Theme> =
+    new BehaviorSubject<Theme>((localStorage.getItem(this.THEME) || 'system') as Theme);
 
   setWorkingHoursStartMinutes(value: number): void {
     this.workingHoursStartMinutes.next(value);
@@ -97,5 +101,14 @@ export class UserPreferencesService {
 
   getHideWeekend$(): Observable<boolean> {
     return this.hideWeekend.asObservable();
+  }
+
+  getTheme$(): Observable<Theme> {
+    return this.theme.asObservable();
+  }
+
+  setTheme(value: Theme): void {
+    this.theme.next(value);
+    localStorage.setItem(this.THEME, value);
   }
 }

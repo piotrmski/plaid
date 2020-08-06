@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {Calendar} from '../../helpers/calendar';
+import {Theme} from '../../models/theme';
 
 @Component({
   selector: 'plaid-settings',
@@ -16,6 +17,7 @@ export class SettingsComponent {
   private _workingDaysStart: number;
   private _workingDaysEnd: number;
   private _hideWeekend: boolean;
+  private _theme: Theme;
 
   constructor(private ref: ElementRef) {
     this.hours = Array.from<Date>({ length: 96 }).map((_, i) => new Date(1970, 0, 1, Math.floor(i / 4), (i % 4) * 15));
@@ -75,6 +77,17 @@ export class SettingsComponent {
   }
   @Output()
   hideWeekendChange = new EventEmitter<boolean>();
+
+  @Input()
+  get theme(): Theme {
+    return this._theme;
+  }
+  set theme(value: Theme) {
+    this.themeChange.emit(value);
+    this._theme = value;
+  }
+  @Output()
+  themeChange = new EventEmitter<Theme>();
 
   /**
    * Closes dropdown menu, if user clicked anywhere outside it.

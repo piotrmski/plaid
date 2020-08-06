@@ -74,10 +74,10 @@
   </div>
   <div class="field">
     <label>Dark mode</label>
-    <select class="input wide-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
-      <option value="default">System default</option>
-      <option value="enabled">Enabled</option>
-      <option value="disabled">Disabled</option>
+    <select class="input wide-dropdown" [tabIndex]="dropdownOpen ? 0 : -1" [(ngModel)]="theme">
+      <option value="system">System default</option>
+      <option value="dark">Enabled</option>
+      <option value="light">Disabled</option>
     </select>
   </div>
 </div>
