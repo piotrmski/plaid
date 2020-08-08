@@ -55,7 +55,6 @@ function createWindow(dev) {
 }
 
 module.exports = function(dev) {
-  app.allowRendererProcessReuse = true;
   if (app.requestSingleInstanceLock()) {
     app.on('ready', () => createWindow(dev));
     app.on('second-instance', () => createWindow(dev));
