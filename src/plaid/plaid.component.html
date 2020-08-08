@@ -33,6 +33,7 @@
   >
     <plaid-zoom-controls
       class="inside-settings"
+      [allowBothColorSchemes]="false"
       (pixelsPerMinuteChange)="pixelsPerMinute = $event"
       [(pixelsPerMinuteExponent)]="pixelsPerMinuteExponent"
       [shortcutsDisabled]="true"

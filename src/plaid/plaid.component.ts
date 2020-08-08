@@ -7,8 +7,8 @@ import {AuthFacade} from './core/auth/auth.facade';
 import {WorklogFacade} from './core/worklog/worklog.facade';
 import {AppStateService} from './core/app-state.service';
 import {UserPreferencesService} from './core/user-preferences.service';
-import {first} from 'rxjs/operators';
 import {Theme} from './models/theme';
+import {SystemPreferencesService} from './core/system-preferences.service';
 
 /**
  * Application container.
@@ -36,6 +36,7 @@ export class PlaidComponent implements OnInit {
   theme: Theme;
 
   constructor(
+    private systemPreferencesService: SystemPreferencesService, // Injected service early to run its constructor
     private authFacade: AuthFacade,
     private worklogFacade: WorklogFacade,
     private appStateService: AppStateService,

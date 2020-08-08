@@ -18,6 +18,9 @@ export class ZoomControlsComponent implements OnInit {
   @Input()
   shortcutsDisabled = false;
 
+  @Input()
+  allowBothColorSchemes = true;
+
   @Output()
   pixelsPerMinuteChange = new EventEmitter<number>();
 

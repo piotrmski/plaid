@@ -8,9 +8,9 @@ export class SystemPreferencesService {
   private darkModeSubject = new BehaviorSubject<boolean>(nativeTheme.shouldUseDarkColors);
 
   constructor(private userPreferencesService: UserPreferencesService) {
-    userPreferencesService.getTheme$().subscribe(theme => nativeTheme.themeSource = theme);
     nativeTheme.removeAllListeners('updated');
     nativeTheme.addListener('updated', () => this.darkModeSubject.next(nativeTheme.shouldUseDarkColors));
+    userPreferencesService.getTheme$().subscribe(theme => nativeTheme.themeSource = theme);
   }
 
   getDarkMode$(): Observable<boolean> {

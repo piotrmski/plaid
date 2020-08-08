@@ -1,5 +1,6 @@
 <a
   class="button"
+  [class.both-color-schemes]="allowBothColorSchemes"
   [class.active]="zoomOutButtonActive"
   [class.disabled]="!isAbleToZoomOut"
   (click)="zoomOut()"
@@ -9,6 +10,7 @@
 </a>
 <a
   class="button"
+  [class.both-color-schemes]="allowBothColorSchemes"
   [class.active]="zoomInButtonActive"
   [class.disabled]="!isAbleToZoomIn"
   (click)="zoomIn()"

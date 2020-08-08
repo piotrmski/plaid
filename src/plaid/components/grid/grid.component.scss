@@ -47,13 +47,21 @@
   background: var(--color-gray-0);
 
   @media (prefers-color-scheme: dark) {
-    background: #000;
+    background: var(--color-gray-7);
+
+    .grid-header {
+      background: #000;
+
+      & > * {
+        border-color: var(--color-gray-5);
+        color: #fff;
+      }
+    }
 
     .grid-footer {
       background: #000;
 
-      .footer-under-labels,
-      .footer-under-content {
+      & > * {
         background: #000;
         border-color: var(--color-gray-5);
         color: #fff;
@@ -72,6 +80,10 @@
   .working-window {
     position: absolute;
     background: #fff;
+
+    @media (prefers-color-scheme: dark) {
+      background: #000;
+    }
   }
 }
 
@@ -125,14 +137,17 @@
   background-color: #fff;
   font-weight: 600;
 
+  & > * {
+    border-right: 1px solid var(--color-gray-3);
+    border-top: 1px solid var(--color-gray-3);
+  }
+
   .footer-under-labels {
     flex: 0;
     min-width: 30px;
     max-width: 30px;
     font-family: sans-serif;
     text-align: center;
-    border-right: 1px solid var(--color-gray-3);
-    border-top: 1px solid var(--color-gray-3);
     background-color: #fff;
     position: sticky;
     left: 0;
@@ -141,7 +156,5 @@
   .footer-under-content {
     flex: 1;
     padding: 0 5px;
-    border-right: 1px solid var(--color-gray-3);
-    border-top: 1px solid var(--color-gray-3);
   }
 }

@@ -91,10 +91,10 @@ export class UserPreferencesService {
   setHideWeekend(value: boolean): void {
     this.hideWeekend.next(value);
     if (this.workingDaysStart.getValue() !== 0) {
-      this.visibleDaysStart.next(value ? this.workingDaysStart.getValue() : 0)
+      this.visibleDaysStart.next(value ? this.workingDaysStart.getValue() : 0);
     }
     if (this.workingDaysEnd.getValue() !== 6) {
-      this.visibleDaysEnd.next(value ? this.workingDaysEnd.getValue() : 6)
+      this.visibleDaysEnd.next(value ? this.workingDaysEnd.getValue() : 6);
     }
     localStorage.setItem(this.HIDE_WEEKEND, value ? '1' : '0');
   }

@@ -39,6 +39,11 @@
       display: none;
     }
   }
+
+  @media (prefers-color-scheme: dark) {
+    background: #000;
+    border-color: var(--color-gray-5);
+  }
 }
 
 @media (max-width: 500px) {
