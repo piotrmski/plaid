@@ -1,5 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import * as Mousetrap from 'mousetrap';
+import Mousetrap from 'mousetrap';
 
 /**
  * Dumb component, presents button, handles refresh shortcuts, and delegates refresh action
