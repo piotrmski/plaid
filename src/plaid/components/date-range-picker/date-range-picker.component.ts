@@ -48,8 +48,11 @@ export class DateRangePickerComponent implements OnInit {
     if (this._visibleDaysStart !== undefined && this.selectedDateRange) {
       this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() + value - this._visibleDaysStart);
     }
+    const initialized: boolean = this._visibleDaysStart !== undefined && this._visibleDaysEnd !== undefined;
     this._visibleDaysStart = value;
-    this.emitDateRangeDebounce();
+    if (initialized) {
+      this.emitDateRangeDebounce();
+    }
   }
   get visibleDaysStart(): number {
     return this._visibleDaysStart;
@@ -60,8 +63,11 @@ export class DateRangePickerComponent implements OnInit {
     if (this._visibleDaysEnd !== undefined && this.selectedDateRange) {
       this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() + value - this._visibleDaysEnd);
     }
+    const initialized: boolean = this._visibleDaysStart !== undefined && this._visibleDaysEnd !== undefined;
     this._visibleDaysEnd = value;
-    this.emitDateRangeDebounce();
+    if (initialized) {
+      this.emitDateRangeDebounce();
+    }
   }
   get visibleDaysEnd(): number {
     return this._visibleDaysEnd;
