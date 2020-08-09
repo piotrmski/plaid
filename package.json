@@ -1,7 +1,7 @@
 {
   "name": "plaid",
   "productName": "Plaid",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": {
     "name": "Piotr Marczyński",
     "email": "piotmski@gmail.com"

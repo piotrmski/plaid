@@ -1,5 +1,23 @@
 # Change log
 
+## 0.5
+
+**0.5.0**
+
+![Settings](https://raw.githubusercontent.com/piotrmski/plaid/master/changelog-screenshots/settings.png)
+
+- added settings dropdown containing:
+  - the working window start size and position,
+  - option to hide weekends,
+  - periodic refreshing option,
+  - dark mode toggle,
+- changed appearance of calendar header
+- added gray background to outside of the working window
+- fixed Jira Cloud integration
+- fixed a bug causing edited work log to visually disappear after saving
+- prevented key repetition in keyboard shortcuts
+- updated dependencies
+
 ## 0.4
 
 **0.4.0**
