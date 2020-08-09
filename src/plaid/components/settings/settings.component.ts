@@ -2,6 +2,9 @@ import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListen
 import {Calendar} from '../../helpers/calendar';
 import {Theme} from '../../models/theme';
 
+/**
+ * Dumb component, presents settings button and dropdown, and delegates settings changes to the parent component.
+ */
 @Component({
   selector: 'plaid-settings',
   templateUrl: './settings.component.html',

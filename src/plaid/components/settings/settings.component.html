@@ -2,6 +2,7 @@
   <svg class="icon"><use href="assets/icons.svg#cog"></use></svg>
 </a>
 <div class="dropdown" [class.open]="dropdownOpen">
+  <!-- Parent component can accommodate stuff inside the settings dropdown that would not fit outside of it. -->
   <ng-content></ng-content>
 
   <div class="field">

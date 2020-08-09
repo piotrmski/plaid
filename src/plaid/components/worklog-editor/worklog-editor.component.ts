@@ -146,6 +146,10 @@ export class WorklogEditorComponent implements OnInit {
     return this._worklog;
   }
 
+  /**
+   * Beginning of the range for week days displayed on the calendar. Editing work logs on days outside working week is
+   * prohibited.
+   */
   @Input()
   set visibleDaysStart(value: number) {
     this._visibleDaysStart = value;
@@ -157,6 +161,10 @@ export class WorklogEditorComponent implements OnInit {
     return this._visibleDaysStart;
   }
 
+  /**
+   * End of the range for week days displayed on the calendar. Editing work logs on days outside working week is
+   * prohibited.
+   */
   @Input()
   set visibleDaysEnd(value: number) {
     this._visibleDaysEnd = value;

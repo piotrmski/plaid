@@ -64,6 +64,6 @@ export class Calendar {
     return {
       start: new Date(dateRange.start),
       end: new Date(dateRange.end)
-    }
+    };
   }
 }
