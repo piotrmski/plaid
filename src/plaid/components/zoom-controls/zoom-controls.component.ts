@@ -38,7 +38,7 @@ export class ZoomControlsComponent implements OnInit {
       }
     }, {passive: false});
     addEventListener('keydown', (e: KeyboardEvent) => {
-      if (!this.shortcutsDisabled && e.ctrlKey) {
+      if (!this.shortcutsDisabled && e.ctrlKey && !e.repeat) {
         if (e.key === '-' || e.key === '_') { // Ctrl -, Ctrl _
           this.zoomOutButtonActive = true;
           this.zoomOut();

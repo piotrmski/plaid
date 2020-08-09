@@ -63,7 +63,6 @@
     "@openfonts/comfortaa_latin": "^1.44.4",
     "@openfonts/source-sans-pro_all": "^1.44.1",
     "electron-updater": "^4.3.4",
-    "mousetrap": "^1.6.5",
     "ngx-electron": "~2.2.0",
     "rxjs": "~6.6.2",
     "tslib": "^2.0.0",

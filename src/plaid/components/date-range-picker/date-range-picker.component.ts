@@ -86,7 +86,7 @@ export class DateRangePickerComponent implements OnInit {
   ngOnInit(): void {
     // Singleton component, no need to unbind events
     addEventListener('keydown', (e: KeyboardEvent) => {
-      if (!this.shortcutsDisabled) {
+      if (!this.shortcutsDisabled && !e.repeat) {
         if (e.key === 'F4') {
           this.decrementWeekButtonActive = true;
           this.decrementWeek();
