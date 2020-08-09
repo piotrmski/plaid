@@ -92,16 +92,18 @@
   transition: 0.1s all;
   border-radius: 100%;
 
-  &:hover,
-  &:focus {
-    background: rgba(0, 0, 0, 0.1);
-    color: var(--color-gray-6);
-    transition: 0.025s all ease-out;
-  }
+  &:not(.disabled) {
+    &:hover,
+    &:focus {
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--color-gray-6);
+      transition: 0.025s all ease-out;
+    }
 
-  &:active {
-    background: rgba(0, 0, 0, 0.2);
-    color: var(--color-gray-7);
+    &:active {
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--color-gray-7);
+    }
   }
 
   &.selected {

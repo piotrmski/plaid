@@ -17,6 +17,7 @@ import {ZoomControlsComponent} from './components/zoom-controls/zoom-controls.co
 import {CurrentTimeMarkerComponent} from './components/current-time-marker/current-time-marker.component';
 import {WorklogEditorComponent} from './components/worklog-editor/worklog-editor.component';
 import {DatePickerCloudComponent} from './components/date-picker-cloud/date-picker-cloud.component';
+import {SettingsComponent} from './components/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {DatePickerCloudComponent} from './components/date-picker-cloud/date-pick
     AuthStatusComponent,
     ZoomControlsComponent,
     CurrentTimeMarkerComponent,
-    WorklogEditorComponent
+    WorklogEditorComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

@@ -31,7 +31,6 @@
 
   &.visible {
     opacity: 1;
-    transition: 0.2s opacity;
   }
 
   &:not(.visible) {
@@ -44,16 +43,24 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background: #fff;
+  background: var(--color-gray-0);
 
   @media (prefers-color-scheme: dark) {
-    background: #000;
+    background: var(--color-gray-7);
+
+    .grid-header {
+      background: #000;
+
+      & > * {
+        border-color: var(--color-gray-5);
+        color: #fff;
+      }
+    }
 
     .grid-footer {
       background: #000;
 
-      .footer-under-labels,
-      .footer-under-content {
+      & > * {
         background: #000;
         border-color: var(--color-gray-5);
         color: #fff;
@@ -62,13 +69,35 @@
   }
 }
 
+.working-window-wrapper {
+  position: absolute;
+  top: 25px;
+  bottom: 0;
+  left: 30px;
+  right: 0;
+
+  .working-window {
+    position: absolute;
+    background: #fff;
+
+    @media (prefers-color-scheme: dark) {
+      background: #000;
+    }
+  }
+}
+
 .grid-header {
   display: flex;
   align-items: stretch;
-  background-color: var(--color-gray-6);
+  background-color: #fff;
   position: sticky;
   top: 0;
   z-index: 3;
+
+  & > * {
+    border-right: 1px solid var(--color-gray-3);
+    border-bottom: 1px solid var(--color-gray-3);
+  }
 
   .header-over-labels {
     flex: 0;
@@ -79,14 +108,13 @@
   .header-over-content {
     flex: 1;
     padding: 0 5px;
-    line-height: 35px;
-    color: #fff;
+    line-height: 24px;
   }
 }
 
 .worklog-panels-area {
   position: absolute;
-  top: 35px;
+  top: 25px;
   left: 30px;
   width: calc(100% - 30px);
   display: flex;
@@ -108,14 +136,17 @@
   background-color: #fff;
   font-weight: 600;
 
+  & > * {
+    border-right: 1px solid var(--color-gray-3);
+    border-top: 1px solid var(--color-gray-3);
+  }
+
   .footer-under-labels {
     flex: 0;
     min-width: 30px;
     max-width: 30px;
     font-family: sans-serif;
     text-align: center;
-    border-right: 1px solid var(--color-gray-3);
-    border-top: 1px solid var(--color-gray-3);
     background-color: #fff;
     position: sticky;
     left: 0;
@@ -124,7 +155,5 @@
   .footer-under-content {
     flex: 1;
     padding: 0 5px;
-    border-right: 1px solid var(--color-gray-3);
-    border-top: 1px solid var(--color-gray-3);
   }
 }

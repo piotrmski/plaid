@@ -4,6 +4,9 @@ const {getNewWindowRect, getNewWindowMaximized, saveWindowState} = require('./wi
 
 let firstWindowCreated = false;
 
+// Workaround for https://github.com/electron/electron/issues/23664
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
+
 function createWindow(dev) {
   if (!firstWindowCreated) { // Check for update once in the process (if subsequent windows are opened, don't check again)
     autoUpdater.checkForUpdatesAndNotify(); // Note to self: don't mess that one up!
@@ -55,7 +58,6 @@ function createWindow(dev) {
 }
 
 module.exports = function(dev) {
-  app.allowRendererProcessReuse = true;
   if (app.requestSingleInstanceLock()) {
     app.on('ready', () => createWindow(dev));
     app.on('second-instance', () => createWindow(dev));

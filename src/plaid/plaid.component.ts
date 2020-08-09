@@ -6,6 +6,9 @@ import {ConnectionIssueModalVisible} from './components/connection-issue-resolve
 import {AuthFacade} from './core/auth/auth.facade';
 import {WorklogFacade} from './core/worklog/worklog.facade';
 import {AppStateService} from './core/app-state.service';
+import {UserPreferencesService} from './core/user-preferences.service';
+import {Theme} from './models/theme';
+import {SystemPreferencesService} from './core/system-preferences.service';
 
 /**
  * Application container.
@@ -17,16 +20,28 @@ import {AppStateService} from './core/app-state.service';
 })
 export class PlaidComponent implements OnInit {
   pixelsPerMinute: number;
+  pixelsPerMinuteExponent = 0.75; // Only for synchronizing internal exponent value between two sets of zoom buttons
   worklogs: Worklog[];
   loading: boolean;
   visibleDateRange: DateRange;
   currentUser: User;
   connectionIssueModalVisible = false;
+  workingHoursStartMinutes: number;
+  workingHoursEndMinutes: number;
+  workingDaysStart: number;
+  workingDaysEnd: number;
+  visibleDaysStart: number;
+  visibleDaysEnd: number;
+  hideWeekend: boolean;
+  refreshIntervalMinutes: number;
+  theme: Theme;
 
   constructor(
+    private systemPreferencesService: SystemPreferencesService, // Injected service early to run its constructor
     private authFacade: AuthFacade,
     private worklogFacade: WorklogFacade,
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
+    private userPreferencesService: UserPreferencesService
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +52,15 @@ export class PlaidComponent implements OnInit {
     this.appStateService.getConnectionIssueModalVisible$()
       .subscribe(val => this.connectionIssueModalVisible = val !== ConnectionIssueModalVisible.NONE);
     this.appStateService.getVisibleDateRange$().subscribe(dateRange => this.visibleDateRange = dateRange);
+    this.userPreferencesService.getWorkingHoursStartMinutes$().subscribe(value => this.workingHoursStartMinutes = value);
+    this.userPreferencesService.getWorkingHoursEndMinutes$().subscribe(value => this.workingHoursEndMinutes = value);
+    this.userPreferencesService.getWorkingDaysStart$().subscribe(value => this.workingDaysStart = value);
+    this.userPreferencesService.getWorkingDaysEnd$().subscribe(value => this.workingDaysEnd = value);
+    this.userPreferencesService.getVisibleDaysStart$().subscribe(value => this.visibleDaysStart = value);
+    this.userPreferencesService.getVisibleDaysEnd$().subscribe(value => this.visibleDaysEnd = value);
+    this.userPreferencesService.getHideWeekend$().subscribe(value => this.hideWeekend = value);
+    this.userPreferencesService.getRefreshIntervalMinutes$().subscribe(value => this.refreshIntervalMinutes = value);
+    this.userPreferencesService.getTheme$().subscribe(value => this.theme = value);
   }
 
   setVisibleDateRange(dateRange: DateRange): void {
@@ -55,5 +79,33 @@ export class PlaidComponent implements OnInit {
 
   forgetAccount(): void {
     this.authFacade.logout();
+  }
+
+  setWorkingHoursStartMinutes(value: number): void {
+    this.userPreferencesService.setWorkingHoursStartMinutes(value);
+  }
+
+  setWorkingHoursEndMinutes(value: number): void {
+    this.userPreferencesService.setWorkingHoursEndMinutes(value);
+  }
+
+  setWorkingDaysStart(value: number): void {
+    this.userPreferencesService.setWorkingDaysStart(value);
+  }
+
+  setWorkingDaysEnd(value: number): void {
+    this.userPreferencesService.setWorkingDaysEnd(value);
+  }
+
+  setHideWeekend(value: boolean): void {
+    this.userPreferencesService.setHideWeekend(value);
+  }
+
+  setRefreshIntervalMinutes(value: number): void {
+    this.userPreferencesService.setRefreshIntervalMinutes(value);
+  }
+
+  setTheme(value: Theme): void {
+    this.userPreferencesService.setTheme(value);
   }
 }

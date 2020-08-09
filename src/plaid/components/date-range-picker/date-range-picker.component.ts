@@ -11,6 +11,7 @@ import {
 import {DateRange} from '../../models/date-range';
 import {Format} from '../../helpers/format';
 import {Calendar} from '../../helpers/calendar';
+import Timeout = NodeJS.Timeout;
 
 /**
  * Dumb component, responsible for presenting current date on a dropdown calendar, currently selected week and
@@ -29,6 +30,9 @@ export class DateRangePickerComponent implements OnInit {
   _calendarOpen = false;
   decrementWeekButtonActive = false;
   incrementWeekButtonActive = false;
+  _visibleDaysStart: number;
+  _visibleDaysEnd: number;
+  dateRangeEmissionTimeout: Timeout;
 
   /**
    * Disables F4 and F6 shortcuts for date range changing (by default these keys decrement and increment selected week)
@@ -38,6 +42,36 @@ export class DateRangePickerComponent implements OnInit {
 
   @Input()
   selectedDateRange: DateRange;
+
+  @Input()
+  set visibleDaysStart(value: number) {
+    if (this._visibleDaysStart !== undefined && this.selectedDateRange) {
+      this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() + value - this._visibleDaysStart);
+    }
+    const initialized: boolean = this._visibleDaysStart !== undefined && this._visibleDaysEnd !== undefined;
+    this._visibleDaysStart = value;
+    if (initialized) {
+      this.emitDateRangeDebounce();
+    }
+  }
+  get visibleDaysStart(): number {
+    return this._visibleDaysStart;
+  }
+
+  @Input()
+  set visibleDaysEnd(value: number) {
+    if (this._visibleDaysEnd !== undefined && this.selectedDateRange) {
+      this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() + value - this._visibleDaysEnd);
+    }
+    const initialized: boolean = this._visibleDaysStart !== undefined && this._visibleDaysEnd !== undefined;
+    this._visibleDaysEnd = value;
+    if (initialized) {
+      this.emitDateRangeDebounce();
+    }
+  }
+  get visibleDaysEnd(): number {
+    return this._visibleDaysEnd;
+  }
 
   @Output()
   selectedDateRangeChange = new EventEmitter<DateRange>();
@@ -52,7 +86,7 @@ export class DateRangePickerComponent implements OnInit {
   ngOnInit(): void {
     // Singleton component, no need to unbind events
     addEventListener('keydown', (e: KeyboardEvent) => {
-      if (!this.shortcutsDisabled) {
+      if (!this.shortcutsDisabled && !e.repeat) {
         if (e.key === 'F4') {
           this.decrementWeekButtonActive = true;
           this.decrementWeek();
@@ -125,13 +159,13 @@ export class DateRangePickerComponent implements OnInit {
   decrementWeek(): void {
     this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() - 7);
     this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() - 7);
-    this.selectedDateRangeChange.emit({...this.selectedDateRange});
+    this.emitDateRange();
   }
 
   incrementWeek(): void {
     this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() + 7);
     this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() + 7);
-    this.selectedDateRangeChange.emit({...this.selectedDateRange});
+    this.emitDateRange();
   }
 
   get buttonText(): string {
@@ -140,7 +174,23 @@ export class DateRangePickerComponent implements OnInit {
 
   selectDateRange(dateRange: DateRange) {
     this.selectedDateRange = dateRange;
-    this.selectedDateRangeChange.emit(dateRange);
+    this.emitDateRange();
     this.calendarOpen = false;
+  }
+
+  emitDateRange(): void {
+    if (this.selectedDateRange) {
+      this.selectedDateRangeChange.emit(Calendar.copyDateRange(this.selectedDateRange));
+    }
+  }
+
+  emitDateRangeDebounce(): void {
+    if (this.dateRangeEmissionTimeout != null) {
+      clearTimeout(this.dateRangeEmissionTimeout);
+    }
+    this.dateRangeEmissionTimeout = setTimeout(() => {
+      this.emitDateRange();
+      this.dateRangeEmissionTimeout = null;
+    }, 0);
   }
 }

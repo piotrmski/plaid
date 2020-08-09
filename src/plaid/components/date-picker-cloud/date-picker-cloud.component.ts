@@ -47,6 +47,12 @@ export class DatePickerCloudComponent {
     return this._calendarOpen;
   }
 
+  @Input()
+  selectableDaysStart: number;
+
+  @Input()
+  selectableDaysEnd: number;
+
   @Output()
   calendarOpenChange = new EventEmitter<boolean>();
 
@@ -70,10 +76,16 @@ export class DatePickerCloudComponent {
     this.month = new Date(this.month.getFullYear(), this.month.getMonth() + 1);
   }
 
-  selectDate(date: Date) {
-    this.selectedDate = date;
-    this.selectedDateChange.emit(date);
-    this.calendarOpen = false;
-    this.calendarOpenChange.emit(false);
+  selectDate(date: Date): void {
+    if (this.isDateSelectable(date)) {
+      this.selectedDate = date;
+      this.selectedDateChange.emit(date);
+      this.calendarOpen = false;
+      this.calendarOpenChange.emit(false);
+    }
+  }
+
+  isDateSelectable(date: Date): boolean {
+    return date.getDay() >= this.selectableDaysStart && date.getDay() <= this.selectableDaysEnd;
   }
 }

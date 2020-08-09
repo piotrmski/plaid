@@ -3,14 +3,14 @@
   user-select: none;
   font-family: var(--font-text);
 
-  --color-gray-0: #f9f9f9;
+  --color-gray-0: #f4f4f4;
   --color-gray-1: #ebebeb;
   --color-gray-2: #cfcfcf;
   --color-gray-3: #adadad;
   --color-gray-4: #727272;
   --color-gray-5: #424242;
   --color-gray-6: #2c2c2c;
-  --color-gray-7: #1d1d1d;
+  --color-gray-7: #1a1a1a;
 
   --color-primary-0: #ebfaff;
   --color-primary-1: #c8f1ff;
@@ -29,7 +29,7 @@
 body {
   margin: 0;
   font-size: 16px;
-  color: var(--color-gray-7);
+  color: #000;
 }
 
 img {
@@ -88,9 +88,23 @@ img {
 /* Buttons */
 
 .button {
+  --button-color-high-contrast: #000;
+  --button-color-low-contrast: var(--color-gray-2);
+  --button-color-more-translucent: rgba(0, 0, 0, 0.1);
+  --button-color-less-translucent: rgba(0, 0, 0, 0.2);
+
+  &.both-color-schemes {
+    @media (prefers-color-scheme: dark) {
+      --button-color-high-contrast: #fff;
+      --button-color-low-contrast: var(--color-gray-5);
+      --button-color-more-translucent: rgba(255, 255, 255, 0.15);
+      --button-color-less-translucent: rgba(255, 255, 255, 0.2);
+    }
+  }
+
   line-height: 30px;
   min-width: 30px;
-  color: var(--color-gray-5);
+  color: var(--button-color-high-contrast);
   text-align: center;
   margin: 0 2px;
   border-radius: 15px;
@@ -106,13 +120,12 @@ img {
   }
 
   &.disabled, &[disabled] {
-    color: var(--color-gray-2);
+    color: var(--button-color-low-contrast);
   }
 
   &:not(.disabled):not([disabled]) {
     &:hover {
-      background: rgba(0, 0, 0, 0.1);
-      color: var(--color-gray-6);
+      background: var(--button-color-more-translucent);
     }
 
     &:focus:not(:hover):not(:active) {
@@ -120,8 +133,7 @@ img {
     }
 
     &:active, &.active {
-      background: rgba(0, 0, 0, 0.2);
-      color: var(--color-gray-7);
+      background: var(--button-color-less-translucent);
       transition: 0.025s all ease-out;
     }
 
@@ -182,7 +194,7 @@ input, .input, textarea {
   transition: 0.1s all;
   outline: none;
   resize: none;
-  color: var(--color-gray-7);
+  color: #000;
 
   &[disabled] {
     color: var(--color-gray-4);
@@ -197,6 +209,15 @@ input, .input, textarea {
       box-shadow: 0 0 0 2px var(--color-primary-1);
       background: #fff;
     }
+  }
+}
+
+select.input {
+  height: 30px;
+  padding: 0 0 0 8px;
+
+  option {
+    background: #fff;
   }
 }
 

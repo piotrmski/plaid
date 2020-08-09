@@ -1,4 +1,4 @@
-<a class="button" (click)="dropdownOpen = !dropdownOpen" [class.active]="dropdownOpen">
+<a class="button both-color-schemes" (click)="dropdownOpen = !dropdownOpen" [class.active]="dropdownOpen">
   <img [src]="currentUserAvatarUrl" *ngIf="currentUserAvatarUrl">
   <svg class="icon-user" *ngIf="!currentUserAvatarUrl"><use href="assets/icons.svg#user"></use></svg>
 </a>

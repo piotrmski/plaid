@@ -1,3 +1,5 @@
+import {DateRange} from '../models/date-range';
+
 export class Calendar {
   static readonly months: string[] = [
     'January',
@@ -56,5 +58,12 @@ export class Calendar {
       );
     }
     return days;
+  }
+
+  static copyDateRange(dateRange: DateRange): DateRange {
+    return {
+      start: new Date(dateRange.start),
+      end: new Date(dateRange.end)
+    };
   }
 }

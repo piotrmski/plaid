@@ -8,7 +8,7 @@
       <textarea [value]="applicationErrorBody" disabled></textarea>
     </div>
     <div class="modal-footer">
-      <button class="button padded" (click)="error = null; closeModal()">Close</button>
+      <button class="button padded" (click)="error = null; closeModal()" [tabIndex]="modalVisible === ConnectionIssueModalVisible.ERROR ? 0 : -1">Close</button>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
       Could not connect to Jira. Verify your internet connection and retry.
     </div>
     <div class="modal-footer">
-      <button class="button primary padded" (click)="reconnect()" [disabled]="fetching">
+      <button class="button primary padded" (click)="reconnect()" [disabled]="fetching" [tabIndex]="modalVisible === ConnectionIssueModalVisible.LOST_CONNECTION ? 0 : -1">
         <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Retry</ng-container>
       </button>
@@ -48,21 +48,53 @@
       </p>
       <label>Jira URL</label>
       <div class="input-wrapper">
-        <input name="jiraUrl" type="url" [(ngModel)]="authInfo.jiraUrl" required (change)="onUrlChange()" [class.http-notice-visible]="httpNoticeVisible">
+        <input
+          name="jiraUrl"
+          type="url"
+          [(ngModel)]="authInfo.jiraUrl"
+          required
+          (change)="onUrlChange()"
+          [class.http-notice-visible]="httpNoticeVisible"
+          [tabIndex]="modalVisible === ConnectionIssueModalVisible.LOGIN ? 0 : -1"
+        >
         <svg class="icon-warning" [class.visible]="httpNoticeVisible"><use href="assets/icons.svg#warning"></use></svg>
         <div class="http-notice">By design Plaid does not require administrative actions on the server for the program to work. As a consequence it uses basic authentication, meaning your username and password will be sent to the server in HTTP Authorization header with every request. Therefore HTTPS is strongly recommended to keep your credentials secure.</div>
       </div>
       <label>Username <small>(for Jira Cloud use your email address instead)</small></label>
-      <input name="username" type="text" [(ngModel)]="authInfo.username" required>
+      <input
+        name="username"
+        type="text"
+        [(ngModel)]="authInfo.username"
+        required
+        [tabIndex]="modalVisible === ConnectionIssueModalVisible.LOGIN ? 0 : -1"
+      >
       <label>Password <small>(for Jira Cloud use an <u plaidExtHref="https://id.atlassian.com/manage/api-tokens">API token</u> instead)</small></label>
-      <input name="password" type="password" [(ngModel)]="authInfo.password" required>
+      <input
+        name="password"
+        type="password"
+        [(ngModel)]="authInfo.password"
+        required
+        [tabIndex]="modalVisible === ConnectionIssueModalVisible.LOGIN ? 0 : -1"
+      >
     </div>
     <div class="modal-footer">
-      <button class="button primary padded" (click)="login()" [disabled]="form.invalid || fetching">
+      <button
+        class="button primary padded"
+        (click)="login()"
+        [disabled]="form.invalid || fetching"
+        [tabIndex]="modalVisible === ConnectionIssueModalVisible.LOGIN ? 0 : -1"
+      >
         <span *ngIf="fetching" class="spinner"></span>
         <ng-container *ngIf="!fetching">Log in</ng-container>
       </button>
-      <button class="button padded" (click)="closeModal()" [disabled]="fetching">Cancel</button>
+      <button
+        class="button padded"
+        (click)="closeModal()"
+        [disabled]="fetching"
+        [tabIndex]="modalVisible === ConnectionIssueModalVisible.LOGIN ? 0 : -1"
+      >
+        Cancel
+      </button>
     </div>
   </form>
 </div>
