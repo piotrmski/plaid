@@ -33,6 +33,7 @@ export class PlaidComponent implements OnInit {
   visibleDaysStart: number;
   visibleDaysEnd: number;
   hideWeekend: boolean;
+  refreshInterval: number;
   theme: Theme;
 
   constructor(
@@ -58,6 +59,7 @@ export class PlaidComponent implements OnInit {
     this.userPreferencesService.getVisibleDaysStart$().subscribe(value => this.visibleDaysStart = value);
     this.userPreferencesService.getVisibleDaysEnd$().subscribe(value => this.visibleDaysEnd = value);
     this.userPreferencesService.getHideWeekend$().subscribe(value => this.hideWeekend = value);
+    this.userPreferencesService.getRefreshInterval$().subscribe(value => this.refreshInterval = value);
     this.userPreferencesService.getTheme$().subscribe(value => this.theme = value);
   }
 
@@ -97,6 +99,10 @@ export class PlaidComponent implements OnInit {
 
   setHideWeekend(value: boolean): void {
     this.userPreferencesService.setHideWeekend(value);
+  }
+
+  setRefreshInterval(value: number): void {
+    this.userPreferencesService.setRefreshInterval(value);
   }
 
   setTheme(value: Theme): void {

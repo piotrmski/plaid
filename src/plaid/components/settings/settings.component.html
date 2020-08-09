@@ -10,7 +10,7 @@
       class="input narrow-dropdown"
       [tabIndex]="dropdownOpen ? 0 : -1"
       [ngModel]="workingHoursStartMinutes?.toString()"
-      (ngModelChange)="workingHoursStartMinutes = +$event"
+      (ngModelChange)="setWorkingHoursStartMinutes(+$event)"
     >
       <option *ngFor="let hour of hours; index as i" [value]="i * 15" [disabled]="i * 15 >= workingHoursEndMinutes">
         {{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}
@@ -21,7 +21,7 @@
       class="input narrow-dropdown"
       [tabIndex]="dropdownOpen ? 0 : -1"
       [ngModel]="workingHoursEndMinutes?.toString()"
-      (ngModelChange)="workingHoursEndMinutes = +$event"
+      (ngModelChange)="setWorkingHoursEndMinutes(+$event)"
     >
       <option *ngFor="let hour of hours; index as i" [value]="i * 15" [disabled]="i * 15 <= workingHoursStartMinutes">
         {{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}
@@ -34,7 +34,7 @@
       class="input narrow-dropdown"
       [tabIndex]="dropdownOpen ? 0 : -1"
       [ngModel]="workingDaysStart?.toString()"
-      (ngModelChange)="workingDaysStart = +$event"
+      (ngModelChange)="setWorkingDaysStart(+$event)"
     >
       <option *ngFor="let day of weekdays; index as i" [value]="i" [disabled]="i > workingDaysEnd">{{ day }}</option>
     </select>
@@ -43,7 +43,7 @@
       class="input narrow-dropdown"
       [tabIndex]="dropdownOpen ? 0 : -1"
       [ngModel]="workingDaysEnd?.toString()"
-      (ngModelChange)="workingDaysEnd = +$event"
+      (ngModelChange)="setWorkingDaysEnd(+$event)"
     >
       <option *ngFor="let day of weekdays; index as i" [value]="i" [disabled]="i < workingDaysStart">{{ day }}</option>
     </select>
@@ -54,7 +54,7 @@
       class="input wide-dropdown"
       [tabIndex]="dropdownOpen ? 0 : -1"
       [ngModel]="hideWeekend ? 1 : 0"
-      (ngModelChange)="hideWeekend = $event == 1"
+      (ngModelChange)="setHideWeekend($event == 1)"
     >
       <option value="0">Gray out</option>
       <option value="1">Hide</option>
@@ -62,7 +62,12 @@
   </div>
   <div class="field">
     <label>Periodic refreshing</label>
-    <select class="input wide-dropdown" [tabIndex]="dropdownOpen ? 0 : -1">
+    <select
+      class="input wide-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="refreshInterval?.toString()"
+      (ngModelChange)="setRefreshInterval(+$event)"
+    >
       <option value="0">Disabled</option>
       <option value="1">Every minute</option>
       <option value="2">Every 2 minutes</option>
@@ -74,7 +79,12 @@
   </div>
   <div class="field">
     <label>Dark mode</label>
-    <select class="input wide-dropdown" [tabIndex]="dropdownOpen ? 0 : -1" [(ngModel)]="theme">
+    <select
+      class="input wide-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="theme"
+      (ngModelChange)="setTheme($event)"
+    >
       <option value="system">System default</option>
       <option value="dark">Enabled</option>
       <option value="light">Disabled</option>

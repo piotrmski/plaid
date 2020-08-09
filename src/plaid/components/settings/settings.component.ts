@@ -12,82 +12,74 @@ export class SettingsComponent {
   dropdownOpen = false;
   readonly hours: Date[];
   readonly weekdays: string[] = Calendar.weekdays;
-  private _workingHoursStartMinutes: number;
-  private _workingHoursEndMinutes: number;
-  private _workingDaysStart: number;
-  private _workingDaysEnd: number;
-  private _hideWeekend: boolean;
-  private _theme: Theme;
+  @Input()  workingHoursStartMinutes: number;
+  @Output() workingHoursStartMinutesChange = new EventEmitter<number>();
+  @Input()  workingHoursEndMinutes: number;
+  @Output() workingHoursEndMinutesChange = new EventEmitter<number>();
+  @Input()  workingDaysStart: number;
+  @Output() workingDaysStartChange = new EventEmitter<number>();
+  @Input()  workingDaysEnd: number;
+  @Output() workingDaysEndChange = new EventEmitter<number>();
+  @Input()  hideWeekend: boolean;
+  @Output() hideWeekendChange = new EventEmitter<boolean>();
+  @Input()  refreshInterval: number;
+  @Output() refreshIntervalChange = new EventEmitter<number>();
+  @Input()  theme: Theme;
+  @Output() themeChange = new EventEmitter<Theme>();
 
   constructor(private ref: ElementRef) {
     this.hours = Array.from<Date>({ length: 96 }).map((_, i) => new Date(1970, 0, 1, Math.floor(i / 4), (i % 4) * 15));
   }
 
-  @Input()
-  get workingHoursStartMinutes(): number {
-    return this._workingHoursStartMinutes;
+  setWorkingHoursStartMinutes(value: number) {
+    // Values are emitted only after initialization and only if they change
+    if (this.workingHoursStartMinutes !== value && this.workingHoursStartMinutes !== undefined) {
+      this.workingHoursStartMinutesChange.emit(value);
+    }
+    this.workingHoursStartMinutes = value;
   }
-  set workingHoursStartMinutes(value: number) {
-    this.workingHoursStartMinutesChange.emit(value);
-    this._workingHoursStartMinutes = value;
-  }
-  @Output()
-  workingHoursStartMinutesChange = new EventEmitter<number>();
 
-  @Input()
-  get workingHoursEndMinutes(): number {
-    return this._workingHoursEndMinutes;
+  setWorkingHoursEndMinutes(value: number) {
+    if (this.workingHoursEndMinutes !== value && this.workingHoursEndMinutes !== undefined) {
+      this.workingHoursEndMinutesChange.emit(value);
+    }
+    this.workingHoursEndMinutes = value;
   }
-  set workingHoursEndMinutes(value: number) {
-    this.workingHoursEndMinutesChange.emit(value);
-    this._workingHoursEndMinutes = value;
-  }
-  @Output()
-  workingHoursEndMinutesChange = new EventEmitter<number>();
 
-  @Input()
-  get workingDaysStart(): number {
-    return this._workingDaysStart;
+  setWorkingDaysStart(value: number) {
+    if (this.workingDaysStart !== value && this.workingDaysStart !== undefined) {
+      this.workingDaysStartChange.emit(value);
+    }
+    this.workingDaysStart = value;
   }
-  set workingDaysStart(value: number) {
-    this.workingDaysStartChange.emit(value);
-    this._workingDaysStart = value;
-  }
-  @Output()
-  workingDaysStartChange = new EventEmitter<number>();
 
-  @Input()
-  get workingDaysEnd(): number {
-    return this._workingDaysEnd;
+  setWorkingDaysEnd(value: number) {
+    if (this.workingDaysEnd !== value && this.workingDaysEnd !== undefined) {
+      this.workingDaysEndChange.emit(value);
+    }
+    this.workingDaysEnd = value;
   }
-  set workingDaysEnd(value: number) {
-    this.workingDaysEndChange.emit(value);
-    this._workingDaysEnd = value;
-  }
-  @Output()
-  workingDaysEndChange = new EventEmitter<number>();
 
-  @Input()
-  get hideWeekend(): boolean {
-    return this._hideWeekend;
+  setHideWeekend(value: boolean) {
+    if (this.hideWeekend !== value && this.workingDaysEnd !== undefined) {
+      this.hideWeekendChange.emit(value);
+    }
+    this.hideWeekend = value;
   }
-  set hideWeekend(value: boolean) {
-    this.hideWeekendChange.emit(value);
-    this._hideWeekend = value;
-  }
-  @Output()
-  hideWeekendChange = new EventEmitter<boolean>();
 
-  @Input()
-  get theme(): Theme {
-    return this._theme;
+  setRefreshInterval(value: number) {
+    if (this.refreshInterval !== value && this.refreshInterval !== undefined) {
+      this.refreshIntervalChange.emit(value);
+    }
+    this.refreshInterval = value;
   }
-  set theme(value: Theme) {
-    this.themeChange.emit(value);
-    this._theme = value;
+
+  setTheme(value: Theme) {
+    if (this.theme !== value && this.theme !== undefined) {
+      this.themeChange.emit(value);
+    }
+    this.theme = value;
   }
-  @Output()
-  themeChange = new EventEmitter<Theme>();
 
   /**
    * Closes dropdown menu, if user clicked anywhere outside it.

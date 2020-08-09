@@ -48,7 +48,7 @@ export class DateRangePickerComponent implements OnInit {
     }
     this._visibleDaysStart = value;
     this.emitDateRange();
-  };
+  }
   get visibleDaysStart(): number {
     return this._visibleDaysStart;
   }
@@ -60,7 +60,7 @@ export class DateRangePickerComponent implements OnInit {
     }
     this._visibleDaysEnd = value;
     this.emitDateRange();
-  };
+  }
   get visibleDaysEnd(): number {
     return this._visibleDaysEnd;
   }
