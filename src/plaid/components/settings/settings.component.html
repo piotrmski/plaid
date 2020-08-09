@@ -1,0 +1,93 @@
+<a class="button both-color-schemes" (click)="dropdownOpen = !dropdownOpen" [class.active]="dropdownOpen" title="Settings">
+  <svg class="icon"><use href="assets/icons.svg#cog"></use></svg>
+</a>
+<div class="dropdown" [class.open]="dropdownOpen">
+  <ng-content></ng-content>
+
+  <div class="field">
+    <label>Working hours</label>
+    <select
+      class="input narrow-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="workingHoursStartMinutes?.toString()"
+      (ngModelChange)="setWorkingHoursStartMinutes(+$event)"
+    >
+      <option *ngFor="let hour of hours; index as i" [value]="i * 15" [disabled]="i * 15 >= workingHoursEndMinutes">
+        {{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}
+      </option>
+    </select>
+    <label class="input-separator">to</label>
+    <select
+      class="input narrow-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="workingHoursEndMinutes?.toString()"
+      (ngModelChange)="setWorkingHoursEndMinutes(+$event)"
+    >
+      <option *ngFor="let hour of hours; index as i" [value]="i * 15" [disabled]="i * 15 <= workingHoursStartMinutes">
+        {{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}
+      </option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Working days</label>
+    <select
+      class="input narrow-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="workingDaysStart?.toString()"
+      (ngModelChange)="setWorkingDaysStart(+$event)"
+    >
+      <option *ngFor="let day of weekdays; index as i" [value]="i" [disabled]="i > workingDaysEnd">{{ day }}</option>
+    </select>
+    <label class="input-separator">to</label>
+    <select
+      class="input narrow-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="workingDaysEnd?.toString()"
+      (ngModelChange)="setWorkingDaysEnd(+$event)"
+    >
+      <option *ngFor="let day of weekdays; index as i" [value]="i" [disabled]="i < workingDaysStart">{{ day }}</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Non-working days</label>
+    <select
+      class="input wide-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="hideWeekend ? 1 : 0"
+      (ngModelChange)="setHideWeekend($event == 1)"
+    >
+      <option value="0">Gray out</option>
+      <option value="1">Hide</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Periodic refreshing</label>
+    <select
+      class="input wide-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="refreshIntervalMinutes?.toString()"
+      (ngModelChange)="setRefreshIntervalMinutes(+$event)"
+    >
+      <option value="0">Disabled</option>
+      <option value="1">Every minute</option>
+      <option value="2">Every 2 minutes</option>
+      <option value="5">Every 5 minutes</option>
+      <option value="10">Every 10 minutes</option>
+      <option value="15">Every 15 minutes</option>
+      <option value="30">Every 30 minutes</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Dark mode</label>
+    <select
+      class="input wide-dropdown"
+      [tabIndex]="dropdownOpen ? 0 : -1"
+      [ngModel]="theme"
+      (ngModelChange)="setTheme($event)"
+    >
+      <option value="system">System default</option>
+      <option value="dark">Enabled</option>
+      <option value="light">Disabled</option>
+    </select>
+  </div>
+</div>

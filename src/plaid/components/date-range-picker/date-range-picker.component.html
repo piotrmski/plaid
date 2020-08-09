@@ -1,10 +1,10 @@
-<a class="button" (click)="decrementWeek()" [class.active]="decrementWeekButtonActive" title="Previous week (F4)">
+<a class="button both-color-schemes" (click)="decrementWeek()" [class.active]="decrementWeekButtonActive" title="Previous week (F4)">
   <svg class="icon"><use href="assets/icons.svg#arrow-left"></use></svg>
 </a>
-<a class="button toggle-button" [class.active]="calendarOpen" (click)="calendarOpen = !calendarOpen" title="Select week">
+<a class="button both-color-schemes toggle-button" [class.active]="calendarOpen" (click)="calendarOpen = !calendarOpen" title="Select week">
   {{ buttonText }}
 </a>
-<a class="button" (click)="incrementWeek()" [class.active]="incrementWeekButtonActive" title="Next week (F6)">
+<a class="button both-color-schemes" (click)="incrementWeek()" [class.active]="incrementWeekButtonActive" title="Next week (F6)">
   <svg class="icon"><use href="assets/icons.svg#arrow-right"></use></svg>
 </a>
 <div class="calendar" [class.open]="calendarOpen">
@@ -27,8 +27,8 @@
   <div
     class="week"
     *ngFor="let week of days"
-    [class.selected]="selectedDateRange.start.valueOf() === week[0].valueOf() && selectedDateRange.end.valueOf() === week[6].valueOf()"
-    (click)="selectDateRange({ start: week[0], end: week[6] })"
+    [class.selected]="selectedDateRange.start.valueOf() === week[this.visibleDaysStart].valueOf() && selectedDateRange.end.valueOf() === week[this.visibleDaysEnd].valueOf()"
+    (click)="selectDateRange({ start: week[this.visibleDaysStart], end: week[this.visibleDaysEnd] })"
   >
     <div
       class="day"

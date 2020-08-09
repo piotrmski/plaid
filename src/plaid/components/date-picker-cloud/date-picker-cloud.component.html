@@ -26,6 +26,7 @@
       (click)="selectDate(day)"
       [class.other-month]="day.getMonth() !== month.getMonth()"
       [class.today]="day.getTime() === today.getTime()"
+      [class.disabled]="!isDateSelectable(day)"
     >
       {{ day.getDate() }}
     </div>

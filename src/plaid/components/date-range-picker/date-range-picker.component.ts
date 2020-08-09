@@ -29,6 +29,8 @@ export class DateRangePickerComponent implements OnInit {
   _calendarOpen = false;
   decrementWeekButtonActive = false;
   incrementWeekButtonActive = false;
+  _visibleDaysStart: number;
+  _visibleDaysEnd: number;
 
   /**
    * Disables F4 and F6 shortcuts for date range changing (by default these keys decrement and increment selected week)
@@ -38,6 +40,30 @@ export class DateRangePickerComponent implements OnInit {
 
   @Input()
   selectedDateRange: DateRange;
+
+  @Input()
+  set visibleDaysStart(value: number) {
+    if (this._visibleDaysStart !== undefined && this.selectedDateRange) {
+      this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() + value - this._visibleDaysStart);
+    }
+    this._visibleDaysStart = value;
+    this.emitDateRange();
+  }
+  get visibleDaysStart(): number {
+    return this._visibleDaysStart;
+  }
+
+  @Input()
+  set visibleDaysEnd(value: number) {
+    if (this._visibleDaysEnd !== undefined && this.selectedDateRange) {
+      this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() + value - this._visibleDaysEnd);
+    }
+    this._visibleDaysEnd = value;
+    this.emitDateRange();
+  }
+  get visibleDaysEnd(): number {
+    return this._visibleDaysEnd;
+  }
 
   @Output()
   selectedDateRangeChange = new EventEmitter<DateRange>();
@@ -125,13 +151,13 @@ export class DateRangePickerComponent implements OnInit {
   decrementWeek(): void {
     this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() - 7);
     this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() - 7);
-    this.selectedDateRangeChange.emit({...this.selectedDateRange});
+    this.emitDateRange();
   }
 
   incrementWeek(): void {
     this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() + 7);
     this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() + 7);
-    this.selectedDateRangeChange.emit({...this.selectedDateRange});
+    this.emitDateRange();
   }
 
   get buttonText(): string {
@@ -140,7 +166,13 @@ export class DateRangePickerComponent implements OnInit {
 
   selectDateRange(dateRange: DateRange) {
     this.selectedDateRange = dateRange;
-    this.selectedDateRangeChange.emit(dateRange);
+    this.emitDateRange();
     this.calendarOpen = false;
+  }
+
+  emitDateRange(): void {
+    if (this.selectedDateRange) {
+      this.selectedDateRangeChange.emit(Calendar.copyDateRange(this.selectedDateRange));
+    }
   }
 }

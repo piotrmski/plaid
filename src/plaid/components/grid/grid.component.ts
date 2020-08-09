@@ -20,6 +20,8 @@ import {Format} from '../../helpers/format';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridComponent implements AfterViewInit {
+  static readonly GRID_HEADER_AND_FOOTER_COMBINED_HEIGHT = 50;
+
   days: Date[];
   _dateRange: DateRange;
   _worklogs: Worklog[];
@@ -29,6 +31,11 @@ export class GridComponent implements AfterViewInit {
   gridHeight = 0;
   timeout: number;
   editedWorklog: Worklog;
+  _workingDaysStart: number;
+  _workingDaysEnd: number;
+  _hideWeekend: boolean;
+  visibleDaysStart: number;
+  visibleDaysEnd: number;
 
   /**
    * Whether an overlay with a spinner should be visible
@@ -54,7 +61,7 @@ export class GridComponent implements AfterViewInit {
     const newScrollTop = change * this.hostElement.nativeElement.scrollTop
       + (change - 1) * this.hostElement.nativeElement.clientHeight * 0.5;
     const oldGridHeight = this.gridHeight;
-    this.gridHeight = 1440 * ppm + 60;
+    this.gridHeight = 1440 * ppm + GridComponent.GRID_HEADER_AND_FOOTER_COMBINED_HEIGHT;
     if (newScrollTop + this.hostElement.nativeElement.clientHeight > oldGridHeight) {
       this.timeout = setTimeout(() => {
         this.hostElement.nativeElement.scrollTop = newScrollTop;
@@ -154,6 +161,38 @@ export class GridComponent implements AfterViewInit {
     return this._dateRange;
   }
 
+  @Input()
+  workingHoursStartMinutes: number;
+  @Input()
+  workingHoursEndMinutes: number;
+
+  @Input()
+  set workingDaysStart(value: number) {
+    this._workingDaysStart = value;
+    this.updateVisibleDays();
+  }
+  get workingDaysStart(): number {
+    return this._workingDaysStart;
+  }
+
+  @Input()
+  set workingDaysEnd(value: number) {
+    this._workingDaysEnd = value;
+    this.updateVisibleDays();
+  }
+  get workingDaysEnd(): number {
+    return this._workingDaysEnd;
+  }
+
+  @Input()
+  set hideWeekend(value: boolean) {
+    this._hideWeekend = value;
+    this.updateVisibleDays();
+  }
+  get hideWeekend(): boolean {
+    return this._hideWeekend;
+  }
+
   constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
 
   /**
@@ -167,5 +206,10 @@ export class GridComponent implements AfterViewInit {
     const weekdayWidth: number = this.hostElement.nativeElement.scrollWidth / 7;
     this.hostElement.nativeElement.scrollLeft = curTime.getDay() * weekdayWidth
       - (this.hostElement.nativeElement.offsetWidth - weekdayWidth) * 0.5;
+  }
+
+  updateVisibleDays(): void {
+    this.visibleDaysStart = this.hideWeekend ? this.workingDaysStart : 0;
+    this.visibleDaysEnd = this.hideWeekend ? this.workingDaysEnd : 6;
   }
 }

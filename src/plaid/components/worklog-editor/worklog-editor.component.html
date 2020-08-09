@@ -91,6 +91,8 @@ Ctrl to snap to 60 minutes."
       [selectedDate]="date"
       (selectedDateChange)="selectDate($event)"
       title=""
+      [selectableDaysStart]="visibleDaysStart"
+      [selectableDaysEnd]="visibleDaysEnd"
     ></plaid-date-picker-cloud>
   </div>
 

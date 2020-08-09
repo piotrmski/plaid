@@ -1,5 +1,7 @@
 <div class="top-bar">
   <plaid-date-range-picker
+    [visibleDaysStart]="visibleDaysStart"
+    [visibleDaysEnd]="visibleDaysEnd"
     [selectedDateRange]="visibleDateRange"
     (selectedDateRangeChange)="setVisibleDateRange($event)"
     [shortcutsDisabled]="connectionIssueModalVisible"
@@ -10,9 +12,35 @@
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-refresh-button>
   <plaid-zoom-controls
+    class="outside-settings"
     (pixelsPerMinuteChange)="pixelsPerMinute = $event"
+    [(pixelsPerMinuteExponent)]="pixelsPerMinuteExponent"
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-zoom-controls>
+  <plaid-settings
+    [workingHoursStartMinutes]="workingHoursStartMinutes"
+    (workingHoursStartMinutesChange)="setWorkingHoursStartMinutes($event)"
+    [workingHoursEndMinutes]="workingHoursEndMinutes"
+    (workingHoursEndMinutesChange)="setWorkingHoursEndMinutes($event)"
+    [workingDaysStart]="workingDaysStart"
+    (workingDaysStartChange)="setWorkingDaysStart($event)"
+    [workingDaysEnd]="workingDaysEnd"
+    (workingDaysEndChange)="setWorkingDaysEnd($event)"
+    [hideWeekend]="hideWeekend"
+    (hideWeekendChange)="setHideWeekend($event)"
+    [refreshIntervalMinutes]="refreshIntervalMinutes"
+    (refreshIntervalMinutesChange)="setRefreshIntervalMinutes($event)"
+    [theme]="theme"
+    (themeChange)="setTheme($event)"
+  >
+    <plaid-zoom-controls
+      class="inside-settings"
+      [allowBothColorSchemes]="false"
+      (pixelsPerMinuteChange)="pixelsPerMinute = $event"
+      [(pixelsPerMinuteExponent)]="pixelsPerMinuteExponent"
+      [shortcutsDisabled]="true"
+    ></plaid-zoom-controls>
+  </plaid-settings>
   <plaid-auth-status
     [user]="currentUser"
     (changeCredentials)="changeCredentials()"
@@ -24,5 +52,10 @@
   [worklogs]="worklogs"
   [dateRange]="visibleDateRange"
   [loading]="loading"
+  [workingHoursStartMinutes]="workingHoursStartMinutes"
+  [workingHoursEndMinutes]="workingHoursEndMinutes"
+  [workingDaysStart]="workingDaysStart"
+  [workingDaysEnd]="workingDaysEnd"
+  [hideWeekend]="hideWeekend"
 ></plaid-grid>
 <plaid-connection-issue-resolver></plaid-connection-issue-resolver>
