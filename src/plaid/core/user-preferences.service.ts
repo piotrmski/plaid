@@ -28,7 +28,7 @@ export class UserPreferencesService {
   private visibleDaysEnd: BehaviorSubject<number> = new BehaviorSubject<number>(
     localStorage.getItem(this.HIDE_WEEKEND) === '1' ? Number(localStorage.getItem(this.WORKING_DAYS_END) || 5) : 6
   );
-  private refreshInterval: BehaviorSubject<number> =
+  private refreshIntervalMinutes: BehaviorSubject<number> =
     new BehaviorSubject<number>(Number(localStorage.getItem(this.REFRESH_INTERVAL) || 0));
   private theme: BehaviorSubject<Theme> =
     new BehaviorSubject<Theme>((localStorage.getItem(this.THEME) || 'system') as Theme);
@@ -106,12 +106,12 @@ export class UserPreferencesService {
     return this.hideWeekend.asObservable();
   }
 
-  getRefreshInterval$(): Observable<number> {
-    return this.refreshInterval.asObservable();
+  getRefreshIntervalMinutes$(): Observable<number> {
+    return this.refreshIntervalMinutes.asObservable();
   }
 
-  setRefreshInterval(value: number): void {
-    this.refreshInterval.next(value);
+  setRefreshIntervalMinutes(value: number): void {
+    this.refreshIntervalMinutes.next(value);
     localStorage.setItem(this.REFRESH_INTERVAL, value.toString());
   }
 

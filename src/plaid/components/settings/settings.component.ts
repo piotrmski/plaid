@@ -22,8 +22,8 @@ export class SettingsComponent {
   @Output() workingDaysEndChange = new EventEmitter<number>();
   @Input()  hideWeekend: boolean;
   @Output() hideWeekendChange = new EventEmitter<boolean>();
-  @Input()  refreshInterval: number;
-  @Output() refreshIntervalChange = new EventEmitter<number>();
+  @Input()  refreshIntervalMinutes: number;
+  @Output() refreshIntervalMinutesChange = new EventEmitter<number>();
   @Input()  theme: Theme;
   @Output() themeChange = new EventEmitter<Theme>();
 
@@ -67,11 +67,11 @@ export class SettingsComponent {
     this.hideWeekend = value;
   }
 
-  setRefreshInterval(value: number) {
-    if (this.refreshInterval !== value && this.refreshInterval !== undefined) {
-      this.refreshIntervalChange.emit(value);
+  setRefreshIntervalMinutes(value: number) {
+    if (this.refreshIntervalMinutes !== value && this.refreshIntervalMinutes !== undefined) {
+      this.refreshIntervalMinutesChange.emit(value);
     }
-    this.refreshInterval = value;
+    this.refreshIntervalMinutes = value;
   }
 
   setTheme(value: Theme) {

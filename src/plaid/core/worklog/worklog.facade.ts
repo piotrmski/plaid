@@ -9,6 +9,8 @@ import {AuthFacade} from '../auth/auth.facade';
 import {AppStateService} from '../app-state.service';
 import {tap} from 'rxjs/operators';
 import {Calendar} from '../../helpers/calendar';
+import {UserPreferencesService} from '../user-preferences.service';
+import Timeout = NodeJS.Timeout;
 
 /**
  * Business logic facade for work logs.
@@ -18,12 +20,15 @@ export class WorklogFacade {
   private fetchWorklogsSubscription: Subscription;
   visibleDateRange: DateRange;
   currentUser: User;
+  refreshIntervalTimeoutMinutes: number;
+  refreshIntervalHandle: Timeout;
 
   constructor(
     private worklogState: WorklogState,
     private worklogApi: WorklogApi,
     private authFacade: AuthFacade,
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
+    private userPreferencesService: UserPreferencesService
   ) {
     // Fetch work logs after visible date range change
     this.appStateService.getVisibleDateRange$().subscribe(dateRange => {
@@ -51,10 +56,15 @@ export class WorklogFacade {
         this.worklogState.setWorklogs([]);
       }
     });
+
+    this.userPreferencesService.getRefreshIntervalMinutes$().subscribe(interval => {
+      this.refreshIntervalTimeoutMinutes = interval;
+      this.reschedulePeriodicRefreshing();
+    });
   }
 
   /**
-   * Refresh work logs by emitting the updated list on every stage of the refreshing process and emit 'fetching'.
+   * Refreshes work logs by emitting the updated list on every stage of the refreshing process and emits 'fetching'.
    */
   fetchWorklogsVerbose(): void {
     this.worklogState.setFetching(true);
@@ -68,10 +78,12 @@ export class WorklogFacade {
         next: (worklogs: Worklog[]) => this.worklogState.setWorklogs(worklogs),
         complete: () => this.worklogState.setFetching(false)
       });
+
+    this.reschedulePeriodicRefreshing();
   }
 
   /**
-   * Refresh work logs by emitting the updated list only once after don't emit 'fetching'
+   * Refreshes work logs by emitting the updated list only once and doesn't emit 'fetching' afterwards.
    */
   fetchWorklogsQuiet(): void {
     if (this.fetchWorklogsSubscription) {
@@ -100,5 +112,17 @@ export class WorklogFacade {
     return this.worklogApi.updateWorklog(worklog.issueId, worklog.id, started, timeSpentSeconds, comment).pipe(
       tap<Worklog>(log => this.worklogState.updateWorklog(log))
     );
+  }
+
+  reschedulePeriodicRefreshing(): void {
+    if (this.refreshIntervalHandle != null) {
+      clearInterval(this.refreshIntervalHandle);
+      this.refreshIntervalHandle = null;
+    }
+
+    if (this.refreshIntervalTimeoutMinutes > 0) {
+      this.refreshIntervalHandle =
+        setInterval(() => this.fetchWorklogsQuiet(), this.refreshIntervalTimeoutMinutes * 60000);
+    }
   }
 }

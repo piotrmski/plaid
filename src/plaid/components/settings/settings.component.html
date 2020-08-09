@@ -65,8 +65,8 @@
     <select
       class="input wide-dropdown"
       [tabIndex]="dropdownOpen ? 0 : -1"
-      [ngModel]="refreshInterval?.toString()"
-      (ngModelChange)="setRefreshInterval(+$event)"
+      [ngModel]="refreshIntervalMinutes?.toString()"
+      (ngModelChange)="setRefreshIntervalMinutes(+$event)"
     >
       <option value="0">Disabled</option>
       <option value="1">Every minute</option>

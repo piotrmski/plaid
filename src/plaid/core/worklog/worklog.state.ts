@@ -24,6 +24,7 @@ export class WorklogState {
   }
 
   updateWorklog(updatedWorklog: Worklog): void {
+    // FIXME Sometimes worklog is not in worklogs
     this.worklogs.next(this.worklogs.getValue().map(worklog => {
       if (worklog.id === updatedWorklog.id) {
         return {...worklog, ...updatedWorklog};
