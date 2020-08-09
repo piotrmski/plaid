@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class WorklogState {
   private fetching = new BehaviorSubject<boolean>(false);
-  private worklogs = new BehaviorSubject<Worklog[]>(null);
+  private worklogs = new BehaviorSubject<Worklog[]>([]);
 
   getFetching$(): Observable<boolean> {
     return this.fetching.asObservable();
@@ -24,13 +24,13 @@ export class WorklogState {
   }
 
   updateWorklog(updatedWorklog: Worklog): void {
-    // FIXME Sometimes worklog is not in worklogs
-    this.worklogs.next(this.worklogs.getValue().map(worklog => {
-      if (worklog.id === updatedWorklog.id) {
-        return {...worklog, ...updatedWorklog};
-      } else {
-        return worklog;
-      }
-    }));
+    const worklogs: Worklog[] = this.worklogs.getValue();
+    const updatedWorklogIndex: number = worklogs.findIndex(worklog => worklog.id === updatedWorklog.id);
+    if (updatedWorklogIndex > -1) {
+      worklogs[updatedWorklogIndex] = updatedWorklog;
+    } else {
+      worklogs.push(updatedWorklog);
+    }
+    this.worklogs.next([...worklogs]);
   }
 }

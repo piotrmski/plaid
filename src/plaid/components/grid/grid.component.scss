@@ -31,7 +31,6 @@
 
   &.visible {
     opacity: 1;
-    transition: 0.2s opacity;
   }
 
   &:not(.visible) {

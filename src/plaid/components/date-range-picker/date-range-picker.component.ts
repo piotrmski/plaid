@@ -11,6 +11,7 @@ import {
 import {DateRange} from '../../models/date-range';
 import {Format} from '../../helpers/format';
 import {Calendar} from '../../helpers/calendar';
+import Timeout = NodeJS.Timeout;
 
 /**
  * Dumb component, responsible for presenting current date on a dropdown calendar, currently selected week and
@@ -31,6 +32,7 @@ export class DateRangePickerComponent implements OnInit {
   incrementWeekButtonActive = false;
   _visibleDaysStart: number;
   _visibleDaysEnd: number;
+  dateRangeEmissionTimeout: Timeout;
 
   /**
    * Disables F4 and F6 shortcuts for date range changing (by default these keys decrement and increment selected week)
@@ -47,7 +49,7 @@ export class DateRangePickerComponent implements OnInit {
       this.selectedDateRange.start.setDate(this.selectedDateRange.start.getDate() + value - this._visibleDaysStart);
     }
     this._visibleDaysStart = value;
-    this.emitDateRange();
+    this.emitDateRangeDebounce();
   }
   get visibleDaysStart(): number {
     return this._visibleDaysStart;
@@ -59,7 +61,7 @@ export class DateRangePickerComponent implements OnInit {
       this.selectedDateRange.end.setDate(this.selectedDateRange.end.getDate() + value - this._visibleDaysEnd);
     }
     this._visibleDaysEnd = value;
-    this.emitDateRange();
+    this.emitDateRangeDebounce();
   }
   get visibleDaysEnd(): number {
     return this._visibleDaysEnd;
@@ -174,5 +176,15 @@ export class DateRangePickerComponent implements OnInit {
     if (this.selectedDateRange) {
       this.selectedDateRangeChange.emit(Calendar.copyDateRange(this.selectedDateRange));
     }
+  }
+
+  emitDateRangeDebounce(): void {
+    if (this.dateRangeEmissionTimeout != null) {
+      clearTimeout(this.dateRangeEmissionTimeout);
+    }
+    this.dateRangeEmissionTimeout = setTimeout(() => {
+      this.emitDateRange();
+      this.dateRangeEmissionTimeout = null;
+    }, 0);
   }
 }

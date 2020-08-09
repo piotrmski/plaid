@@ -108,9 +108,9 @@ export class WorklogFacade {
   /**
    * Upon subscription updates work log entry, emits response from the server after it acknowledged the update
    */
-  updateWorklog(worklog: Worklog, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
+  updateWorklog$(worklog: Worklog, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
     return this.worklogApi.updateWorklog(worklog.issueId, worklog.id, started, timeSpentSeconds, comment).pipe(
-      tap<Worklog>(log => this.worklogState.updateWorklog(log))
+      tap<Worklog>(updated => this.worklogState.updateWorklog({...worklog, ...updated}))
     );
   }
 

@@ -437,7 +437,7 @@ export class WorklogEditorComponent implements OnInit {
    */
   save(): void {
     this.saving = true;
-    this.worklogFacade.updateWorklog(
+    this.worklogFacade.updateWorklog$(
       this.worklog,
       this.start,
       this.durationMinutes * 60,
