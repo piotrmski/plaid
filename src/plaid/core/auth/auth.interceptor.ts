@@ -30,9 +30,9 @@ export class AuthInterceptor implements HttpInterceptor {
     this.authState.setError(error);
 
     if (!error || [0, 401, 403].includes(error.status)) { // If the error is related to lack of connection or authorization:
-      // Retry the request after authentication, except /rest/api/2/user and /rest/auth/1/session, because requests to
-      // these end points will be retried in the process of authentication.
-      return request.url.substr(0, 16) === '/rest/api/2/user' || request.url === '/rest/auth/1/session'
+      // Retry the request after authentication, except /rest/api/2/myself, because requests to this end point will be
+      // retried in the process of authentication.
+      return request.url === '/rest/api/2/myself'
         ? EMPTY
         : this.retryAfterAuthenticated(() => this.intercept(request, next));
     } else { // Otherwise let the error propagate
