@@ -5,31 +5,31 @@
   <!-- Parent component can accommodate stuff inside the settings dropdown that would not fit outside of it. -->
   <ng-content></ng-content>
 
-  <div class="field">
+  <div class="field-set">
     <label>Working hours</label>
-    <select
-      class="input narrow-dropdown"
+    <input
+      class="input time-input"
+      type="time"
       [tabIndex]="dropdownOpen ? 0 : -1"
-      [ngModel]="workingHoursStartMinutes?.toString()"
-      (ngModelChange)="setWorkingHoursStartMinutes(+$event)"
-    >
-      <option *ngFor="let hour of hours; index as i" [value]="i * 15" [disabled]="i * 15 >= workingHoursEndMinutes">
-        {{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}
-      </option>
-    </select>
+      #workingHoursStart
+      [max]="minutesToTimeString(workingHoursEndMinutes - 1)"
+      [ngModel]="minutesToTimeString(workingHoursStartMinutes)"
+      (ngModelChange)="setWorkingHoursStartMinutes(timeStringToMinutes(workingHoursStart.checkValidity() ? $event : null))"
+      (blur)="workingHoursStart.value = minutesToTimeString(workingHoursStartMinutes)"
+    />
     <label class="input-separator">to</label>
-    <select
-      class="input narrow-dropdown"
+    <input
+      class="input time-input"
+      type="time"
       [tabIndex]="dropdownOpen ? 0 : -1"
-      [ngModel]="workingHoursEndMinutes?.toString()"
-      (ngModelChange)="setWorkingHoursEndMinutes(+$event)"
-    >
-      <option *ngFor="let hour of hours; index as i" [value]="i * 15" [disabled]="i * 15 <= workingHoursStartMinutes">
-        {{ hour.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) }}
-      </option>
-    </select>
+      #workingHoursEnd
+      [min]="minutesToTimeString(workingHoursStartMinutes + 1)"
+      [ngModel]="minutesToTimeString(workingHoursEndMinutes)"
+      (ngModelChange)="setWorkingHoursEndMinutes(timeStringToMinutes(workingHoursEnd.checkValidity() ? $event : null))"
+      (blur)="workingHoursEnd.value = minutesToTimeString(workingHoursEndMinutes)"
+    />
   </div>
-  <div class="field">
+  <div class="field-set">
     <label>Working days</label>
     <select
       class="input narrow-dropdown"
@@ -49,7 +49,7 @@
       <option *ngFor="let day of weekdays; index as i" [value]="i" [disabled]="i < workingDaysStart">{{ day }}</option>
     </select>
   </div>
-  <div class="field">
+  <div class="field-set">
     <label>Non-working days</label>
     <select
       class="input wide-dropdown"
@@ -61,7 +61,7 @@
       <option value="1">Hide</option>
     </select>
   </div>
-  <div class="field">
+  <div class="field-set">
     <label>Periodic refreshing</label>
     <select
       class="input wide-dropdown"
@@ -78,7 +78,7 @@
       <option value="30">Every 30 minutes</option>
     </select>
   </div>
-  <div class="field">
+  <div class="field-set">
     <label>Dark mode</label>
     <select
       class="input wide-dropdown"

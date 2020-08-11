@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {Calendar} from '../../helpers/calendar';
 import {Theme} from '../../models/theme';
 
@@ -13,7 +22,6 @@ import {Theme} from '../../models/theme';
 })
 export class SettingsComponent {
   dropdownOpen = false;
-  readonly hours: Date[];
   readonly weekdays: string[] = Calendar.weekdays;
   @Input()  workingHoursStartMinutes: number;
   @Output() workingHoursStartMinutesChange = new EventEmitter<number>();
@@ -31,22 +39,25 @@ export class SettingsComponent {
   @Output() themeChange = new EventEmitter<Theme>();
 
   constructor(private ref: ElementRef) {
-    this.hours = Array.from<Date>({ length: 96 }).map((_, i) => new Date(1970, 0, 1, Math.floor(i / 4), (i % 4) * 15));
   }
 
   setWorkingHoursStartMinutes(value: number) {
     // Values are emitted only after initialization and only if they change
-    if (this.workingHoursStartMinutes !== value && this.workingHoursStartMinutes !== undefined) {
-      this.workingHoursStartMinutesChange.emit(value);
+    if (value != null) {
+      if (this.workingHoursStartMinutes !== value && this.workingHoursStartMinutes !== undefined) {
+        this.workingHoursStartMinutesChange.emit(value);
+      }
+      this.workingHoursStartMinutes = value;
     }
-    this.workingHoursStartMinutes = value;
   }
 
   setWorkingHoursEndMinutes(value: number) {
-    if (this.workingHoursEndMinutes !== value && this.workingHoursEndMinutes !== undefined) {
-      this.workingHoursEndMinutesChange.emit(value);
+    if (value != null) {
+      if (this.workingHoursEndMinutes !== value && this.workingHoursEndMinutes !== undefined) {
+        this.workingHoursEndMinutesChange.emit(value);
+      }
+      this.workingHoursEndMinutes = value;
     }
-    this.workingHoursEndMinutes = value;
   }
 
   setWorkingDaysStart(value: number) {
@@ -92,5 +103,25 @@ export class SettingsComponent {
     if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
       this.dropdownOpen = false;
     }
+  }
+
+  minutesToTimeString(minutesSinceMidnight: number): string {
+    if (minutesSinceMidnight == null) {
+      return null;
+    }
+    const hours: number = Math.floor(minutesSinceMidnight / 60);
+    const minutes: number = minutesSinceMidnight % 60;
+    return (hours <= 9 ? '0' : '') + hours.toString() + ':' + (minutes <= 9 ? '0' : '') + minutes.toString();
+  }
+
+  timeStringToMinutes(timeString: string): number {
+    if (!timeString) {
+      return null;
+    }
+    const split: string[] = timeString.split(':');
+    if (split.length !== 2) {
+      return null;
+    }
+    return Number(split[0]) * 60 + Number(split[1]);
   }
 }
