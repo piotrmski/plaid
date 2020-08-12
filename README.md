@@ -4,10 +4,12 @@
 
 Plaid lets you get a better overview of your Jira work logs. See your work logs neatly laid out and never struggle to search for gaps in your hours again. Edit them by dragging them across the calendar.
 
-## New in 0.4
+## New in 0.5
 
-- Work logs can now be edited within Plaid (adding and deleting will come in future versions as well)
-- Fixed Jira Cloud integration
+- Added settings with dark mode toggle, periodic refreshing and more
+- The working window is now displayed on the calendar
+- Fixed Jira Cloud integration again
+- Fixed some bugs here and there
 
 See full change log in `changelog.md`
 
@@ -70,8 +72,4 @@ npm run package
 ## Roadmap
 
 Planned functionality includes:
-- **adding and editing work logs within the application**,
-- hiding weekends,
-- viewing single days,
-- setting hour markers for beginnings and ends of work days,
-- periodic refreshing.
+- adding and removing work logs within the application
