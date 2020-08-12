@@ -114,6 +114,18 @@ img {
   font-size: 16px;
   outline: none;
   display: inline-block;
+  
+  @keyframes progress-on-button {
+    from { background-position-x: -100%!important; }
+    to { background-position-x: 0%!important; }
+  }
+
+  &.progress-30s {
+    background-image: linear-gradient(to right, var(--button-color-less-translucent) 0%, var(--button-color-less-translucent) 100%);
+    background-repeat: no-repeat;
+    animation: progress-on-button 5s linear;
+    animation-fill-mode: forwards;
+  }
 
   &.padded {
     padding: 0 15px;
@@ -152,6 +164,10 @@ img {
 
       &:active, &.active {
         background: var(--color-primary-3);
+      }
+
+      &.progress-30s {
+        background-image: linear-gradient(to right, var(--color-primary-3) 0%, var(--color-primary-3) 100%)
       }
     }
 
