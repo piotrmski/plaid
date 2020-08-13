@@ -6,7 +6,15 @@
     Could not connect to Jira. Verify your internet connection and retry.
   </div>
   <div class="modal-footer">
-    <button class="button primary padded" (click)="reconnect.emit()" [disabled]="fetching" [tabIndex]="open ? 0 : -1" [class.progress-30s]="open">
+    <button
+      class="button primary padded"
+      (click)="this.cancelReconnectCountdown(); reconnect.emit()"
+      [disabled]="fetching"
+      [tabIndex]="open ? 0 : -1"
+      [class.progress-30s]="reconnectCountdown != null"
+      (mouseover)="this.cancelReconnectCountdown()"
+      (focus)="this.cancelReconnectCountdown()"
+    >
       <span *ngIf="fetching" class="spinner"></span>
       <ng-container *ngIf="!fetching">Retry</ng-container>
     </button>

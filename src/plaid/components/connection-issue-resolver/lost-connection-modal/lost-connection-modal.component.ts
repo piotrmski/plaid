@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, Output, EventEmitter} from '@angular/core';
+import Timeout = NodeJS.Timeout;
 
 /**
  * Dumb component, presents lost connection modal and delegates actions to parent component.
@@ -10,8 +11,29 @@ import {ChangeDetectionStrategy, Component, Input, Output, EventEmitter} from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LostConnectionModalComponent {
-  @Input() open: boolean;
+  private _open: boolean;
+  reconnectCountdown: Timeout;
+
+  @Input() set open(value: boolean) {
+    this._open = value;
+    if (value) {
+      // FIXME This doesn't trigger for subsequent reconnect attempts
+      this.reconnectCountdown = setTimeout(() => {
+        this.reconnect.emit();
+        this.reconnectCountdown = null;
+      }, 30000);
+    }
+  }
+  get open(): boolean {
+    return this._open;
+  }
   @Input() fetching: boolean;
   @Output() reconnect = new EventEmitter<void>();
 
+  cancelReconnectCountdown(): void {
+    if (this.reconnectCountdown != null) {
+      clearTimeout(this.reconnectCountdown);
+      this.reconnectCountdown = null;
+    }
+  }
 }
