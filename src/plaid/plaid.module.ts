@@ -18,6 +18,9 @@ import {CurrentTimeMarkerComponent} from './components/current-time-marker/curre
 import {WorklogEditorComponent} from './components/worklog-editor/worklog-editor.component';
 import {DatePickerCloudComponent} from './components/date-picker-cloud/date-picker-cloud.component';
 import {SettingsComponent} from './components/settings/settings.component';
+import {LostConnectionModalComponent} from './components/connection-issue-resolver/lost-connection-modal/lost-connection-modal.component';
+import {LoginModalComponent} from './components/connection-issue-resolver/login-modal/login-modal.component';
+import {ErrorModalComponent} from './components/connection-issue-resolver/error-modal/error-modal.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,10 @@ import {SettingsComponent} from './components/settings/settings.component';
     ZoomControlsComponent,
     CurrentTimeMarkerComponent,
     WorklogEditorComponent,
-    SettingsComponent
+    SettingsComponent,
+    LostConnectionModalComponent,
+    LoginModalComponent,
+    ErrorModalComponent
   ],
   imports: [
     BrowserModule,
