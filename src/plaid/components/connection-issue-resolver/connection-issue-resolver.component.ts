@@ -5,6 +5,7 @@ import {User} from '../../models/user';
 import {ConnectionIssueModalVisible} from './connection-issue-modal-visible';
 import {AuthFacade} from '../../core/auth/auth.facade';
 import {AppStateService} from '../../core/app-state.service';
+import { Subject } from 'rxjs';
 
 /**
  * Smart component, contains login, lost connection, and error modals and handles login and reconnect actions.
@@ -19,6 +20,7 @@ export class ConnectionIssueResolverComponent implements OnInit {
   authInfo: AuthInfo = { jiraUrl: null, username: null, password: null };
   error: HttpErrorResponse;
   fetching = false;
+  startReconnectCountdown = new Subject<void>();
 
   readonly ConnectionIssueModalVisible = ConnectionIssueModalVisible;
 
@@ -28,7 +30,12 @@ export class ConnectionIssueResolverComponent implements OnInit {
     // Singleton component, no need to unsubscribe
     this.authFacade.getError$().subscribe((authError: HttpErrorResponse) => this.errorUpdated(authError));
     this.authFacade.getAuthenticatedUser$().subscribe(user => this.currentUserUpdated(user));
-    this.appStateService.getConnectionIssueModalVisible$().subscribe(val => this.modalVisible = val);
+    this.appStateService.getConnectionIssueModalVisible$().subscribe(val => {
+      this.modalVisible = val;
+      if (val === ConnectionIssueModalVisible.LOST_CONNECTION) {
+        this.startReconnectCountdown.next();
+      }
+    });
     this.authFacade.getAuthInfo$().subscribe(authInfo => this.authInfo = authInfo || { jiraUrl: null, username: null, password: null });
   }
 

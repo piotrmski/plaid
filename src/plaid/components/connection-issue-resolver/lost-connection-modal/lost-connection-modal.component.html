@@ -12,7 +12,7 @@
       [disabled]="fetching"
       [tabIndex]="open ? 0 : -1"
       [class.progress-30s]="reconnectCountdown != null"
-      (mouseover)="this.cancelReconnectCountdown()"
+      (mousemove)="this.cancelReconnectCountdown()"
       (focus)="this.cancelReconnectCountdown()"
     >
       <span *ngIf="fetching" class="spinner"></span>

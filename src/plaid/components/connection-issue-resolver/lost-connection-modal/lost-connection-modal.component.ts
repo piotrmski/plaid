@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, Input, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import Timeout = NodeJS.Timeout;
+import { Observable } from 'rxjs';
 
 /**
  * Dumb component, presents lost connection modal and delegates actions to parent component.
@@ -10,25 +11,25 @@ import Timeout = NodeJS.Timeout;
   styleUrls: ['../connection-issue-resolver.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LostConnectionModalComponent {
-  private _open: boolean;
+export class LostConnectionModalComponent implements OnInit {
   reconnectCountdown: Timeout;
 
-  @Input() set open(value: boolean) {
-    this._open = value;
-    if (value) {
-      // FIXME This doesn't trigger for subsequent reconnect attempts
-      this.reconnectCountdown = setTimeout(() => {
-        this.reconnect.emit();
-        this.reconnectCountdown = null;
-      }, 30000);
-    }
-  }
-  get open(): boolean {
-    return this._open;
-  }
+  @Input() open: boolean;
   @Input() fetching: boolean;
   @Output() reconnect = new EventEmitter<void>();
+  // This property needs to be set on init and may not change throughout the component's lifecycle.
+  @Input() startReconnectCountdown: Observable<void>;
+
+  ngOnInit(): void {
+    this.startReconnectCountdown.subscribe(() => {
+      if (this.reconnectCountdown == null) {
+        this.reconnectCountdown = setTimeout(() => {
+          this.reconnectCountdown = null;
+          this.reconnect.emit();
+        }, 30000);
+      }
+    })
+  }
 
   cancelReconnectCountdown(): void {
     if (this.reconnectCountdown != null) {

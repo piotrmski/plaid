@@ -9,6 +9,7 @@
     [open]="modalVisible === ConnectionIssueModalVisible.LOST_CONNECTION"
     [fetching]="fetching"
     (reconnect)="reconnect()"
+    [startReconnectCountdown]="startReconnectCountdown.asObservable()"
   ></plaid-lost-connection-modal>
 
   <plaid-login-modal

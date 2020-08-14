@@ -9,11 +9,8 @@
   <div class="modal-footer">
     <button
       class="button padded"
-      (click)="this.cancelCloseModalCountdown(); error = null; errorChange.emit(null); closeModal.emit()"
+      (click)="error = null; errorChange.emit(null); closeModal.emit()"
       [tabIndex]="open ? 0 : -1"
-      [class.progress-30s]="closeModalCountdown != null"
-      (mouseover)="this.cancelCloseModalCountdown()"
-      (focus)="this.cancelCloseModalCountdown()"
     >Close</button>
   </div>
 </div>
