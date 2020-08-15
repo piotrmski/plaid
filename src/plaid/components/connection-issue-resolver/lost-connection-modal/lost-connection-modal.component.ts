@@ -28,7 +28,7 @@ export class LostConnectionModalComponent implements OnInit {
           this.reconnect.emit();
         }, 30000);
       }
-    })
+    });
   }
 
   cancelReconnectCountdown(): void {
