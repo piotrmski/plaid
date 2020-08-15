@@ -22,12 +22,13 @@ export class LostConnectionModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.startReconnectCountdown.subscribe(() => {
-      if (this.reconnectCountdown == null) {
+      this.cancelReconnectCountdown();
+      setTimeout(() => { // There needs to be a minimal time gap for the CSS progress animation to reset properly.
         this.reconnectCountdown = setTimeout(() => {
           this.reconnectCountdown = null;
           this.reconnect.emit();
         }, 30000);
-      }
+      });
     });
   }
 
