@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import Timeout = NodeJS.Timeout;
 import { Observable } from 'rxjs';
 
@@ -13,6 +22,7 @@ import { Observable } from 'rxjs';
 })
 export class LostConnectionModalComponent implements OnInit {
   reconnectCountdown: Timeout;
+  @ViewChild('reconnectButton', {static: true}) reconnectButton: ElementRef<HTMLButtonElement>;
 
   @Input() open: boolean;
   @Input() fetching: boolean;
@@ -22,20 +32,32 @@ export class LostConnectionModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.startReconnectCountdown.subscribe(() => {
-      this.cancelReconnectCountdown();
-      setTimeout(() => { // There needs to be a minimal time gap for the CSS progress animation to reset properly.
+      if (this.reconnectCountdown == null) {
+        this.setProgressOnButtonVisible(true);
         this.reconnectCountdown = setTimeout(() => {
+          this.setProgressOnButtonVisible(false);
           this.reconnectCountdown = null;
           this.reconnect.emit();
         }, 30000);
-      });
+      }
     });
   }
 
   cancelReconnectCountdown(): void {
     if (this.reconnectCountdown != null) {
       clearTimeout(this.reconnectCountdown);
+      this.setProgressOnButtonVisible(false);
       this.reconnectCountdown = null;
+    }
+  }
+
+  setProgressOnButtonVisible(value: boolean): void {
+    // Manually manipulating element's class list because toggling the class via component template is wonky
+    this.reconnectButton.nativeElement.classList.remove('progress-30s');
+    if (value) {
+      setTimeout(() => {
+        this.reconnectButton.nativeElement.classList.add('progress-30s');
+      });
     }
   }
 }

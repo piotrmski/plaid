@@ -7,11 +7,11 @@
   </div>
   <div class="modal-footer">
     <button
+      #reconnectButton
       class="button primary padded"
       (click)="this.cancelReconnectCountdown(); reconnect.emit()"
       [disabled]="fetching"
       [tabIndex]="open ? 0 : -1"
-      [class.progress-30s]="reconnectCountdown != null"
       (mousemove)="this.cancelReconnectCountdown()"
       (focus)="this.cancelReconnectCountdown()"
     >
