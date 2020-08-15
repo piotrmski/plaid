@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, Menu} = require('electron');
 const {autoUpdater} = require('electron-updater');
 const {getNewWindowRect, getNewWindowMaximized, saveWindowState} = require('./window-state');
 
@@ -41,6 +41,40 @@ function createWindow(dev) {
   window.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
     delete details.requestHeaders['User-Agent'];
     callback({cancel: false, requestHeaders: details.requestHeaders});
+  });
+
+  window.webContents.addListener('context-menu', (e, params) => {
+    if (params.isEditable || params.inputFieldType !== 'none') {
+      Menu.buildFromTemplate([
+        {
+          label: 'Undo',
+          role: 'undo',
+          enabled: params.editFlags.canUndo
+        }, {
+          label: 'Redo',
+          role: 'redo',
+          enabled: params.editFlags.canRedo
+        }, {
+          type: 'separator',
+        }, {
+          label: 'Cut',
+          role: 'cut',
+          enabled: params.editFlags.canCut
+        }, {
+          label: 'Copy',
+          role: 'copy',
+          enabled: params.editFlags.canCopy
+        }, {
+          label: 'Paste',
+          role: 'paste',
+          enabled: params.editFlags.canPaste
+        }, {
+          label: 'Select all',
+          role: 'selectAll',
+          enabled: params.editFlags.canSelectAll
+        }
+      ]).popup();
+    }
   });
 
   if (dev) {
