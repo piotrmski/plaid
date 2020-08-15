@@ -212,11 +212,11 @@ input, .input, textarea {
   resize: none;
   color: #000;
 
-  &[disabled] {
+  &.disabled, &[disabled] {
     color: var(--color-gray-4);
   }
 
-  &:not([disabled]) {
+  &:not(.disabled):not([disabled]) {
     &:hover {
       background: rgba(0, 0, 0, 0.1);
     }

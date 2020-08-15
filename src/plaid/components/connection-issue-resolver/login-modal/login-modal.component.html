@@ -27,6 +27,7 @@
         (change)="onUrlChange()"
         [class.http-notice-visible]="httpNoticeVisible"
         [tabIndex]="open ? 0 : -1"
+        [disabled]="fetching"
       >
       <svg class="icon-warning" [class.visible]="httpNoticeVisible"><use href="assets/icons.svg#warning"></use></svg>
       <div class="http-notice">By design Plaid does not require administrative actions on the server for the program to work. As a consequence it uses basic authentication, meaning your username and password will be sent to the server in HTTP Authorization header with every request. Therefore HTTPS is strongly recommended to keep your credentials secure.</div>
@@ -38,6 +39,7 @@
       [(ngModel)]="authInfo.username"
       required
       [tabIndex]="open ? 0 : -1"
+      [disabled]="fetching"
     >
     <label>Password <small>(for Jira Cloud use an <u plaidExtHref="https://id.atlassian.com/manage/api-tokens">API token</u> instead)</small></label>
     <input
@@ -46,6 +48,7 @@
       [(ngModel)]="authInfo.password"
       required
       [tabIndex]="open ? 0 : -1"
+      [disabled]="fetching"
     >
   </div>
   <div class="modal-footer">

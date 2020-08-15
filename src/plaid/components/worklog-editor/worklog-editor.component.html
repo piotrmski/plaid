@@ -42,17 +42,20 @@ Ctrl to snap to 60 minutes."
         [class.active]="calendarOpen"
         title=""
         (click)="toggleCalendar()"
+        [class.disabled]="saving"
       >{{ dateString }}</a>
       <label>Comment</label>
       <textarea
         [(ngModel)]="commentString"
         title=""
         class="tangible space-under"
+        [disabled]="saving"
       ></textarea>
     </div>
 
     <div class="buttons-area">
       <button
+        id="save-button"
         class="button primary tangible"
         [disabled]="saving"
         title=""
