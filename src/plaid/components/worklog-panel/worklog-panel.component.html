@@ -20,10 +20,6 @@
     }"
   >
     <div class="panel-content">
-      <div class="delete-confirmation" [class.open]="deleteConfirmationOpen" (blur)="deleteConfirmationOpen = false">
-        For sure?&ensp;
-        <a class="button delete-confirmation-button">Yes</a>
-      </div>
       <a
         class="button worklog-action-button edit-button"
         title="Edit log"
@@ -38,6 +34,14 @@
       >
         D
       </a>
+      <div
+        class="delete-confirmation"
+        [class.open]="deleteConfirmationOpen"
+        (mouseleave)="deleteConfirmationOpen = false"
+      >
+        For sure?
+        <a class="button">Yes</a>
+      </div>
       <p
         class="parent-name"
         *ngIf="worklog.issue.fields.parent"
