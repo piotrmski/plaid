@@ -1,0 +1,16 @@
+<div class="modal" [class.open]="open">
+  <div class="modal-header">
+    Application error
+  </div>
+  <div class="modal-body">
+    <p>{{ error ? error.message : null }}</p>
+    <textarea [value]="applicationErrorBody" disabled></textarea>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="button padded"
+      (click)="error = null; errorChange.emit(null); closeModal.emit()"
+      [tabIndex]="open ? 0 : -1"
+    >Close</button>
+  </div>
+</div>

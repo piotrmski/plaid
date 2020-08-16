@@ -47,7 +47,7 @@
   }
 }
 
-.field {
+.field-set {
   display: flex;
 
   :first-child {
@@ -55,8 +55,7 @@
   }
 
   .narrow-dropdown {
-    min-width: 80px;
-    max-width: 80px;
+    width: 95px;
   }
 
   .wide-dropdown {
@@ -66,5 +65,12 @@
   .input-separator {
     width: 25px;
     text-align: center;
+  }
+
+  .time-input {
+    height: 30px;
+    width: 95px;
+    padding-left: 10px;
+    padding-right: 0;
   }
 }

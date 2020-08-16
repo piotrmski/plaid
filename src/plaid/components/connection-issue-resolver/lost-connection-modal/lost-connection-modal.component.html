@@ -1,0 +1,22 @@
+<div class="modal" [class.open]="open">
+  <div class="modal-header">
+    Connection error
+  </div>
+  <div class="modal-body">
+    Could not connect to Jira. Verify your internet connection and retry.
+  </div>
+  <div class="modal-footer">
+    <button
+      #reconnectButton
+      class="button primary padded"
+      (click)="this.cancelReconnectCountdown(); reconnect.emit()"
+      [disabled]="fetching"
+      [tabIndex]="open ? 0 : -1"
+      (mousemove)="this.cancelReconnectCountdown()"
+      (focus)="this.cancelReconnectCountdown()"
+    >
+      <span *ngIf="fetching" class="spinner"></span>
+      <ng-container *ngIf="!fetching">Retry</ng-container>
+    </button>
+  </div>
+</div>

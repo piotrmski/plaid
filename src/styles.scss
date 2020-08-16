@@ -109,11 +109,23 @@ img {
   margin: 0 2px;
   border-radius: 15px;
   transition: 0.1s all;
-  background: transparent;
+  background-color: transparent;
   border: none;
   font-size: 16px;
   outline: none;
   display: inline-block;
+
+  @keyframes progress-on-button {
+    from { background-size: 0%; }
+    to { background-size: 100%; }
+  }
+
+  &.progress-30s {
+    background-image: linear-gradient(to right, var(--button-color-less-translucent), var(--button-color-less-translucent));
+    background-repeat: no-repeat;
+    animation: progress-on-button 30s linear;
+    animation-fill-mode: forwards;
+  }
 
   &.padded {
     padding: 0 15px;
@@ -125,7 +137,7 @@ img {
 
   &:not(.disabled):not([disabled]) {
     &:hover {
-      background: var(--button-color-more-translucent);
+      background-color: var(--button-color-more-translucent);
     }
 
     &:focus:not(:hover):not(:active) {
@@ -133,37 +145,41 @@ img {
     }
 
     &:active, &.active {
-      background: var(--button-color-less-translucent);
+      background-color: var(--button-color-less-translucent);
       transition: 0.025s all ease-out;
     }
 
     &.primary {
-      background: var(--color-primary-5);
+      background-color: var(--color-primary-5);
       color: #fff;
 
       &:hover {
-        background: var(--color-primary-4);
+        background-color: var(--color-primary-4);
       }
 
       &:focus:not(:hover):not(:active) {
         box-shadow: 0 0 0 2px var(--color-primary-5) inset;
-        background: var(--color-primary-4);
+        background-color: var(--color-primary-4);
       }
 
       &:active, &.active {
-        background: var(--color-primary-3);
+        background-color: var(--color-primary-3);
+      }
+
+      &.progress-30s {
+        background-image: linear-gradient(to right, var(--color-primary-3), var(--color-primary-3))
       }
     }
 
     &.non-translucent {
-      background: #fff;
+      background-color: #fff;
 
       &:hover {
-        background: var(--color-gray-1);
+        background-color: var(--color-gray-1);
       }
 
       &:active, &.active {
-        background: var(--color-gray-2);
+        background-color: var(--color-gray-2);
       }
     }
   }
@@ -196,11 +212,11 @@ input, .input, textarea {
   resize: none;
   color: #000;
 
-  &[disabled] {
+  &.disabled, &[disabled] {
     color: var(--color-gray-4);
   }
 
-  &:not([disabled]) {
+  &:not(.disabled):not([disabled]) {
     &:hover {
       background: rgba(0, 0, 0, 0.1);
     }

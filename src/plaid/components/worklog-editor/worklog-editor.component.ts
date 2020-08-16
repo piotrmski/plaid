@@ -213,7 +213,7 @@ export class WorklogEditorComponent implements OnInit {
    * Initiates panel dragging, adds event listeners for mouse movement and button release
    */
   dragStart(event: MouseEvent): void {
-    if (event.button === 0 && event.target === this.panel.nativeElement) {
+    if (!this.saving && event.button === 0 && event.target === this.panel.nativeElement) {
       this.dragging = true;
       this.mouseEventXOffset = event.offsetX;
       this.mouseEventYOffset = event.offsetY;
@@ -279,7 +279,7 @@ export class WorklogEditorComponent implements OnInit {
    * Initiates top stretch handle dragging, adds event listeners for mouse movement and button release
    */
   stretchTopStart(event: MouseEvent): void {
-    if (event.button === 0) {
+    if (!this.saving && event.button === 0) {
       this.stretching = true;
       this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
       this.mousemoveEventListener = e => this.handleStretchTopEvent(e);
@@ -292,7 +292,7 @@ export class WorklogEditorComponent implements OnInit {
    * Initiates bottom stretch handle dragging, adds event listeners for mouse movement and button release
    */
   stretchBottomStart(event: MouseEvent): void {
-    if (event.button === 0) {
+    if (!this.saving && event.button === 0) {
       this.stretching = true;
       this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
       this.mousemoveEventListener = e => this.handleStretchBottomEvent(e);
@@ -420,7 +420,7 @@ export class WorklogEditorComponent implements OnInit {
    * Opens or closes calendar cloud and sets event listener to close the calendar if user clicked outside it
    */
   toggleCalendar(): void {
-    if (!this.calendarOpen) {
+    if (!this.saving && !this.calendarOpen) {
       this.calendarOpen = true;
       this.computeSizeAndOffset();
 

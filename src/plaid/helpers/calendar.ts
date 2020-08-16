@@ -32,6 +32,16 @@ export class Calendar {
   ];
 
   static readonly weekdays: string[] = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
+
+  static readonly weekdaysShort: string[] = [
     'Sun',
     'Mon',
     'Tue',

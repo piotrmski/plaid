@@ -78,7 +78,7 @@ export class DateRangePickerComponent implements OnInit {
 
   readonly months: string[] = Calendar.months;
 
-  readonly weekdays: string[] = Calendar.weekdays;
+  readonly weekdays: string[] = Calendar.weekdaysShort;
 
   constructor(private ref: ElementRef, private cdr: ChangeDetectorRef) {
   }

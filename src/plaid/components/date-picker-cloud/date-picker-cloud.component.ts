@@ -58,7 +58,7 @@ export class DatePickerCloudComponent {
 
   readonly months: string[] = Calendar.monthsShort;
 
-  readonly weekdays: string[] = Calendar.weekdays;
+  readonly weekdays: string[] = Calendar.weekdaysShort;
 
   set month(month: Date) {
     this._month = month;
