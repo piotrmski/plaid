@@ -42,6 +42,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   components: string;
   timeRange: string;
   _darkMode: boolean;
+  deleteConfirmationOpen = false;
 
   /**
    * Emits when user presses edit button.

@@ -20,12 +20,23 @@
     }"
   >
     <div class="panel-content">
+      <div class="delete-confirmation" [class.open]="deleteConfirmationOpen" (blur)="deleteConfirmationOpen = false">
+        For sure?&ensp;
+        <a class="button delete-confirmation-button">Yes</a>
+      </div>
       <a
-        class="button edit-button"
+        class="button worklog-action-button edit-button"
         title="Edit log"
         (click)="edit.emit()"
       >
         <svg class="icon"><use href="assets/icons.svg#edit"></use></svg>
+      </a>
+      <a
+        class="button worklog-action-button delete-button"
+        title="Delete log"
+        (click)="deleteConfirmationOpen = true"
+      >
+        D
       </a>
       <p
         class="parent-name"

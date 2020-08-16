@@ -32,7 +32,7 @@ p {
       }
     }
 
-    .button.edit-button {
+    .worklog-action-button {
       opacity: 1;
     }
   }
@@ -121,13 +121,20 @@ p {
   opacity: 0.8;
 }
 
-.button.edit-button {
+.worklog-action-button {
   opacity: 0;
   position: absolute;
   bottom: 5px;
-  right: 0;
   z-index: 1;
   cursor: default!important;
+
+  &.delete-button {
+    right: 0;
+  }
+
+  &.edit-button {
+    right: 34px;
+  }
 
   @media (prefers-color-scheme: dark) {
     color: rgba(255, 255, 255, 0.8);
@@ -141,5 +148,26 @@ p {
       color: #fff;
       background: rgba(255, 255, 255, 0.2);
     }
+  }
+}
+
+.delete-confirmation {
+  opacity: 0;
+  transition: 0.2s all;
+  background: transparent;
+  pointer-events: none;
+  height: 30px;
+  border-radius: 15px;
+  color: #fff;
+  position: absolute;
+  bottom: 5px;
+  right: 0;
+  left: 80%;
+
+  &.open {
+    opacity: 1;
+    background: var(--color-red);
+    pointer-events: all;
+    left: 0;
   }
 }
