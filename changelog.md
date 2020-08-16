@@ -2,6 +2,17 @@
 
 ## 0.5
 
+**0.5.1**
+
+- upon lost connection, automatic reconnection attempts will now be made in 30 second intervals (cancellable by hovering
+  the mouse over the "Reconnect" button
+- working hours in settings are now presented as time inputs instead of dropdowns
+- inputs and text areas now have context menus
+- credentials now can't be changed after pressing "Log in"
+- work log editing now gets blocked after pressing "Save"
+- "Save" button in the work log editor is now slightly wider to lower misclick rate
+- updated dependencies
+
 **0.5.0**
 
 ![Settings](https://raw.githubusercontent.com/piotrmski/plaid/master/changelog-screenshots/settings.png)
