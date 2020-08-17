@@ -29,7 +29,7 @@
       [style.height.px]="pixelsPerMinute * 1440"
     >
       <plaid-worklog-panel
-        *ngFor="let worklog of logs"
+        *ngFor="let worklog of logs; trackBy: worklogPanelTrackByFn"
         [worklog]="worklog"
         [pixelsPerMinute]="pixelsPerMinute"
         [currentlyEdited]="worklog.id === editedWorklog?.id"
