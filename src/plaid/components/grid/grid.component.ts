@@ -26,6 +26,7 @@ export class GridComponent implements AfterViewInit {
   _dateRange: DateRange;
   _worklogs: Worklog[];
   worklogsSplitByDays: Worklog[][];
+  addHintsSplitByDays: Worklog[][];
   timeSums: string[];
   _pixelsPerMinute: number;
   gridHeight = 0;
@@ -36,6 +37,8 @@ export class GridComponent implements AfterViewInit {
   _hideWeekend: boolean;
   visibleDaysStart: number;
   visibleDaysEnd: number;
+  _workingHoursStartMinutes: number;
+  _workingHoursEndMinutes: number;
 
   /**
    * Whether an overlay with a spinner should be visible
@@ -205,22 +208,38 @@ export class GridComponent implements AfterViewInit {
     this._dateRange = range;
     this.days = [];
     this.worklogsSplitByDays = [];
+    this.addHintsSplitByDays = [];
     if (range) {
       for (const date: Date = new Date(range.start); date <= range.end; date.setDate(date.getDate() + 1)) {
         this.days.push(new Date(date));
         this.worklogsSplitByDays.push([]);
+        this.addHintsSplitByDays.push([]);
       }
     }
     this.worklogs = this.worklogs || [];
+    this.updateAddHints();
   }
   get dateRange(): DateRange {
     return this._dateRange;
   }
 
   @Input()
-  workingHoursStartMinutes: number;
+  set workingHoursStartMinutes(value: number) {
+    this._workingHoursStartMinutes = value;
+    this.updateAddHints();
+  }
+  get workingHoursStartMinutes(): number {
+    return this._workingHoursStartMinutes;
+  }
+
   @Input()
-  workingHoursEndMinutes: number;
+  set workingHoursEndMinutes(value: number) {
+    this._workingHoursEndMinutes = value;
+    this.updateAddHints();
+  }
+  get workingHoursEndMinutes(): number {
+    return this._workingHoursEndMinutes;
+  }
 
   @Input()
   set workingDaysStart(value: number) {
@@ -267,9 +286,25 @@ export class GridComponent implements AfterViewInit {
   updateVisibleDays(): void {
     this.visibleDaysStart = this.hideWeekend ? this.workingDaysStart : 0;
     this.visibleDaysEnd = this.hideWeekend ? this.workingDaysEnd : 6;
+    this.updateAddHints();
   }
 
   worklogPanelTrackByFn(index: number, item: Worklog): string {
     return JSON.stringify(item);
+  }
+
+  updateAddHints(): void {
+    if (this.days && this.workingHoursStartMinutes != null && this.workingHoursEndMinutes != null) {
+      // Assumption is made that this.worklogsSplitByDays is what it's supposed to be.
+      this.days.filter(day => day < new Date()).forEach((day: Date, dayIndex: number) => {
+        let gapStart: Date = new Date(day);
+        let gapEnd: Date;
+        this.worklogsSplitByDays[dayIndex].forEach(worklog => {
+          gapEnd = new Date(worklog.started);
+          // TODO add the hint in the gap
+          gapStart = new Date(gapEnd.getTime() + worklog.timeSpentSeconds * 1000);
+        });
+      });
+    }
   }
 }
