@@ -93,7 +93,8 @@ export class GridComponent implements AfterViewInit {
         ).sort((a, b) => new Date(a.started).getTime() - new Date(b.started).getTime());
 
       if (this.days && this.days.length > 0) {
-        this.worklogsSplitByDays = this.days.map(weekday => {
+        this.days.forEach((weekday: Date, weekdayIndex: number) => {
+          this.worklogsSplitByDays[weekdayIndex].length = 0;
           // Here the magic of putting overlapping worklogs side by side happens. To explain what happens here, let's
           // use this highly pathological example. Say I have 5 worklogs to lay out:
           // - A: 9 AM - 10 AM
@@ -127,10 +128,10 @@ export class GridComponent implements AfterViewInit {
           const sectionsMaxColumns: number[] = []; // Greatest column number which had to be used in each section
           // In the example the first section is 1 column wide, and the other is 3 columns wide, therefore
           // sectionsMaxColumns = [1, 3].
-          return this.worklogs.filter(worklog =>
+          this.worklogs.filter(worklog =>
             new Date(worklog.started) >= weekday &&
             new Date(worklog.started) < new Date(weekday.getTime() + 86400000)
-          ).map(worklog => {
+          ).forEach(worklog => {
             // First step is to find the first column in which a given worklog will fit (the loop will iterate over the
             // columns in which the worklog doesn't fit).
             // After processing A: column = 0, columnsLastLogsEndsDates = [10 AM]
@@ -165,8 +166,9 @@ export class GridComponent implements AfterViewInit {
             }
             // Going forwards through each worklog gave us the information which column each worklog belongs in, but at
             // no point were we certain, that a section won't get wider.
-            return {...worklog, _column: column};
-          }).map(worklog => {
+            this.worklogsSplitByDays[weekdayIndex].push({...worklog, _column: column});
+          });
+          this.worklogsSplitByDays[weekdayIndex].forEach(worklog => {
             // After going through every worklog once we know for certain what the sections are. The third step is then
             // to apply this knowledge, so that the worklogs can be displayed with appropriate width and position.
             // Because we have widths of every section and the number of worklogs in each one, the knowledge is applied
@@ -178,7 +180,7 @@ export class GridComponent implements AfterViewInit {
               sectionsMaxColumns.shift();
             }
             --sectionsSizes[0];
-            return {...worklog, _columns: sectionsMaxColumns[0] + 1};
+            worklog._columns = sectionsMaxColumns[0] + 1;
           });
         });
 
@@ -201,13 +203,14 @@ export class GridComponent implements AfterViewInit {
   @Input()
   set dateRange(range: DateRange) {
     this._dateRange = range;
-    const wd: Date[] = [];
+    this.days = [];
+    this.worklogsSplitByDays = [];
     if (range) {
       for (const date: Date = new Date(range.start); date <= range.end; date.setDate(date.getDate() + 1)) {
-        wd.push(new Date(date));
+        this.days.push(new Date(date));
+        this.worklogsSplitByDays.push([]);
       }
     }
-    this.days = wd;
     this.worklogs = this.worklogs || [];
   }
   get dateRange(): DateRange {
@@ -264,5 +267,9 @@ export class GridComponent implements AfterViewInit {
   updateVisibleDays(): void {
     this.visibleDaysStart = this.hideWeekend ? this.workingDaysStart : 0;
     this.visibleDaysEnd = this.hideWeekend ? this.workingDaysEnd : 6;
+  }
+
+  worklogPanelTrackByFn(index: number, item: Worklog): string {
+    return JSON.stringify(item);
   }
 }
