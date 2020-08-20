@@ -4,7 +4,8 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Input
+  Input,
+  OnInit
 } from '@angular/core';
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
@@ -19,7 +20,7 @@ import {Format} from '../../helpers/format';
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GridComponent implements AfterViewInit {
+export class GridComponent implements OnInit, AfterViewInit {
   static readonly GRID_HEADER_AND_FOOTER_COMBINED_HEIGHT = 50;
 
   days: Date[];
@@ -194,6 +195,7 @@ export class GridComponent implements AfterViewInit {
         this._worklogs = [];
         this.worklogsSplitByDays = [];
       }
+      this.updateAddHints();
     }
   }
   get worklogs(): Worklog[] {
@@ -217,7 +219,6 @@ export class GridComponent implements AfterViewInit {
       }
     }
     this.worklogs = this.worklogs || [];
-    this.updateAddHints();
   }
   get dateRange(): DateRange {
     return this._dateRange;
@@ -270,6 +271,12 @@ export class GridComponent implements AfterViewInit {
 
   constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
 
+  // Update add hints every minute to keep up with current time marker
+  ngOnInit(): void {
+    // Singleton component, no need to clear interval
+    setInterval(() => this.updateAddHints(), 60000);
+  }
+
   /**
    * Scroll vertically into current time and horizontally into current day.
    */
@@ -295,16 +302,51 @@ export class GridComponent implements AfterViewInit {
 
   updateAddHints(): void {
     if (this.days && this.workingHoursStartMinutes != null && this.workingHoursEndMinutes != null) {
-      // Assumption is made that this.worklogsSplitByDays is what it's supposed to be.
-      this.days.filter(day => day < new Date()).forEach((day: Date, dayIndex: number) => {
+      // Assumption is made that this.worklogsSplitByDays is what it's supposed to be (worklogs there are sorted by
+      // starting time in ascending order).
+      this.days.filter(d => d < new Date() && d.getDay() >= this.workingDaysStart && d.getDay() <= this.workingDaysEnd)
+        .forEach((day: Date, dayIndex: number) => {
+        this.addHintsSplitByDays[dayIndex].length = 0;
         let gapStart: Date = new Date(day);
         let gapEnd: Date;
         this.worklogsSplitByDays[dayIndex].forEach(worklog => {
           gapEnd = new Date(worklog.started);
-          // TODO add the hint in the gap
+          this.addAddHint(gapStart, gapEnd, day, dayIndex);
           gapStart = new Date(gapEnd.getTime() + worklog.timeSpentSeconds * 1000);
         });
+        gapEnd = new Date(day);
+        gapEnd.setHours(0, this.workingHoursEndMinutes);
+        this.addAddHint(gapStart, gapEnd, day, dayIndex);
       });
+    }
+  }
+
+  addAddHint(gapStart: Date, gapEnd: Date, day: Date, dayIndex: number): void {
+    const oneday = 86400000; // ms
+    if (day.getTime() - gapStart.getTime() < oneday && day.getTime() - gapEnd.getTime() < oneday) {
+      if (gapStart.getHours() * 60 + gapStart.getMinutes() < this.workingHoursStartMinutes) {
+        gapStart = new Date(gapStart);
+        gapStart.setHours(Math.floor(this.workingHoursStartMinutes / 60), this.workingHoursStartMinutes % 60);
+      }
+      if (gapEnd.getHours() * 60 + gapEnd.getMinutes() > this.workingHoursEndMinutes) {
+        gapEnd = new Date(gapEnd);
+        gapEnd.setHours(Math.floor(this.workingHoursEndMinutes / 60), this.workingHoursEndMinutes % 60);
+      }
+      const fivemin = 300000; // ms
+      const now = new Date(Math.round(new Date().getTime() / fivemin) * fivemin);
+      if (gapEnd > now) {
+        gapEnd = new Date(gapEnd);
+        gapEnd.setHours(now.getHours(), now.getMinutes());
+      }
+      if (gapEnd > gapStart) {
+        const timeSpentSeconds = (gapEnd.getTime() - gapStart.getTime()) / 1000;
+        this.addHintsSplitByDays[dayIndex].push({
+          started: gapStart.getTime(),
+          timeSpentSeconds,
+          _columns: 1,
+          _column: 0
+        });
+      }
     }
   }
 }

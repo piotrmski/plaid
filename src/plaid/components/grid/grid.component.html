@@ -25,7 +25,7 @@
   <div class="worklog-panels-area">
     <div
       class="worklog-panels-area-column"
-      *ngFor="let logs of worklogsSplitByDays"
+      *ngFor="let logs of worklogsSplitByDays; index as dayIndex"
       [style.height.px]="pixelsPerMinute * 1440"
     >
       <plaid-worklog-panel
@@ -34,6 +34,12 @@
         [pixelsPerMinute]="pixelsPerMinute"
         [currentlyEdited]="worklog.id === editedWorklog?.id"
         (edit)="editedWorklog = worklog"
+      ></plaid-worklog-panel>
+      <plaid-worklog-panel
+        *ngFor="let addHint of addHintsSplitByDays[dayIndex]; trackBy: worklogPanelTrackByFn"
+        [worklog]="addHint"
+        [pixelsPerMinute]="pixelsPerMinute"
+        (edit)="editedWorklog = addHint"
       ></plaid-worklog-panel>
     </div>
   </div>
