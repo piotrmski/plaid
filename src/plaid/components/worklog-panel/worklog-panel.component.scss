@@ -47,6 +47,10 @@ p {
     .panel-inner {
       border-style: dashed;
       border-color: rgba(0, 0, 0, 0.5);
+
+      @media (prefers-color-scheme: dark) {
+        border-color: rgba(255, 255, 255, 0.5);
+      }
     }
   }
 }
@@ -154,12 +158,12 @@ p {
 
     &:hover {
       color: rgba(255, 255, 255, 0.9);
-      background: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.1)!important;
     }
 
     &:active {
       color: #fff;
-      background: rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.2)!important;
     }
   }
 }
@@ -168,6 +172,20 @@ p {
   margin: 0;
   position: absolute;
   left: calc(50% - 15px);
+
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255, 255, 255, 0.1)!important;
+    }
+
+    &:active {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.2)!important;
+    }
+  }
 }
 
 .delete-confirmation {
