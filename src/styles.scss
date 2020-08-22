@@ -108,7 +108,7 @@ img {
   text-align: center;
   margin: 0 2px;
   border-radius: 15px;
-  transition: 0.1s all;
+  transition: 0.1s color, 0.1s background-color, 0.1s box-shadow;
   background-color: transparent;
   border: none;
   font-size: 16px;
