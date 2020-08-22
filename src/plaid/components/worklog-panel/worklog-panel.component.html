@@ -67,7 +67,12 @@
       <pre class="comment">{{ worklog.comment?.trim() }}</pre>
     </div>
     <div class="panel-content" *ngIf="!worklog.issue">
-      Add
+      <a
+        class="button add-button"
+        title="Add log"
+        (click)="edit.emit()"
+        [style.top.px]="panelHeight / 2 - 15"
+      ><svg class="icon"><use href="assets/icons.svg#plus"></use></svg></a>
     </div>
   </div>
 </div>
