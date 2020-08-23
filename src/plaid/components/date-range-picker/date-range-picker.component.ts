@@ -114,6 +114,16 @@ export class DateRangePickerComponent implements OnInit {
     return this._month;
   }
 
+  /**
+   * Closes dropdown, if user clicked anywhere outside it.
+   */
+  onDocumentClick: (event: MouseEvent) => void = (event: MouseEvent) => {
+    if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
+      this.calendarOpen = false;
+      this.cdr.detectChanges();
+    }
+  }
+
   get calendarOpen(): boolean {
     return this._calendarOpen;
   }
@@ -135,16 +145,9 @@ export class DateRangePickerComponent implements OnInit {
       const curTime: Date = new Date();
       this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
 
-      const mousedownOutsideCalendarEventListener = (event: MouseEvent) => {
-        if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
-          this.calendarOpen = false;
-          document.removeEventListener('mousedown', mousedownOutsideCalendarEventListener);
-
-          this.cdr.detectChanges();
-        }
-      };
-
-      document.addEventListener('mousedown', mousedownOutsideCalendarEventListener);
+      addEventListener('click', this.onDocumentClick);
+    } else {
+      removeEventListener('click', this.onDocumentClick);
     }
   }
 

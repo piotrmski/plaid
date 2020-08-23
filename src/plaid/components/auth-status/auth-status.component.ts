@@ -1,4 +1,12 @@
-import {Component, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output
+} from '@angular/core';
 import {User} from '../../models/user';
 import {environment} from '../../../environments/environment';
 
@@ -9,11 +17,12 @@ import {environment} from '../../../environments/environment';
 @Component({
   selector: 'plaid-auth-status',
   templateUrl: './auth-status.component.html',
-  styleUrls: ['./auth-status.component.scss']
+  styleUrls: ['./auth-status.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthStatusComponent {
   readonly appVersion: string = environment.version;
-  dropdownOpen = false;
+  private _dropdownOpen = false;
   /**
    * Currently authenticated user
    */
@@ -30,16 +39,27 @@ export class AuthStatusComponent {
   @Output()
   forgetAccount = new EventEmitter<null>();
 
-  constructor(private ref: ElementRef) {}
+  constructor(private ref: ElementRef, private cdr: ChangeDetectorRef) {}
 
   /**
    * Closes dropdown menu, if user clicked anywhere outside it.
    */
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
+  onDocumentClick: (event: MouseEvent) => void = (event: MouseEvent) => {
     if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
       this.dropdownOpen = false;
+      this.cdr.detectChanges();
     }
+  }
+  set dropdownOpen(value: boolean) {
+    this._dropdownOpen = value;
+    if (value) {
+      addEventListener('click', this.onDocumentClick);
+    } else {
+      removeEventListener('click', this.onDocumentClick);
+    }
+  }
+  get dropdownOpen(): boolean {
+    return this._dropdownOpen;
   }
 
   /**

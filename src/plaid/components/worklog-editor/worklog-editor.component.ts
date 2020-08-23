@@ -52,7 +52,6 @@ export class WorklogEditorComponent implements OnInit {
   stretching = false;
   mouseEventXOffset: number;
   mouseEventYOffset: number;
-  mousemoveEventListener: (e: MouseEvent) => void;
   issueString: string;
   dateString: string;
   commentString: string;
@@ -233,24 +232,21 @@ export class WorklogEditorComponent implements OnInit {
       this.dragging = true;
       this.mouseEventXOffset = event.offsetX;
       this.mouseEventYOffset = event.offsetY;
-      this.mousemoveEventListener = e => this.handleDragEvent(e);
-      document.addEventListener('mousemove', this.mousemoveEventListener);
-      document.addEventListener('mouseup', () => this.dragEnd(), {once: true});
+      addEventListener('mousemove', this.handleDragEvent);
+      addEventListener('mouseup', () => this.dragEnd(), {once: true});
     }
   }
 
   dragEnd(): void {
     this.dragging = false;
     this.cdr.detectChanges();
-    if (this.mousemoveEventListener) {
-      document.removeEventListener('mousemove', this.mousemoveEventListener);
-    }
+    removeEventListener('mousemove', this.handleDragEvent);
   }
 
   /**
    * Handles mouse movement during panel dragging calculating change in start time and date
    */
-  handleDragEvent(event: MouseEvent): void {
+  handleDragEvent: (event: MouseEvent) => void = (event: MouseEvent) => {
     // Handle dragging vertically
     const oldStartTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
     let newStartTimeMinutes: number = this.getPointerTopOffsetMinutes(event, this.getSnapTo(event));
@@ -298,9 +294,8 @@ export class WorklogEditorComponent implements OnInit {
     if (!this.saving && event.button === 0) {
       this.stretching = true;
       this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
-      this.mousemoveEventListener = e => this.handleStretchTopEvent(e);
-      document.addEventListener('mousemove', this.mousemoveEventListener);
-      document.addEventListener('mouseup', () => this.stretchEnd(), {once: true});
+      addEventListener('mousemove', this.handleStretchTopEvent);
+      addEventListener('mouseup', () => this.stretchEnd(this.handleStretchTopEvent), {once: true});
     }
   }
 
@@ -311,24 +306,21 @@ export class WorklogEditorComponent implements OnInit {
     if (!this.saving && event.button === 0) {
       this.stretching = true;
       this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
-      this.mousemoveEventListener = e => this.handleStretchBottomEvent(e);
-      document.addEventListener('mousemove', this.mousemoveEventListener);
-      document.addEventListener('mouseup', () => this.stretchEnd(), {once: true});
+      addEventListener('mousemove', this.handleStretchBottomEvent);
+      addEventListener('mouseup', () => this.stretchEnd(this.handleStretchBottomEvent), {once: true});
     }
   }
 
-  stretchEnd(): void {
+  stretchEnd(eventListenerToRemove: (event: MouseEvent) => void): void {
     this.stretching = false;
     this.cdr.detectChanges();
-    if (this.mousemoveEventListener) {
-      document.removeEventListener('mousemove', this.mousemoveEventListener);
-    }
+    removeEventListener('mousemove', eventListenerToRemove);
   }
 
   /**
    * Handles mouse movement during top stretch handle dragging calculating change in start time and work duration
    */
-  handleStretchTopEvent(event: MouseEvent): void {
+  handleStretchTopEvent: (event: MouseEvent) => void = (event: MouseEvent) => {
     const snapTo: number = this.getSnapTo(event);
     const oldStartTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
     const endTimeMinutes: number = oldStartTimeMinutes + this.durationMinutes;
@@ -351,7 +343,7 @@ export class WorklogEditorComponent implements OnInit {
   /**
    * Handles mouse movement during top stretch handle dragging calculating change in work duration
    */
-  handleStretchBottomEvent(event: MouseEvent): void {
+  handleStretchBottomEvent: (event: MouseEvent) => void = (event: MouseEvent) => {
     const snapTo: number = this.getSnapTo(event);
     const startTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
     const oldEndTimeMinutes: number = startTimeMinutes + this.durationMinutes;
@@ -444,13 +436,13 @@ export class WorklogEditorComponent implements OnInit {
         if (!(this.calendarCloud.element.nativeElement as Node).contains(event.target as Node)
           && event.target !== this.calendarToggle.nativeElement) {
           this.calendarOpen = false;
-          document.removeEventListener('mousedown', mousedownOutsideCalendarEventListener);
+          removeEventListener('mousedown', mousedownOutsideCalendarEventListener);
 
           this.cdr.detectChanges();
         }
       };
 
-      document.addEventListener('mousedown', mousedownOutsideCalendarEventListener);
+      addEventListener('mousedown', mousedownOutsideCalendarEventListener);
     } else {
       this.calendarOpen = false;
     }
@@ -468,13 +460,13 @@ export class WorklogEditorComponent implements OnInit {
         if (!(this.issuePickerCloud.element.nativeElement as Node).contains(event.target as Node)
           && event.target !== this.issuePickerToggle.nativeElement) {
           this.issuePickerOpen = false;
-          document.removeEventListener('mousedown', mousedownOutsideIssuePickerEventListener);
+          removeEventListener('mousedown', mousedownOutsideIssuePickerEventListener);
 
           this.cdr.detectChanges();
         }
       };
 
-      document.addEventListener('mousedown', mousedownOutsideIssuePickerEventListener);
+      addEventListener('mousedown', mousedownOutsideIssuePickerEventListener);
     } else {
       this.issuePickerOpen = false;
     }
