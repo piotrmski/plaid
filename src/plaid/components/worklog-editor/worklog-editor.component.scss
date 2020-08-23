@@ -183,7 +183,11 @@
   min-width: 4em;
 }
 
-#date-input {
+#issue-picker-toggle:not([disabled]):focus {
+  box-shadow: none;
+}
+
+#calendar-toggle {
   text-align: left;
   cursor: default;
 }

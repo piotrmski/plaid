@@ -1,0 +1,31 @@
+:host {
+  display: flex;
+  flex-flow: row;
+  position: relative;
+  pointer-events: none;
+}
+
+.issue-picker {
+  position: absolute;
+  opacity: 0;
+  left: 15px;
+  right: 16px;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  top: 0;
+  transition: 0.2s opacity;
+  height: 300px;
+  overflow: hidden;
+
+  &.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.search {
+  border-radius: 0;
+  background-color: #fff!important;
+  box-shadow: none!important;
+}

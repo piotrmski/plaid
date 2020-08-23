@@ -17,6 +17,8 @@ import {AuthFacade} from '../../core/auth/auth.facade';
 import {AppStateService} from '../../core/app-state.service';
 import {WorklogFacade} from '../../core/worklog/worklog.facade';
 import {DatePickerCloudComponent} from '../date-picker-cloud/date-picker-cloud.component';
+import {Issue} from '../../models/issue';
+import {IssuePickerCloudComponent} from '../issue-picker-cloud/issue-picker-cloud.component';
 
 /**
  * Smart component, presenting edited worklog, handling all its interactions and updating worklog on the server
@@ -45,6 +47,7 @@ export class WorklogEditorComponent implements OnInit {
   spaceUnderPanel: number;
   editedPanelInRange: boolean;
   panelHue: number;
+  panelSaturation: number;
   dragging = false;
   stretching = false;
   mouseEventXOffset: number;
@@ -59,6 +62,8 @@ export class WorklogEditorComponent implements OnInit {
   calendarOpen = false;
   calendarOffsetTop = 0;
   flipCalendar = false;
+  issuePickerOpen = false;
+  issuePickerOffsetTop = 0;
   _visibleDaysStart: number;
   _visibleDaysEnd: number;
 
@@ -73,6 +78,12 @@ export class WorklogEditorComponent implements OnInit {
 
   @ViewChild(DatePickerCloudComponent, {read: ViewContainerRef})
   calendarCloud: ViewContainerRef;
+
+  @ViewChild('issuePickerToggle')
+  issuePickerToggle: ElementRef<HTMLAnchorElement>;
+
+  @ViewChild(IssuePickerCloudComponent, {read: ViewContainerRef})
+  issuePickerCloud: ViewContainerRef;
 
   @Output()
   cancelEdit = new EventEmitter<void>();
@@ -131,10 +142,11 @@ export class WorklogEditorComponent implements OnInit {
       this.startTimeString = Format.time(this.start);
       this.endTimeString = Format.time(end);
       this.editedPanelInRange = this.date >= this.dateRange.start && this.date <= this.dateRange.end;
-      this.panelHue = Math.round((Number(this.worklog.issue.fields.parent
+      this.panelHue = this.worklog.issue ? Math.round((Number(this.worklog.issue.fields.parent
         ? this.worklog.issue.fields.parent.id
-        : this.worklog.issue.id) * 360 / 1.61803)) % 360;
-      this.issueString = worklog.issue.key + ' - ' + worklog.issue.fields.summary;
+        : this.worklog.issue.id) * 360 / 1.61803)) % 360 : 0;
+      this.panelSaturation = this.worklog.issue ? 50 : 0;
+      this.issueString = worklog.issue ? worklog.issue.key + ' - ' + worklog.issue.fields.summary : ''; // TODO is that needed?
       this.dateString = Format.date(this.start);
       this.commentString = worklog.comment;
       if (this.editedPanelInRange) {
@@ -205,8 +217,12 @@ export class WorklogEditorComponent implements OnInit {
     this.panelWidth = 1 / (Math.round((this.dateRange.end.getTime() - this.dateRange.start.getTime()) / 86400000) + 1);
     this.panelOffsetLeft = this.panelWidth * Math.round((this.date.getTime() - this.dateRange.start.getTime()) / 86400000);
     this.spaceUnderPanel = 1440 * this.pixelsPerMinute - this.panelOffsetTop - this.panelHeight;
-    this.calendarOffsetTop = this.calendarToggle.nativeElement.offsetTop + 30 - this.panel.nativeElement.scrollTop;
+    this.calendarOffsetTop = this.calendarToggle.nativeElement.offsetTop + 31 - this.panel.nativeElement.scrollTop;
     this.flipCalendar = this.panelOffsetTop + this.calendarOffsetTop + 240 > 1440 * this.pixelsPerMinute;
+    this.issuePickerOffsetTop = Math.min(
+      this.issuePickerToggle.nativeElement.offsetTop - this.panel.nativeElement.scrollTop + 1,
+      1440 * this.pixelsPerMinute - this.panelOffsetTop - 300
+    );
   }
 
   /**
@@ -386,7 +402,7 @@ export class WorklogEditorComponent implements OnInit {
    * Closes the editor if user clicked outside the panel with left mouse button
    */
   handleClickOutsideEditor(event: MouseEvent): void {
-    if (event.button === 0 && event.target === this.wrapper.nativeElement && !this.calendarOpen) {
+    if (event.button === 0 && event.target === this.wrapper.nativeElement && !this.calendarOpen && !this.issuePickerOpen) {
       this.cancelEdit.emit();
     }
   }
@@ -441,6 +457,30 @@ export class WorklogEditorComponent implements OnInit {
   }
 
   /**
+   * Opens or closes issue picker cloud and sets event listener to close the calendar if user clicked outside it
+   */
+  toggleIssuePicker(): void {
+    if (!this.saving && !this.issuePickerOpen && !this.worklog.id) {
+      this.issuePickerOpen = true;
+      this.computeSizeAndOffset();
+
+      const mousedownOutsideIssuePickerEventListener = (event: MouseEvent) => {
+        if (!(this.issuePickerCloud.element.nativeElement as Node).contains(event.target as Node)
+          && event.target !== this.issuePickerToggle.nativeElement) {
+          this.issuePickerOpen = false;
+          document.removeEventListener('mousedown', mousedownOutsideIssuePickerEventListener);
+
+          this.cdr.detectChanges();
+        }
+      };
+
+      document.addEventListener('mousedown', mousedownOutsideIssuePickerEventListener);
+    } else {
+      this.issuePickerOpen = false;
+    }
+  }
+
+  /**
    * Updates worklog on the server and closes the editor if update was successful
    */
   save(): void {
@@ -464,5 +504,9 @@ export class WorklogEditorComponent implements OnInit {
 
   isDateVisible(date: Date): boolean {
     return date.getDay() >= this.visibleDaysStart && date.getDay() <= this.visibleDaysEnd;
+  }
+
+  selectIssue(issue: Issue): void {
+
   }
 }

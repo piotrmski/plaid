@@ -24,20 +24,24 @@ Ctrl to snap to 60 minutes."
     <div
       #panel
       class="panel"
-      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      [style.border-color]="'hsl(' + panelHue + ', ' + panelSaturation + '%, 50%)'"
       (mousedown)="dragStart($event)"
     >
       <label>Issue</label>
       <input
-        disabled
+        #issuePickerToggle
+        id="issue-picker-toggle"
+        readonly
+        [disabled]="worklog?.id || saving"
         [value]="issueString"
         title=""
         class="tangible"
+        (focusin)="toggleIssuePicker()"
       >
       <label>Date</label>
       <a
         #calendarToggle
-        id="date-input"
+        id="calendar-toggle"
         class="button input tangible"
         [class.active]="calendarOpen"
         title=""
@@ -75,12 +79,12 @@ Ctrl to snap to 60 minutes."
 
     <div
       class="handle-top"
-      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      [style.border-color]="'hsl(' + panelHue + ', ' + panelSaturation + '%, 50%)'"
       (mousedown)="stretchTopStart($event)"
     ></div>
     <div
       class="handle-bottom"
-      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      [style.border-color]="'hsl(' + panelHue + ', ' + panelSaturation + '%, 50%)'"
       (mousedown)="stretchBottomStart($event)"
     ></div>
 
@@ -88,15 +92,22 @@ Ctrl to snap to 60 minutes."
     <div class="end-time">{{ endTimeString }}</div>
 
     <plaid-date-picker-cloud
-      [(calendarOpen)]="calendarOpen"
+      [(open)]="calendarOpen"
       [style.top.px]="calendarOffsetTop"
-      [class.flip]="flipCalendar"
+      [flipped]="flipCalendar"
       [selectedDate]="date"
       (selectedDateChange)="selectDate($event)"
       title=""
       [selectableDaysStart]="visibleDaysStart"
       [selectableDaysEnd]="visibleDaysEnd"
     ></plaid-date-picker-cloud>
+
+    <plaid-issue-picker-cloud
+      [(open)]="issuePickerOpen"
+      [style.top.px]="issuePickerOffsetTop"
+      (issueChange)="selectIssue($event)"
+      title=""
+    ></plaid-issue-picker-cloud>
   </div>
 
   <a
