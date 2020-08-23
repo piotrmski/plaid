@@ -1,3 +1,4 @@
 <div class="issue-picker" [class.open]="open">
-  <input class="search" #searchInput placeholder="Search">
+  <input class="search" #searchInput placeholder="Search" (input)="searchInputSubject.next(searchInput.value)">
+  <p *ngFor="let res of searchResults">{{res.key}} - {{res.fields.summary}}</p>
 </div>
