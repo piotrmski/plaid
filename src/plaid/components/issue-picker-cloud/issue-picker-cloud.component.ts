@@ -48,7 +48,7 @@ export class IssuePickerCloudComponent implements OnInit {
   ngOnInit() {
     this.searchInputSubject.pipe(
       debounceTime(500),
-      mergeMap(searchString => this.issueFacade.quickSearch$(searchString))
+      mergeMap(s => s ? this.issueFacade.quickSearch$(s) : this.issueFacade.suggestions$())
     ).subscribe(res => {
       this.searchResults = res;
       this.cdr.detectChanges();
