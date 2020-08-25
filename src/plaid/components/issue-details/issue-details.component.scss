@@ -33,6 +33,7 @@ p {
     padding: 0 2px;
     background-color: var(--color-gray-4);
     margin-right: 2px;
+    line-height: 1;
 
     @media (prefers-color-scheme: dark) {
       background-color: var(--color-gray-7);
