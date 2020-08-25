@@ -27,7 +27,7 @@ export class WorklogApi {
     startAt = 0
   ): Observable<SearchResults> {
     const url = this.searchUrl
-      + '?fields=components,issuetype,parent,priority,summary'
+      + '?fields=components,issuetype,parent,priority,summary,status'
       + '&startAt=' + startAt
       + '&jql=' + encodeURIComponent(
         'worklogAuthor = currentUser() && worklogDate >= "'

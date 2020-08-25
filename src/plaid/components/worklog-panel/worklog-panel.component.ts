@@ -39,7 +39,6 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   panelOffsetTop: number;
   panelOffsetLeft: number;
   panelHue: number;
-  components: string;
   timeRange: string;
   _darkMode: boolean;
   deleteConfirmationOpen = false;
@@ -65,9 +64,6 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
       this.panelHue = Math.round((Number(this.worklog.issue.fields.parent
         ? this.worklog.issue.fields.parent.id
         : this.worklog.issue.id) * 360 / 1.61803)) % 360;
-      this.components = this.worklog.issue.fields.components
-        ? this.worklog.issue.fields.components.map(c => c.name).join(', ')
-        : null;
     }
     this.computeHeightAndOffset();
     this.computeTimeRange();

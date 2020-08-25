@@ -95,37 +95,6 @@ p {
   padding: 2px 0;
 }
 
-.parent-name {
-  font-size: 11px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  opacity: 0.5;
-
-  .icon-parent {
-    margin-right: 4px;
-  }
-}
-
-.name {
-  font-size: 14px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-bottom: 3px;
-}
-
-.fields {
-  font-size: 11px;
-
-  img {
-    vertical-align: middle;
-    height: 16px;
-    margin-right: 4px;
-  }
-}
-
 .time {
   font-size: 19px;
 }

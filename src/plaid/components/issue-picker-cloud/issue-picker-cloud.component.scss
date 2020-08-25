@@ -14,7 +14,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   border-radius: 15px;
   top: 0;
-  transition: 0.2s opacity;
+  transition: 0.1s opacity;
   height: 300px;
   overflow: hidden;
 
@@ -28,4 +28,34 @@
   border-radius: 0;
   background-color: #fff!important;
   box-shadow: none!important;
+}
+
+.scrollable-area {
+  height: 270px;
+  overflow-y: auto;
+  padding-bottom: 15px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+plaid-issue-details {
+  line-height: 1;
+  padding: 5px;
+  transition: 0.1s background-color;
+  display: block;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 }

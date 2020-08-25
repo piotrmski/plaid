@@ -1,4 +1,10 @@
 <div class="issue-picker" [class.open]="open">
   <input class="search" #searchInput placeholder="Search" (input)="searchInputSubject.next(searchInput.value)">
-  <p *ngFor="let res of searchResults">{{res.key}} - {{res.fields.summary}}</p>
+  <div class="scrollable-area">
+    <plaid-issue-details
+      *ngFor="let res of searchResults"
+      [issue]="res"
+      (click)="issueChange.emit(res); searchInput.value = ''"
+    ></plaid-issue-details>
+  </div>
 </div>

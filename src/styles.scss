@@ -21,6 +21,8 @@
 
   --color-red: #c20;
   --color-orange: #e90;
+  --color-blue: var(--color-primary-5);
+  --color-green: #270;
 
   --font-display: Comfortaa, sans-serif;
   --font-text: "Source Sans Pro", sans-serif;
@@ -146,7 +148,7 @@ img {
 
     &:active, &.active {
       background-color: var(--button-color-less-translucent);
-      transition: 0.025s all ease-out;
+      transition: 0.025s color ease-out, 0.025s background-color ease-out, 0.025s box-shadow ease-out;
     }
 
     &.primary {

@@ -37,9 +37,6 @@ export class IssuePickerCloudComponent implements OnInit {
   }
 
   @Output()
-  openChange = new EventEmitter<boolean>();
-
-  @Output()
   issueChange = new EventEmitter<Issue>();
 
   constructor(private issueFacade: IssueFacade, private cdr: ChangeDetectorRef) {

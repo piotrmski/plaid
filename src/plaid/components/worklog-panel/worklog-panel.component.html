@@ -43,39 +43,7 @@
         For sure?
         <a class="button">Yes</a>
       </div>
-      <p
-        class="parent-name"
-        *ngIf="worklog.issue.fields.parent"
-        [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.fields.parent.key"
-        title="Show parent issue"
-      >
-        <svg class="icon-parent"><use href="assets/icons.svg#parent"></use></svg>
-        <b>{{ worklog.issue.fields.parent.key }}</b>
-        {{ worklog.issue.fields.parent.fields.summary }}
-      </p>
-      <p
-        class="name"
-        [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.key"
-        title="Show issue"
-      >
-        <b>{{ worklog.issue.key }}</b>
-        {{ worklog.issue.fields.summary }}
-      </p>
-      <p class="fields">
-        <img
-          *ngIf="worklog.issue.fields.issuetype"
-          [src]="worklog.issue.fields.issuetype.iconUrl"
-          [title]="worklog.issue.fields.issuetype.name"
-          class="field-icon"
-        >
-        <img
-          *ngIf="worklog.issue.fields.priority"
-          [src]="worklog.issue.fields.priority.iconUrl"
-          [title]="worklog.issue.fields.priority.name"
-          class="field-icon"
-        >
-        {{ components }}
-      </p>
+      <plaid-issue-details [jiraURL]="jiraURL" [issue]="worklog.issue"></plaid-issue-details>
       <p class="time">
         {{ timeRange }}
       </p>

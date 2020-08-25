@@ -14,20 +14,21 @@ export class IssueApi {
 
   getIssue$(issueIdOrKey: string): Observable<Issue> {
     return this.http.get<Issue>(this.getIssueUrl.replace('{issueIdOrKey}', issueIdOrKey) +
-      '?fields=components,issuetype,parent,priority,summary').pipe(catchError(() => of(null)));
+      '?fields=components,issuetype,parent,priority,summary,status').pipe(catchError(() => of(null)));
   }
 
-  search$(jql: string): Observable<SearchResults> {
+  search$(jql: string, limit: number = 15): Observable<SearchResults> {
     return this.http.post<SearchResults>(this.searchUrl, {
       jql,
       startAt: 0,
-      maxResults: 15,
+      maxResults: limit,
       fields: [
         'components',
         'issuetype',
         'parent',
         'priority',
-        'summary'
+        'summary',
+        'status'
       ]});
   }
 }

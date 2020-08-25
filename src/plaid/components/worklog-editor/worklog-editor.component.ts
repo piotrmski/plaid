@@ -145,7 +145,7 @@ export class WorklogEditorComponent implements OnInit {
         ? this.worklog.issue.fields.parent.id
         : this.worklog.issue.id) * 360 / 1.61803)) % 360 : 0;
       this.panelSaturation = this.worklog.issue ? 50 : 0;
-      this.issueString = worklog.issue ? worklog.issue.key + ' - ' + worklog.issue.fields.summary : ''; // TODO is that needed?
+      this.issueString = worklog.issue ? worklog.issue.key + ' - ' + worklog.issue.fields.summary : '';
       this.dateString = Format.date(this.start);
       this.commentString = worklog.comment;
       if (this.editedPanelInRange) {
@@ -499,6 +499,10 @@ export class WorklogEditorComponent implements OnInit {
   }
 
   selectIssue(issue: Issue): void {
-
+    this.worklog.issueId = issue.id;
+    this.panelHue = Math.round((Number(issue.fields.parent ? issue.fields.parent.id : issue.id) * 360 / 1.61803)) % 360;
+    this.panelSaturation = 50;
+    this.issueString = issue ? issue.key + ' - ' + issue.fields.summary : '';
+    this.issuePickerOpen = false;
   }
 }

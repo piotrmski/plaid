@@ -17,6 +17,12 @@ export interface Issue {
       name: string;
     };
     summary?: string;
+    status?: {
+      name: string,
+      statusCategory?: {
+        colorName: string;
+      }
+    }
   };
   renderedFields?: {};
   properties?: any;

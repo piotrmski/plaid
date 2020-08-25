@@ -5,17 +5,22 @@ import {ElectronService} from 'ngx-electron';
   selector: '[plaidExtHref]'
 })
 export class ExtHrefDirective {
+  private _plaidExtHref: string;
 
   @Input()
-  plaidExtHref: string;
+  set plaidExtHref(value: string) {
+    this._plaidExtHref = value;
+    this.el.nativeElement.style.cursor = value != null ? 'pointer' : undefined;
+  }
 
   constructor(private el: ElementRef, private electron: ElectronService) {
-    this.el.nativeElement.style.cursor = 'pointer';
   }
 
   @HostListener('click')
   onClick(): void {
-    this.electron.shell.openExternal(this.plaidExtHref);
+    if (this._plaidExtHref != null) {
+      this.electron.shell.openExternal(this._plaidExtHref);
+    }
   }
 
 }
