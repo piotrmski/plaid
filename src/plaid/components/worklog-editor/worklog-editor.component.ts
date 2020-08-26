@@ -19,6 +19,7 @@ import {WorklogFacade} from '../../core/worklog/worklog.facade';
 import {DatePickerCloudComponent} from '../date-picker-cloud/date-picker-cloud.component';
 import {Issue} from '../../models/issue';
 import {IssuePickerCloudComponent} from '../issue-picker-cloud/issue-picker-cloud.component';
+import {Subject} from 'rxjs';
 
 /**
  * Smart component, presenting edited worklog, handling all its interactions and updating worklog on the server
@@ -65,6 +66,7 @@ export class WorklogEditorComponent implements OnInit {
   issuePickerOffsetTop = 0;
   _visibleDaysStart: number;
   _visibleDaysEnd: number;
+  updateFavoriteIssuesAndSuggestionsAndEmitSuggestion = new Subject<void>();
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
@@ -141,15 +143,14 @@ export class WorklogEditorComponent implements OnInit {
       this.startTimeString = Format.time(this.start);
       this.endTimeString = Format.time(end);
       this.editedPanelInRange = this.date >= this.dateRange.start && this.date <= this.dateRange.end;
-      this.panelHue = this.worklog.issue ? Math.round((Number(this.worklog.issue.fields.parent
-        ? this.worklog.issue.fields.parent.id
-        : this.worklog.issue.id) * 360 / 1.61803)) % 360 : 0;
-      this.panelSaturation = this.worklog.issue ? 50 : 0;
-      this.issueString = worklog.issue ? worklog.issue.key + ' - ' + worklog.issue.fields.summary : '';
+      this.updatePanelHueSaturationAndIssueString(worklog.issue);
       this.dateString = Format.date(this.start);
       this.commentString = worklog.comment;
       if (this.editedPanelInRange) {
         this.computeSizeAndOffset();
+      }
+      if (!worklog.issue) {
+        this.updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.next();
       }
     }
   }
@@ -499,10 +500,17 @@ export class WorklogEditorComponent implements OnInit {
   }
 
   selectIssue(issue: Issue): void {
-    this.worklog.issueId = issue.id;
-    this.panelHue = Math.round((Number(issue.fields.parent ? issue.fields.parent.id : issue.id) * 360 / 1.61803)) % 360;
-    this.panelSaturation = 50;
-    this.issueString = issue ? issue.key + ' - ' + issue.fields.summary : '';
-    this.issuePickerOpen = false;
+    if (this.worklog) {
+      this.worklog.issueId = issue ? issue.id : null;
+    }
+    this.updatePanelHueSaturationAndIssueString(issue, '');
+  }
+
+  updatePanelHueSaturationAndIssueString(issue?: Issue, defaultIssueString: string = '···'): void {
+    this.panelHue = issue ? Math.round((Number(issue.fields.parent
+      ? issue.fields.parent.id
+      : issue.id) * 360 / 1.61803)) % 360 : 0;
+    this.panelSaturation = issue ? 50 : 0;
+    this.issueString = issue ? issue.key + ' - ' + issue.fields.summary : defaultIssueString;
   }
 }

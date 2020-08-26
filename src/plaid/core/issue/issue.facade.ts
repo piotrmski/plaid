@@ -3,6 +3,7 @@ import {Observable, of, zip} from 'rxjs';
 import {Issue} from '../../models/issue';
 import {IssueApi} from './issue.api';
 import {map} from 'rxjs/operators';
+import {IssueState} from './issue.state';
 
 @Injectable({ providedIn: 'root' })
 export class IssueFacade {
@@ -14,7 +15,7 @@ export class IssueFacade {
     return /^[A-Za-z][A-Za-z0-9_]*-[1-9][0-9]*$/.test(maybeKey);
   }
 
-  constructor(private issueApi: IssueApi) {
+  constructor(private issueApi: IssueApi, private issueState: IssueState) {
   }
 
   quickSearch$(query: string): Observable<Issue[]> {
@@ -36,8 +37,17 @@ export class IssueFacade {
     }
   }
 
-  suggestions$(): Observable<Issue[]> {
-    return this.issueApi.search$('status changed by currentUser() OR creator = currentUser() order by updatedDate desc')
-      .pipe(map(res => res.issues));
+  fetchFavoritesAndSuggestions(): void {
+    // TODO favorites
+    this.issueApi.search$('status changed by currentUser() OR creator = currentUser() order by updatedDate desc')
+      .subscribe(res => this.issueState.setSuggestions(res.issues));
+  }
+
+  getFavorites$(): Observable<Issue[]> {
+    return this.issueState.getFavorites$();
+  }
+
+  getSuggestions$(): Observable<Issue[]> {
+    return this.issueState.getSuggestions$();
   }
 }

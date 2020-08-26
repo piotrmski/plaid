@@ -46,6 +46,18 @@
   }
 }
 
+.section-header {
+  background-color: var(--color-gray-0);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  line-height: 20px;
+  padding: 0 5px;
+  z-index: 1;
+}
+
 plaid-issue-details {
   line-height: 1;
   padding: 5px;

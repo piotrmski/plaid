@@ -103,9 +103,10 @@ Ctrl to snap to 60 minutes."
     ></plaid-date-picker-cloud>
 
     <plaid-issue-picker-cloud
-      [open]="issuePickerOpen"
+      [(open)]="issuePickerOpen"
       [style.top.px]="issuePickerOffsetTop"
       (issueChange)="selectIssue($event)"
+      [updateFavoritesAndSuggestionsAndEmitSuggestion]="updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.asObservable()"
       title=""
     ></plaid-issue-picker-cloud>
   </div>
