@@ -31,6 +31,14 @@
   margin: 0;
 }
 
+.spinner {
+  color: var(--color-gray-2);
+  pointer-events: none;
+  position: absolute;
+  top: 7px;
+  right: 10px;
+}
+
 .scrollable-area {
   height: 270px;
   overflow-y: auto;

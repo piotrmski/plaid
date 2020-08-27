@@ -1,5 +1,6 @@
 <div class="issue-picker" [class.open]="open">
   <input class="search" #searchInput placeholder="Search" (input)="inputSearch(searchInput.value);">
+  <span class="spinner" *ngIf="searching"></span>
   <div class="scrollable-area" *ngIf="searchInput.value">
     <div class="section-header">Search results</div>
     <plaid-issue-details

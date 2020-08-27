@@ -11,7 +11,7 @@ import {
 import {Issue} from '../../models/issue';
 import {Observable, Subject} from 'rxjs';
 import {IssueFacade} from '../../core/issue/issue.facade';
-import {debounceTime, switchMap} from 'rxjs/operators';
+import {debounceTime, switchMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'plaid-issue-picker-cloud',
@@ -25,6 +25,7 @@ export class IssuePickerCloudComponent implements OnInit {
   searchResults: Issue[] = [];
   favorites: Issue[] = [];
   suggestions: Issue[] = [];
+  searching = false;
 
   @ViewChild('searchInput', {static: true})
   searchInput: ElementRef<HTMLInputElement>;
@@ -58,8 +59,13 @@ export class IssuePickerCloudComponent implements OnInit {
   ngOnInit() {
     this.searchInputSubject.pipe(
       debounceTime(250),
+      tap(() => {
+        this.searching = true;
+        this.cdr.detectChanges();
+      }),
       switchMap(s => this.issueFacade.quickSearch$(s))
     ).subscribe(res => {
+      this.searching = false;
       if (this.searchInput.nativeElement.value) {
         this.searchResults = res;
       }
@@ -87,6 +93,7 @@ export class IssuePickerCloudComponent implements OnInit {
     if (query) {
       this.searchInputSubject.next(query);
     } else {
+      this.searching = false;
       this.searchResults = [];
     }
   }
