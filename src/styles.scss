@@ -62,6 +62,18 @@ img {
   height: 6px;
 }
 
+.icon-star {
+  width: 19px;
+  height: 19px;
+  --star-outline-opacity: 1;
+  --star-filled-opacity: 0;
+
+  &.filled {
+    --star-outline-opacity: 0;
+    --star-filled-opacity: 1;
+  }
+}
+
 .spinner {
   display: inline-block;
   width: 1em;
