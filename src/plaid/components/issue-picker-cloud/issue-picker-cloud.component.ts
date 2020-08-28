@@ -106,4 +106,12 @@ export class IssuePickerCloudComponent implements OnInit {
     this.searchInput.nativeElement.value = '';
   }
 
+  favoriteChange(issue: Issue, favorite: boolean): void {
+    if (favorite) {
+      this.issueFacade.addFavorite(issue);
+    } else {
+      this.issueFacade.removeFavorite(issue);
+    }
+  }
+
 }

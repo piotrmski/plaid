@@ -65,18 +65,3 @@
   padding: 0 5px;
   z-index: 1;
 }
-
-plaid-issue-details {
-  line-height: 1;
-  padding: 5px;
-  transition: 0.1s background-color;
-  display: block;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  &:active {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-}

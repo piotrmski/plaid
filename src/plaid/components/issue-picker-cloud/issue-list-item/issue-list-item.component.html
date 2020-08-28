@@ -1,0 +1,7 @@
+<plaid-issue-details
+  [issue]="issue"
+  (click)="issueSelected.emit()"
+></plaid-issue-details>
+<a class="button" (click)="toggleFavorite()" [title]="issue._favorite ? 'Remove from favorites' : 'Add to favorites'">
+  <svg class="icon-star" [class.filled]="issue._favorite"><use href="assets/icons.svg#star"></use></svg>
+</a>

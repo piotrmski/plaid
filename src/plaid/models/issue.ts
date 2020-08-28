@@ -34,4 +34,6 @@ export interface Issue {
   changelog?: any;
   versionedRepresentations?: {};
   fieldsToInclude?: any;
+
+  _favorite?: boolean;
 }

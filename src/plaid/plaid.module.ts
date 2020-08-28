@@ -23,6 +23,7 @@ import {LoginModalComponent} from './components/connection-issue-resolver/login-
 import {ErrorModalComponent} from './components/connection-issue-resolver/error-modal/error-modal.component';
 import {IssuePickerCloudComponent} from './components/issue-picker-cloud/issue-picker-cloud.component';
 import {IssueDetailsComponent} from './components/issue-details/issue-details.component';
+import {IssueListItemComponent} from './components/issue-picker-cloud/issue-list-item/issue-list-item.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {IssueDetailsComponent} from './components/issue-details/issue-details.co
     LoginModalComponent,
     ErrorModalComponent,
     IssuePickerCloudComponent,
-    IssueDetailsComponent
+    IssueDetailsComponent,
+    IssueListItemComponent
   ],
   imports: [
     BrowserModule,
