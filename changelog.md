@@ -2,6 +2,10 @@
 
 ## 0.5
 
+**0.5.2**
+
+- optimized loading work logs
+
 **0.5.1**
 
 - upon lost connection, automatic reconnection attempts will now be made in 30 second intervals (cancellable by hovering
