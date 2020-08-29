@@ -221,7 +221,7 @@ export class WorklogEditorComponent implements OnInit {
     this.flipCalendar = this.panelOffsetTop + this.calendarOffsetTop + 240 > 1440 * this.pixelsPerMinute;
     this.issuePickerOffsetTop = Math.min(
       this.issuePickerToggle.nativeElement.offsetTop - this.panel.nativeElement.scrollTop + 1,
-      1440 * this.pixelsPerMinute - this.panelOffsetTop - 300
+      1440 * this.pixelsPerMinute - this.panelOffsetTop - 400
     );
   }
 

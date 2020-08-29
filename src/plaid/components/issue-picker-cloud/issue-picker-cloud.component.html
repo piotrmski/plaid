@@ -18,9 +18,9 @@
       (issueSelected)="issueSelected(res);"
       (favoriteChange)="favoriteChange(res, $event)"
     ></plaid-issue-list-item>
-    <div class="section-header" *ngIf="suggestions.length > 0">Suggestions</div>
+    <div class="section-header" *ngIf="suggestionsWithoutFavorites.length > 0">Suggestions</div>
     <plaid-issue-list-item
-      *ngFor="let res of suggestions"
+      *ngFor="let res of suggestionsWithoutFavorites"
       [issue]="res"
       (issueSelected)="issueSelected(res);"
       (favoriteChange)="favoriteChange(res, $event)"

@@ -78,7 +78,10 @@ export class IssuePickerCloudComponent implements OnInit {
       });
     }
 
-    this.issueFacade.getFavorites$().subscribe(favorites => this.favorites = favorites);
+    this.issueFacade.getFavorites$().subscribe(favorites => {
+      this.favorites = favorites;
+      this.cdr.detectChanges();
+    });
     this.issueFacade.getSuggestions$().subscribe(suggestions => {
       this.suggestions = suggestions;
       if (suggestions.length > 0) {
@@ -86,6 +89,7 @@ export class IssuePickerCloudComponent implements OnInit {
       } else {
         this.issueChange.emit(null);
       }
+      this.cdr.detectChanges();
     });
   }
 
@@ -112,6 +116,10 @@ export class IssuePickerCloudComponent implements OnInit {
     } else {
       this.issueFacade.removeFavorite(issue);
     }
+  }
+
+  get suggestionsWithoutFavorites(): Issue[] {
+    return this.suggestions.filter(issue => !this.favorites.find(favorite => favorite.key === issue.key));
   }
 
 }

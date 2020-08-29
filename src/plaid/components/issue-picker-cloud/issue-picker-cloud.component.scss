@@ -15,7 +15,7 @@
   border-radius: 15px;
   top: 0;
   transition: 0.1s opacity;
-  height: 300px;
+  height: 400px;
   overflow: hidden;
 
   &.open {
@@ -40,7 +40,7 @@
 }
 
 .scrollable-area {
-  height: 270px;
+  height: 370px;
   overflow-y: auto;
   padding-bottom: 15px;
 
@@ -55,13 +55,13 @@
 }
 
 .section-header {
-  background-color: var(--color-gray-0);
+  background-color: var(--color-gray-1);
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 700;
   position: sticky;
   top: 0;
-  line-height: 20px;
+  line-height: 21px;
   padding: 0 5px;
   z-index: 1;
 }

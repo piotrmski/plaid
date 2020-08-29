@@ -3,7 +3,7 @@
     class="parent-name"
     *ngIf="issue.fields.parent"
     [plaidExtHref]="jiraURL != null ? jiraURL + '/browse/' + issue.fields.parent.key : null"
-    [title]="jiraURL != null ? 'Show parent issue' : 'Parent issue'"
+    [title]="jiraURL != null ? 'Show parent issue' : ''"
   >
     <svg class="icon-parent"><use href="assets/icons.svg#parent"></use></svg>
     <b>{{ issue.fields.parent.key }}</b>

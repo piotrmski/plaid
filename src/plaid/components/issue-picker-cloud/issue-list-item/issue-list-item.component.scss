@@ -14,7 +14,7 @@ plaid-issue-details {
   display: block;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.125);
   }
 
   &:active {
@@ -26,7 +26,7 @@ plaid-issue-details {
   color: rgba(0, 0, 0, 0.4);
   opacity: 0;
   position: absolute;
-  right: 5px;
+  right: 0;
   top: calc(50% - 15px);
   transition: 0.1s all;
 
