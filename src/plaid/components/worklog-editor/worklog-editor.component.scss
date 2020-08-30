@@ -181,6 +181,10 @@
 
 #save-button {
   min-width: 4em;
+
+  .spinner {
+    color: var(--color-primary-5)
+  }
 }
 
 #issue-picker-toggle:not([disabled]):focus {
