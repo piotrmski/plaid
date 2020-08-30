@@ -10,6 +10,7 @@ import {
 import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
 import {Format} from '../../helpers/format';
+import {User} from 'src/plaid/models/user';
 
 /**
  * Dumb container for the entire grid including header, background, footer, time marker, and work log entries.
@@ -40,6 +41,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   visibleDaysEnd: number;
   _workingHoursStartMinutes: number;
   _workingHoursEndMinutes: number;
+  _authenticatedUser: User;
 
   /**
    * Whether an overlay with a spinner should be visible
@@ -269,6 +271,18 @@ export class GridComponent implements OnInit, AfterViewInit {
     return this._hideWeekend;
   }
 
+  @Input()
+  set authenticatedUser(user: User) {
+    this._authenticatedUser = user;
+    if (!user) {
+      this.editedWorklog = null;
+    }
+    this.updateAddHints();
+  }
+  get authenticatedUser(): User {
+    return this._authenticatedUser;
+  }
+
   constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
 
   // Update add hints every minute to keep up with current time marker
@@ -307,16 +321,18 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.days.filter(d => d < new Date() && d.getDay() >= this.workingDaysStart && d.getDay() <= this.workingDaysEnd)
         .forEach((day: Date, dayIndex: number) => {
         this.addHintsSplitByDays[dayIndex].length = 0;
-        let gapStart: Date = new Date(day);
-        let gapEnd: Date;
-        this.worklogsSplitByDays[dayIndex].forEach(worklog => {
-          gapEnd = new Date(worklog.started);
+        if (this.authenticatedUser != null) {
+          let gapStart: Date = new Date(day);
+          let gapEnd: Date;
+          this.worklogsSplitByDays[dayIndex].forEach(worklog => {
+            gapEnd = new Date(worklog.started);
+            this.addAddHint(gapStart, gapEnd, day, dayIndex);
+            gapStart = new Date(gapEnd.getTime() + worklog.timeSpentSeconds * 1000);
+          });
+          gapEnd = new Date(day);
+          gapEnd.setHours(0, this.workingHoursEndMinutes);
           this.addAddHint(gapStart, gapEnd, day, dayIndex);
-          gapStart = new Date(gapEnd.getTime() + worklog.timeSpentSeconds * 1000);
-        });
-        gapEnd = new Date(day);
-        gapEnd.setHours(0, this.workingHoursEndMinutes);
-        this.addAddHint(gapStart, gapEnd, day, dayIndex);
+        }
       });
     }
   }

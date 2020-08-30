@@ -24,7 +24,8 @@ export class IssueFacade {
 
   private setFavoriteAttribute(issues: Issue[]): Issue[] {
     return issues.map(issue => {
-      issue._favorite = this.favoriteKeys[this.authFacade.getJiraURL()].includes(issue.key);
+      const keys: string[] = this.favoriteKeys[this.authFacade.getJiraURL()] || [];
+      issue._favorite = keys.includes(issue.key);
       return issue;
     });
   }
