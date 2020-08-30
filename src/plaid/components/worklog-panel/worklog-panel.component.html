@@ -1,6 +1,6 @@
 <div
   class="panel-outer"
-  [class.add-hint]="!worklog.issue"
+  [class.add-hint]="!worklog.id"
   [class.too-low]="tooLow"
   [class.undersized]="undersized"
   [ngStyle]="{
@@ -14,13 +14,13 @@
     #panelInner
     class="panel-inner"
     [class.currently-edited]="currentlyEdited"
-    [ngStyle]="worklog.issue ? {
+    [ngStyle]="worklog.id ? {
       maxHeight: panelHeight + 1 + 'px',
       backgroundColor: 'hsl(' + panelHue + ', ' + (darkMode ? 40 : 60 ) + '%, ' + (darkMode ? 20 : 92 ) + '%)',
       borderColor: 'hsl(' + panelHue + ', 50%, ' + (darkMode ? 40 : 60 ) + '%)'
     } : {}"
   >
-    <div class="panel-content" *ngIf="worklog.issue">
+    <div class="panel-content" *ngIf="worklog.id">
       <a
         class="button worklog-action-button edit-button"
         title="Edit log"
@@ -49,7 +49,7 @@
       </p>
       <pre class="comment">{{ worklog.comment?.trim() }}</pre>
     </div>
-    <div class="panel-content" *ngIf="!worklog.issue">
+    <div class="panel-content" *ngIf="!worklog.id">
       <a
         class="button add-button"
         title="Add log"

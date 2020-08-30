@@ -501,7 +501,6 @@ export class WorklogEditorComponent implements OnInit {
 
   selectIssue(issue: Issue): void {
     if (this.worklog) {
-      this.worklog.issue = issue;
       this.worklog.issueId = issue ? issue.id : null;
     }
     this.updatePanelHueSaturationAndIssueString(issue, '');
