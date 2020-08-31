@@ -33,4 +33,8 @@ export class WorklogState {
     }
     this.worklogs.next([...worklogs]);
   }
+
+  deleteWorklog(worklogId: string) {
+    this.worklogs.next(this.worklogs.getValue().filter(worklog => worklog.id !== worklogId));
+  }
 }

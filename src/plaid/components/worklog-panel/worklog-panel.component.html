@@ -23,17 +23,20 @@
     <div class="panel-content" *ngIf="worklog.id">
       <a
         class="button worklog-action-button edit-button"
-        title="Edit log"
-        (click)="edit.emit()"
+        [title]="worklog._deleting ? '' : 'Edit log'"
+        (click)="editClick()"
+        [class.disabled]="worklog._deleting"
       >
         <svg class="icon"><use href="assets/icons.svg#pen"></use></svg>
       </a>
       <a
         class="button worklog-action-button delete-button"
-        title="Delete log"
-        (click)="deleteConfirmationOpen = true"
+        [title]="worklog._deleting ? 'Deleting...' : 'Delete log'"
+        (click)="deleteClick()"
+        [class.disabled]="worklog._deleting"
       >
-        <svg class="icon"><use href="assets/icons.svg#trash"></use></svg>
+        <span *ngIf="worklog._deleting" class="spinner"></span>
+        <svg *ngIf="!worklog._deleting" class="icon"><use href="assets/icons.svg#trash"></use></svg>
       </a>
       <div
         class="delete-confirmation"
@@ -41,7 +44,7 @@
         (mouseleave)="deleteConfirmationOpen = false"
       >
         For sure?
-        <a class="button">Yes</a>
+        <a class="button" (click)="deleteConfirm()">Yes</a>
       </div>
       <plaid-issue-details [jiraURL]="jiraURL" [issue]="worklog.issue"></plaid-issue-details>
       <p class="time">

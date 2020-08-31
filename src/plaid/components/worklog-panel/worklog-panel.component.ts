@@ -50,6 +50,12 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   edit = new EventEmitter<void>();
 
   /**
+   * Emits when user presses delete button and confirms their action.
+   */
+  @Output()
+  delete = new EventEmitter<void>();
+
+  /**
    * Presented work log entry. Setting it will set the panel's initial size and position on the grid as well as its
    * color. Color is determined by a hash function applied to the log's issue's parent's ID (or log's issue's ID if it
    * does not have a parent). It will also schedule size and position check (see checkSizeAndPosition).
@@ -160,5 +166,23 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
       this.tooLow = this.panelInner.nativeElement.scrollHeight + 1 > this.maxHeight;
       this.cdr.markForCheck();
     }
+  }
+
+  editClick(): void {
+    if (!this.worklog._deleting) {
+      this.edit.emit();
+    }
+  }
+
+  deleteClick(): void {
+    if (!this.worklog._deleting) {
+      this.deleteConfirmationOpen = true;
+    }
+  }
+
+  deleteConfirm(): void {
+    this.deleteConfirmationOpen = false;
+    this.worklog._deleting = true;
+    this.delete.emit();
   }
 }
