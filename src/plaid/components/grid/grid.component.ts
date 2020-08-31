@@ -11,9 +11,10 @@ import {Worklog} from '../../models/worklog';
 import {DateRange} from '../../models/date-range';
 import {Format} from '../../helpers/format';
 import {User} from 'src/plaid/models/user';
+import {WorklogFacade} from '../../core/worklog/worklog.facade';
 
 /**
- * Dumb container for the entire grid including header, background, footer, time marker, and work log entries.
+ * Container for the entire grid including header, background, footer, time marker, and work log entries.
  */
 @Component({
   selector: 'plaid-grid',
@@ -283,7 +284,11 @@ export class GridComponent implements OnInit, AfterViewInit {
     return this._authenticatedUser;
   }
 
-  constructor(public hostElement: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) {}
+  constructor(
+    public hostElement: ElementRef<HTMLElement>,
+    private worklogFacade: WorklogFacade,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   // Update add hints every minute to keep up with current time marker
   ngOnInit(): void {
@@ -364,5 +369,9 @@ export class GridComponent implements OnInit, AfterViewInit {
         });
       }
     }
+  }
+
+  deleteWorklog(worklog: Worklog): void {
+    this.worklogFacade.deleteWorklog(worklog);
   }
 }

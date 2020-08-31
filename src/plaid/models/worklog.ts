@@ -18,4 +18,5 @@ export interface Worklog {
 
   _column?: number;
   _columns?: number;
+  _deleting?: boolean;
 }

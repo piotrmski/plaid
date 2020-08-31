@@ -34,6 +34,7 @@
         [pixelsPerMinute]="pixelsPerMinute"
         [currentlyEdited]="worklog.id === editedWorklog?.id"
         (edit)="editedWorklog = worklog"
+        (delete)="deleteWorklog(worklog)"
       ></plaid-worklog-panel>
       <plaid-worklog-panel
         *ngFor="let addHint of addHintsSplitByDays[dayIndex]; trackBy: worklogPanelTrackByFn"

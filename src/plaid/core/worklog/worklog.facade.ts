@@ -134,4 +134,10 @@ export class WorklogFacade {
         setInterval(() => this.fetchWorklogsQuiet(), this.refreshIntervalTimeoutMinutes * 60000);
     }
   }
+
+  deleteWorklog(worklog: Worklog): void {
+    this.worklogApi.deleteWorklog$(worklog.issueId, worklog.id).subscribe(() => {
+      this.worklogState.deleteWorklog(worklog.id);
+    });
+  }
 }

@@ -16,6 +16,7 @@ export class WorklogApi {
   private readonly getWorklogsUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
   private readonly addWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
   private readonly updateWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog/{id}';
+  private readonly deleteWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog/{id}';
 
   constructor(private http: HttpClient) { }
 
@@ -124,5 +125,9 @@ export class WorklogApi {
       comment
     };
     return this.http.put<Worklog>(url, body);
+  }
+
+  deleteWorklog$(issueId: string, worklogId: string): Observable<void> {
+    return this.http.delete<void>(this.deleteWorklogUrl.replace('{issueIdOrKey}', issueId).replace('{id}', worklogId));
   }
 }
