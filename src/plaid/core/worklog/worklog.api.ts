@@ -14,6 +14,7 @@ import {DateRange} from '../../models/date-range';
 export class WorklogApi {
   private readonly searchUrl = '/rest/api/2/search';
   private readonly getWorklogsUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
+  private readonly addWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
   private readonly updateWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog/{id}';
 
   constructor(private http: HttpClient) { }
@@ -100,9 +101,22 @@ export class WorklogApi {
   }
 
   /**
+   * Adds new work log entry and returns observable emitting added entry
+   */
+  addWorklog$(issueId: string, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
+    const url: string = this.addWorklogUrl.replace('{issueIdOrKey}', issueId);
+    const body = {
+      started: started.toISOString().replace(/Z$/, '+0000'),
+      timeSpentSeconds,
+      comment
+    };
+    return this.http.post<Worklog>(url, body);
+  }
+
+  /**
    * Updates work log entry and returns observable emitting updated entry
    */
-  updateWorklog(issueId: string, worklogId: string, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
+  updateWorklog$(issueId: string, worklogId: string, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
     const url: string = this.updateWorklogUrl.replace('{issueIdOrKey}', issueId).replace('{id}', worklogId);
     const body = {
       started: started.toISOString().replace(/Z$/, '+0000'),

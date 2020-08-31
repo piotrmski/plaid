@@ -67,6 +67,7 @@ export class WorklogEditorComponent implements OnInit {
   _visibleDaysStart: number;
   _visibleDaysEnd: number;
   updateFavoriteIssuesAndSuggestionsAndEmitSuggestion = new Subject<void>();
+  adding: boolean;
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
@@ -131,8 +132,10 @@ export class WorklogEditorComponent implements OnInit {
    */
   @Input()
   set worklog(worklog: Worklog) {
-    this._worklog = worklog;
     if (worklog) {
+      this._worklog = {...worklog};
+      this.saving = false;
+      this.adding = !worklog.id;
       this.start = new Date(worklog.started);
       this.start.setSeconds(0, 0);
       this.date = new Date(this.start);
@@ -149,9 +152,11 @@ export class WorklogEditorComponent implements OnInit {
       if (this.editedPanelInRange) {
         this.computeSizeAndOffset();
       }
-      if (!worklog.id) {
+      if (this.adding) {
         this.updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.next();
       }
+    } else {
+      this._worklog = null;
     }
   }
   get worklog(): Worklog {
@@ -166,7 +171,7 @@ export class WorklogEditorComponent implements OnInit {
   set visibleDaysStart(value: number) {
     this._visibleDaysStart = value;
     if (this.date && !this.isDateVisible(this.date)) {
-      this.cancelEdit.emit();
+      this.close();
     }
   }
   get visibleDaysStart(): number {
@@ -181,7 +186,7 @@ export class WorklogEditorComponent implements OnInit {
   set visibleDaysEnd(value: number) {
     this._visibleDaysEnd = value;
     if (this.date && !this.isDateVisible(this.date)) {
-      this.cancelEdit.emit();
+      this.close();
     }
   }
   get visibleDaysEnd(): number {
@@ -201,7 +206,7 @@ export class WorklogEditorComponent implements OnInit {
    */
   ngOnInit(): void {
     // Singleton component, no need to unsubscribe
-    this.authFacade.getAuthenticatedUser$().subscribe(() => this.cancelEdit.emit());
+    this.authFacade.getAuthenticatedUser$().subscribe(() => this.close());
   }
 
   /**
@@ -396,7 +401,7 @@ export class WorklogEditorComponent implements OnInit {
    */
   handleClickOutsideEditor(event: MouseEvent): void {
     if (event.button === 0 && event.target === this.wrapper.nativeElement && !this.calendarOpen && !this.issuePickerOpen) {
-      this.cancelEdit.emit();
+      this.close();
     }
   }
 
@@ -453,7 +458,7 @@ export class WorklogEditorComponent implements OnInit {
    * Opens or closes issue picker cloud and sets event listener to close the calendar if user clicked outside it
    */
   toggleIssuePicker(): void {
-    if (!this.saving && !this.issuePickerOpen && !this.worklog.id) {
+    if (!this.saving && !this.issuePickerOpen && this.adding) {
       this.issuePickerOpen = true;
       this.computeSizeAndOffset();
 
@@ -478,21 +483,25 @@ export class WorklogEditorComponent implements OnInit {
    */
   save(): void {
     this.saving = true;
-    this.worklogFacade.updateWorklog$(
-      this.worklog,
-      this.start,
-      this.durationMinutes * 60,
-      this.commentString
-    ).subscribe({
-      next: () => {
-        this.saving = false;
-        this.cancelEdit.emit();
-      },
-      error: () => {
-        this.saving = false;
-        this.cdr.detectChanges();
-      }
-    });
+    if (this.adding) {
+      this.worklogFacade.addWorklog$(this.worklog, this.start, this.durationMinutes * 60, this.commentString)
+        .subscribe({
+          next: () => this.close(),
+          complete: () => {
+            this.saving = false;
+            this.cdr.detectChanges();
+          }
+        });
+    } else {
+      this.worklogFacade.updateWorklog$(this.worklog, this.start, this.durationMinutes * 60, this.commentString)
+        .subscribe({
+          next: () => this.close(),
+          complete: () => {
+            this.saving = false;
+            this.cdr.detectChanges();
+          }
+        });
+    }
   }
 
   isDateVisible(date: Date): boolean {
@@ -501,6 +510,7 @@ export class WorklogEditorComponent implements OnInit {
 
   selectIssue(issue: Issue): void {
     if (this.worklog) {
+      this.worklog.issue = issue;
       this.worklog.issueId = issue ? issue.id : null;
     }
     this.updatePanelHueSaturationAndIssueString(issue, '');
@@ -512,5 +522,10 @@ export class WorklogEditorComponent implements OnInit {
       : issue.id) * 360 / 1.61803)) % 360 : 0;
     this.panelSaturation = issue ? 50 : 0;
     this.issueString = issue ? issue.key + ' - ' + issue.fields.summary : defaultIssueString;
+  }
+
+  close(): void {
+    this.cancelEdit.emit();
+    this.worklog = null;
   }
 }

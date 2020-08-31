@@ -61,17 +61,17 @@ Ctrl to snap to 60 minutes."
       <button
         id="save-button"
         class="button primary tangible"
-        [disabled]="saving"
+        [disabled]="saving || !worklog || !worklog.issueId"
         title=""
         (click)="save()"
       >
         <span *ngIf="saving" class="spinner"></span>
-        <ng-container *ngIf="!saving">{{ !worklog || !!worklog.id ? 'Save' : 'Add' }}</ng-container>
+        <ng-container *ngIf="!saving">{{ this.adding ? 'Add' : 'Save' }}</ng-container>
       </button>
       <button
         class="button tangible"
         [class.non-translucent]="panelHeight < 200"
-        (click)="cancelEdit.emit()"
+        (click)="close()"
         [disabled]="saving"
         title=""
       >Cancel</button>

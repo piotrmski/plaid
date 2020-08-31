@@ -106,11 +106,20 @@ export class WorklogFacade {
   }
 
   /**
+   * Upon subscription adds work log entry, emits response from the server after it successfully performs insertion
+   */
+  addWorklog$(worklog: Worklog, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
+    return this.worklogApi.addWorklog$(worklog.issueId, started, timeSpentSeconds, comment).pipe(
+      tap<Worklog>(added => this.worklogState.addOrUpdateWorklog({...worklog, ...added}))
+    );
+  }
+
+  /**
    * Upon subscription updates work log entry, emits response from the server after it acknowledged the update
    */
   updateWorklog$(worklog: Worklog, started: Date, timeSpentSeconds: number, comment: string): Observable<Worklog> {
-    return this.worklogApi.updateWorklog(worklog.issueId, worklog.id, started, timeSpentSeconds, comment).pipe(
-      tap<Worklog>(updated => this.worklogState.updateWorklog({...worklog, ...updated}))
+    return this.worklogApi.updateWorklog$(worklog.issueId, worklog.id, started, timeSpentSeconds, comment).pipe(
+      tap<Worklog>(updated => this.worklogState.addOrUpdateWorklog({...worklog, ...updated}))
     );
   }
 
