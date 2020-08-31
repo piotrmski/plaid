@@ -21,7 +21,7 @@ export class DatePickerCloudComponent {
   _month: Date;
   today: Date;
   days: Date[][];
-  _calendarOpen = false;
+  _open = false;
 
   @Input()
   selectedDate: Date;
@@ -33,8 +33,8 @@ export class DatePickerCloudComponent {
    * Open or close the calendar. Opening it will set the month to one which the selected date belongs to.
    */
   @Input()
-  set calendarOpen(open: boolean) {
-    this._calendarOpen = open;
+  set open(open: boolean) {
+    this._open = open;
     if (open) {
       const month = new Date(this.selectedDate);
       month.setDate(1);
@@ -43,9 +43,12 @@ export class DatePickerCloudComponent {
       this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
     }
   }
-  get calendarOpen(): boolean {
-    return this._calendarOpen;
+  get open(): boolean {
+    return this._open;
   }
+
+  @Input()
+  flipped = false;
 
   @Input()
   selectableDaysStart: number;
@@ -54,7 +57,7 @@ export class DatePickerCloudComponent {
   selectableDaysEnd: number;
 
   @Output()
-  calendarOpenChange = new EventEmitter<boolean>();
+  openChange = new EventEmitter<boolean>();
 
   readonly months: string[] = Calendar.monthsShort;
 
@@ -80,8 +83,8 @@ export class DatePickerCloudComponent {
     if (this.isDateSelectable(date)) {
       this.selectedDate = date;
       this.selectedDateChange.emit(date);
-      this.calendarOpen = false;
-      this.calendarOpenChange.emit(false);
+      this.open = false;
+      this.openChange.emit(false);
     }
   }
 

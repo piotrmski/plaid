@@ -21,6 +21,9 @@ import {SettingsComponent} from './components/settings/settings.component';
 import {LostConnectionModalComponent} from './components/connection-issue-resolver/lost-connection-modal/lost-connection-modal.component';
 import {LoginModalComponent} from './components/connection-issue-resolver/login-modal/login-modal.component';
 import {ErrorModalComponent} from './components/connection-issue-resolver/error-modal/error-modal.component';
+import {IssuePickerCloudComponent} from './components/issue-picker-cloud/issue-picker-cloud.component';
+import {IssueDetailsComponent} from './components/issue-details/issue-details.component';
+import {IssueListItemComponent} from './components/issue-picker-cloud/issue-list-item/issue-list-item.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import {ErrorModalComponent} from './components/connection-issue-resolver/error-
     SettingsComponent,
     LostConnectionModalComponent,
     LoginModalComponent,
-    ErrorModalComponent
+    ErrorModalComponent,
+    IssuePickerCloudComponent,
+    IssueDetailsComponent,
+    IssueListItemComponent
   ],
   imports: [
     BrowserModule,

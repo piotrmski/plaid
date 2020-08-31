@@ -27,7 +27,13 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleError(request: HttpRequest<any>, next: HttpHandler, error: HttpErrorResponse): Observable<HttpEvent<any>> {
-    this.authState.setError(error);
+    console.log(request.url);
+    if (!error || error.status !== 404 || request.method !== 'GET' ||
+      !/\/rest\/api\/2\/issue\/[A-Za-z][A-Za-z0-9_]*-[1-9][0-9]*\?/.test(request.url)) {
+      // 404 status when calling GET /rest/api/2/issue/{issueKey} is unfortunately our only way to tell if issue ID is
+      // invalid. In any other case we report the error to authState to bring up application error modal.
+      this.authState.setError(error);
+    }
 
     if (!error || [0, 401, 403].includes(error.status)) { // If the error is related to lack of connection or authorization:
       // Retry the request after authentication, except /rest/api/2/myself, because requests to this end point will be

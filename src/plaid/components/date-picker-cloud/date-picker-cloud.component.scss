@@ -3,22 +3,6 @@
   flex-flow: row;
   position: relative;
   pointer-events: none;
-
-  &.flip .calendar {
-    top: unset;
-    bottom: 20px;
-
-    &::before {
-      bottom: unset;
-      top: 100%;
-      border-bottom: none;
-      border-top: 10px solid #fff;
-    }
-
-    &.open {
-      bottom: 40px;
-    }
-  }
 }
 
 .calendar {
@@ -49,6 +33,22 @@
     opacity: 1;
     top: 10px;
     pointer-events: all;
+  }
+
+  &.flipped {
+    top: unset;
+    bottom: 20px;
+
+    &::before {
+      bottom: unset;
+      top: 100%;
+      border-bottom: none;
+      border-top: 10px solid #fff;
+    }
+
+    &.open {
+      bottom: 40px;
+    }
   }
 }
 

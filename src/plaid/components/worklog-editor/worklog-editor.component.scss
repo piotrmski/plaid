@@ -181,9 +181,17 @@
 
 #save-button {
   min-width: 4em;
+
+  .spinner {
+    color: var(--color-primary-5)
+  }
 }
 
-#date-input {
+#issue-picker-toggle:not([disabled]):focus {
+  box-shadow: none;
+}
+
+#calendar-toggle {
   text-align: left;
   cursor: default;
 }

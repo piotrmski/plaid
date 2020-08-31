@@ -1,12 +1,11 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
-  Output,
-  ViewChild
+  Output
 } from '@angular/core';
 import {Calendar} from '../../helpers/calendar';
 import {Theme} from '../../models/theme';
@@ -21,7 +20,7 @@ import {Theme} from '../../models/theme';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsComponent {
-  dropdownOpen = false;
+  private _dropdownOpen = false;
   readonly weekdays: string[] = Calendar.weekdays;
   @Input()  workingHoursStartMinutes: number;
   @Output() workingHoursStartMinutesChange = new EventEmitter<number>();
@@ -38,7 +37,7 @@ export class SettingsComponent {
   @Input()  theme: Theme;
   @Output() themeChange = new EventEmitter<Theme>();
 
-  constructor(private ref: ElementRef) {
+  constructor(private ref: ElementRef, private cdr: ChangeDetectorRef) {
   }
 
   setWorkingHoursStartMinutes(value: number) {
@@ -96,13 +95,24 @@ export class SettingsComponent {
   }
 
   /**
-   * Closes dropdown menu, if user clicked anywhere outside it.
+   * Closes dropdown, if user clicked anywhere outside it.
    */
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
+  onDocumentClick: (event: MouseEvent) => void = (event: MouseEvent) => {
     if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
       this.dropdownOpen = false;
+      this.cdr.detectChanges();
     }
+  }
+  set dropdownOpen(value: boolean) {
+    this._dropdownOpen = value;
+    if (value) {
+      addEventListener('click', this.onDocumentClick);
+    } else {
+      removeEventListener('click', this.onDocumentClick);
+    }
+  }
+  get dropdownOpen(): boolean {
+    return this._dropdownOpen;
   }
 
   minutesToTimeString(minutesSinceMidnight: number): string {

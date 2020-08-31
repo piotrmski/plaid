@@ -17,6 +17,9 @@ import {AuthFacade} from '../../core/auth/auth.facade';
 import {AppStateService} from '../../core/app-state.service';
 import {WorklogFacade} from '../../core/worklog/worklog.facade';
 import {DatePickerCloudComponent} from '../date-picker-cloud/date-picker-cloud.component';
+import {Issue} from '../../models/issue';
+import {IssuePickerCloudComponent} from '../issue-picker-cloud/issue-picker-cloud.component';
+import {Subject} from 'rxjs';
 
 /**
  * Smart component, presenting edited worklog, handling all its interactions and updating worklog on the server
@@ -45,11 +48,11 @@ export class WorklogEditorComponent implements OnInit {
   spaceUnderPanel: number;
   editedPanelInRange: boolean;
   panelHue: number;
+  panelSaturation: number;
   dragging = false;
   stretching = false;
   mouseEventXOffset: number;
   mouseEventYOffset: number;
-  mousemoveEventListener: (e: MouseEvent) => void;
   issueString: string;
   dateString: string;
   commentString: string;
@@ -59,8 +62,12 @@ export class WorklogEditorComponent implements OnInit {
   calendarOpen = false;
   calendarOffsetTop = 0;
   flipCalendar = false;
+  issuePickerOpen = false;
+  issuePickerOffsetTop = 0;
   _visibleDaysStart: number;
   _visibleDaysEnd: number;
+  updateFavoriteIssuesAndSuggestionsAndEmitSuggestion = new Subject<void>();
+  adding: boolean;
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
@@ -73,6 +80,12 @@ export class WorklogEditorComponent implements OnInit {
 
   @ViewChild(DatePickerCloudComponent, {read: ViewContainerRef})
   calendarCloud: ViewContainerRef;
+
+  @ViewChild('issuePickerToggle')
+  issuePickerToggle: ElementRef<HTMLAnchorElement>;
+
+  @ViewChild(IssuePickerCloudComponent, {read: ViewContainerRef})
+  issuePickerCloud: ViewContainerRef;
 
   @Output()
   cancelEdit = new EventEmitter<void>();
@@ -119,8 +132,10 @@ export class WorklogEditorComponent implements OnInit {
    */
   @Input()
   set worklog(worklog: Worklog) {
-    this._worklog = worklog;
     if (worklog) {
+      this._worklog = {...worklog};
+      this.saving = false;
+      this.adding = !worklog.id;
       this.start = new Date(worklog.started);
       this.start.setSeconds(0, 0);
       this.date = new Date(this.start);
@@ -131,15 +146,17 @@ export class WorklogEditorComponent implements OnInit {
       this.startTimeString = Format.time(this.start);
       this.endTimeString = Format.time(end);
       this.editedPanelInRange = this.date >= this.dateRange.start && this.date <= this.dateRange.end;
-      this.panelHue = Math.round((Number(this.worklog.issue.fields.parent
-        ? this.worklog.issue.fields.parent.id
-        : this.worklog.issue.id) * 360 / 1.61803)) % 360;
-      this.issueString = worklog.issue.key + ' - ' + worklog.issue.fields.summary;
+      this.updatePanelHueSaturationAndIssueString(worklog.issue);
       this.dateString = Format.date(this.start);
       this.commentString = worklog.comment;
       if (this.editedPanelInRange) {
         this.computeSizeAndOffset();
       }
+      if (this.adding) {
+        this.updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.next();
+      }
+    } else {
+      this._worklog = null;
     }
   }
   get worklog(): Worklog {
@@ -154,7 +171,7 @@ export class WorklogEditorComponent implements OnInit {
   set visibleDaysStart(value: number) {
     this._visibleDaysStart = value;
     if (this.date && !this.isDateVisible(this.date)) {
-      this.cancelEdit.emit();
+      this.close();
     }
   }
   get visibleDaysStart(): number {
@@ -169,7 +186,7 @@ export class WorklogEditorComponent implements OnInit {
   set visibleDaysEnd(value: number) {
     this._visibleDaysEnd = value;
     if (this.date && !this.isDateVisible(this.date)) {
-      this.cancelEdit.emit();
+      this.close();
     }
   }
   get visibleDaysEnd(): number {
@@ -189,7 +206,7 @@ export class WorklogEditorComponent implements OnInit {
    */
   ngOnInit(): void {
     // Singleton component, no need to unsubscribe
-    this.authFacade.getAuthenticatedUser$().subscribe(() => this.cancelEdit.emit());
+    this.authFacade.getAuthenticatedUser$().subscribe(() => this.close());
   }
 
   /**
@@ -205,8 +222,12 @@ export class WorklogEditorComponent implements OnInit {
     this.panelWidth = 1 / (Math.round((this.dateRange.end.getTime() - this.dateRange.start.getTime()) / 86400000) + 1);
     this.panelOffsetLeft = this.panelWidth * Math.round((this.date.getTime() - this.dateRange.start.getTime()) / 86400000);
     this.spaceUnderPanel = 1440 * this.pixelsPerMinute - this.panelOffsetTop - this.panelHeight;
-    this.calendarOffsetTop = this.calendarToggle.nativeElement.offsetTop + 30 - this.panel.nativeElement.scrollTop;
+    this.calendarOffsetTop = this.calendarToggle.nativeElement.offsetTop + 31 - this.panel.nativeElement.scrollTop;
     this.flipCalendar = this.panelOffsetTop + this.calendarOffsetTop + 240 > 1440 * this.pixelsPerMinute;
+    this.issuePickerOffsetTop = Math.min(
+      this.issuePickerToggle.nativeElement.offsetTop - this.panel.nativeElement.scrollTop + 1,
+      1440 * this.pixelsPerMinute - this.panelOffsetTop - 400
+    );
   }
 
   /**
@@ -217,24 +238,21 @@ export class WorklogEditorComponent implements OnInit {
       this.dragging = true;
       this.mouseEventXOffset = event.offsetX;
       this.mouseEventYOffset = event.offsetY;
-      this.mousemoveEventListener = e => this.handleDragEvent(e);
-      document.addEventListener('mousemove', this.mousemoveEventListener);
-      document.addEventListener('mouseup', () => this.dragEnd(), {once: true});
+      addEventListener('mousemove', this.handleDragEvent);
+      addEventListener('mouseup', () => this.dragEnd(), {once: true});
     }
   }
 
   dragEnd(): void {
     this.dragging = false;
     this.cdr.detectChanges();
-    if (this.mousemoveEventListener) {
-      document.removeEventListener('mousemove', this.mousemoveEventListener);
-    }
+    removeEventListener('mousemove', this.handleDragEvent);
   }
 
   /**
    * Handles mouse movement during panel dragging calculating change in start time and date
    */
-  handleDragEvent(event: MouseEvent): void {
+  handleDragEvent: (event: MouseEvent) => void = (event: MouseEvent) => {
     // Handle dragging vertically
     const oldStartTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
     let newStartTimeMinutes: number = this.getPointerTopOffsetMinutes(event, this.getSnapTo(event));
@@ -282,9 +300,8 @@ export class WorklogEditorComponent implements OnInit {
     if (!this.saving && event.button === 0) {
       this.stretching = true;
       this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
-      this.mousemoveEventListener = e => this.handleStretchTopEvent(e);
-      document.addEventListener('mousemove', this.mousemoveEventListener);
-      document.addEventListener('mouseup', () => this.stretchEnd(), {once: true});
+      addEventListener('mousemove', this.handleStretchTopEvent);
+      addEventListener('mouseup', () => this.stretchEnd(this.handleStretchTopEvent), {once: true});
     }
   }
 
@@ -295,24 +312,21 @@ export class WorklogEditorComponent implements OnInit {
     if (!this.saving && event.button === 0) {
       this.stretching = true;
       this.mouseEventYOffset = event.offsetY - WorklogEditorComponent.STRETCH_HANDLE_OFFSET_TOP;
-      this.mousemoveEventListener = e => this.handleStretchBottomEvent(e);
-      document.addEventListener('mousemove', this.mousemoveEventListener);
-      document.addEventListener('mouseup', () => this.stretchEnd(), {once: true});
+      addEventListener('mousemove', this.handleStretchBottomEvent);
+      addEventListener('mouseup', () => this.stretchEnd(this.handleStretchBottomEvent), {once: true});
     }
   }
 
-  stretchEnd(): void {
+  stretchEnd(eventListenerToRemove: (event: MouseEvent) => void): void {
     this.stretching = false;
     this.cdr.detectChanges();
-    if (this.mousemoveEventListener) {
-      document.removeEventListener('mousemove', this.mousemoveEventListener);
-    }
+    removeEventListener('mousemove', eventListenerToRemove);
   }
 
   /**
    * Handles mouse movement during top stretch handle dragging calculating change in start time and work duration
    */
-  handleStretchTopEvent(event: MouseEvent): void {
+  handleStretchTopEvent: (event: MouseEvent) => void = (event: MouseEvent) => {
     const snapTo: number = this.getSnapTo(event);
     const oldStartTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
     const endTimeMinutes: number = oldStartTimeMinutes + this.durationMinutes;
@@ -335,7 +349,7 @@ export class WorklogEditorComponent implements OnInit {
   /**
    * Handles mouse movement during top stretch handle dragging calculating change in work duration
    */
-  handleStretchBottomEvent(event: MouseEvent): void {
+  handleStretchBottomEvent: (event: MouseEvent) => void = (event: MouseEvent) => {
     const snapTo: number = this.getSnapTo(event);
     const startTimeMinutes: number = this.start.getHours() * 60 + this.start.getMinutes();
     const oldEndTimeMinutes: number = startTimeMinutes + this.durationMinutes;
@@ -386,8 +400,8 @@ export class WorklogEditorComponent implements OnInit {
    * Closes the editor if user clicked outside the panel with left mouse button
    */
   handleClickOutsideEditor(event: MouseEvent): void {
-    if (event.button === 0 && event.target === this.wrapper.nativeElement && !this.calendarOpen) {
-      this.cancelEdit.emit();
+    if (event.button === 0 && event.target === this.wrapper.nativeElement && !this.calendarOpen && !this.issuePickerOpen) {
+      this.close();
     }
   }
 
@@ -428,15 +442,39 @@ export class WorklogEditorComponent implements OnInit {
         if (!(this.calendarCloud.element.nativeElement as Node).contains(event.target as Node)
           && event.target !== this.calendarToggle.nativeElement) {
           this.calendarOpen = false;
-          document.removeEventListener('mousedown', mousedownOutsideCalendarEventListener);
+          removeEventListener('mousedown', mousedownOutsideCalendarEventListener);
 
           this.cdr.detectChanges();
         }
       };
 
-      document.addEventListener('mousedown', mousedownOutsideCalendarEventListener);
+      addEventListener('mousedown', mousedownOutsideCalendarEventListener);
     } else {
       this.calendarOpen = false;
+    }
+  }
+
+  /**
+   * Opens or closes issue picker cloud and sets event listener to close the calendar if user clicked outside it
+   */
+  toggleIssuePicker(): void {
+    if (!this.saving && !this.issuePickerOpen && this.adding) {
+      this.issuePickerOpen = true;
+      this.computeSizeAndOffset();
+
+      const mousedownOutsideIssuePickerEventListener = (event: MouseEvent) => {
+        if (!(this.issuePickerCloud.element.nativeElement as Node).contains(event.target as Node)
+          && event.target !== this.issuePickerToggle.nativeElement) {
+          this.issuePickerOpen = false;
+          removeEventListener('mousedown', mousedownOutsideIssuePickerEventListener);
+
+          this.cdr.detectChanges();
+        }
+      };
+
+      addEventListener('mousedown', mousedownOutsideIssuePickerEventListener);
+    } else {
+      this.issuePickerOpen = false;
     }
   }
 
@@ -445,24 +483,49 @@ export class WorklogEditorComponent implements OnInit {
    */
   save(): void {
     this.saving = true;
-    this.worklogFacade.updateWorklog$(
-      this.worklog,
-      this.start,
-      this.durationMinutes * 60,
-      this.commentString
-    ).subscribe({
-      next: () => {
-        this.saving = false;
-        this.cancelEdit.emit();
-      },
-      error: () => {
-        this.saving = false;
-        this.cdr.detectChanges();
-      }
-    });
+    if (this.adding) {
+      this.worklogFacade.addWorklog$(this.worklog, this.start, this.durationMinutes * 60, this.commentString)
+        .subscribe({
+          next: () => this.close(),
+          complete: () => {
+            this.saving = false;
+            this.cdr.detectChanges();
+          }
+        });
+    } else {
+      this.worklogFacade.updateWorklog$(this.worklog, this.start, this.durationMinutes * 60, this.commentString)
+        .subscribe({
+          next: () => this.close(),
+          complete: () => {
+            this.saving = false;
+            this.cdr.detectChanges();
+          }
+        });
+    }
   }
 
   isDateVisible(date: Date): boolean {
     return date.getDay() >= this.visibleDaysStart && date.getDay() <= this.visibleDaysEnd;
+  }
+
+  selectIssue(issue: Issue): void {
+    if (this.worklog) {
+      this.worklog.issue = issue;
+      this.worklog.issueId = issue ? issue.id : null;
+    }
+    this.updatePanelHueSaturationAndIssueString(issue, '');
+  }
+
+  updatePanelHueSaturationAndIssueString(issue?: Issue, defaultIssueString: string = '···'): void {
+    this.panelHue = issue ? Math.round((Number(issue.fields.parent
+      ? issue.fields.parent.id
+      : issue.id) * 360 / 1.61803)) % 360 : 0;
+    this.panelSaturation = issue ? 50 : 0;
+    this.issueString = issue ? issue.key + ' - ' + issue.fields.summary : defaultIssueString;
+  }
+
+  close(): void {
+    this.cancelEdit.emit();
+    this.worklog = null;
   }
 }
