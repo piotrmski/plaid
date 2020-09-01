@@ -27,8 +27,9 @@
     z-index: 4;
   }
 
-  plaid-auth-status {
+  plaid-settings {
     margin-left: auto;
+    margin-right: 0;
   }
 
   plaid-zoom-controls {
@@ -46,7 +47,7 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .top-bar plaid-zoom-controls {
     &.outside-settings {
       display: none;
@@ -57,7 +58,7 @@
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 460px) {
   .top-bar > * {
     margin: 0;
   }

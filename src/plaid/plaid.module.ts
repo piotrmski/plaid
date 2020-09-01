@@ -24,6 +24,7 @@ import {ErrorModalComponent} from './components/connection-issue-resolver/error-
 import {IssuePickerCloudComponent} from './components/issue-picker-cloud/issue-picker-cloud.component';
 import {IssueDetailsComponent} from './components/issue-details/issue-details.component';
 import {IssueListItemComponent} from './components/issue-picker-cloud/issue-list-item/issue-list-item.component';
+import {AddButtonComponent} from './components/add-button/add-button.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {IssueListItemComponent} from './components/issue-picker-cloud/issue-list
     ErrorModalComponent,
     IssuePickerCloudComponent,
     IssueDetailsComponent,
-    IssueListItemComponent
+    IssueListItemComponent,
+    AddButtonComponent
   ],
   imports: [
     BrowserModule,

@@ -42,7 +42,7 @@
         class="delete-confirmation"
         [class.open]="deleteConfirmationOpen"
         (mouseleave)="deleteConfirmationOpen = false"
-      >
+      > <!-- TODO deleteConfirmationOpen = false should also happen when clicking outside od delete-confirmation area to support touch devices -->
         For sure?
         <a class="button" (click)="deleteConfirm()">Yes</a>
       </div>

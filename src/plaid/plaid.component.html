@@ -11,6 +11,10 @@
     [disabled]="!currentUser"
     [shortcutsDisabled]="connectionIssueModalVisible"
   ></plaid-refresh-button>
+  <plaid-add-button
+    [disabled]="!currentUser || !!grid.editedWorklog"
+    [gridComponent]="grid"
+  ></plaid-add-button>
   <plaid-zoom-controls
     class="outside-settings"
     (pixelsPerMinuteChange)="pixelsPerMinute = $event"
@@ -48,6 +52,7 @@
   ></plaid-auth-status>
 </div>
 <plaid-grid
+  #grid
   [pixelsPerMinute]="pixelsPerMinute"
   [worklogs]="worklogs"
   [dateRange]="visibleDateRange"

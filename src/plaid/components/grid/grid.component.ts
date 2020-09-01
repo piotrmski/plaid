@@ -304,9 +304,10 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.hostElement.nativeElement.scrollTop =
       (curTime.getHours() * 60 + curTime.getMinutes()) * this.pixelsPerMinute
       - this.hostElement.nativeElement.offsetHeight * .5;
-    const weekdayWidth: number = this.hostElement.nativeElement.scrollWidth / 7;
-    this.hostElement.nativeElement.scrollLeft = curTime.getDay() * weekdayWidth
-      - (this.hostElement.nativeElement.offsetWidth - weekdayWidth) * 0.5;
+    const weekdayWidth: number = (this.hostElement.nativeElement.scrollWidth - 30)
+      / (this.visibleDaysEnd - this.visibleDaysStart + 1);
+    this.hostElement.nativeElement.scrollLeft = (curTime.getDay() - this.visibleDaysStart) * weekdayWidth
+      - (this.hostElement.nativeElement.offsetWidth - weekdayWidth) * .5 + 30;
   }
 
   updateVisibleDays(): void {
@@ -373,5 +374,31 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   deleteWorklog(worklog: Worklog): void {
     this.worklogFacade.deleteWorklog(worklog);
+  }
+
+  addWorklogInTheMiddleOfView(): void {
+    const weekdayWidth: number = (this.hostElement.nativeElement.scrollWidth - 30)
+      / (this.visibleDaysEnd - this.visibleDaysStart + 1);
+    let dayIndex = Math.round((this.hostElement.nativeElement.scrollLeft - 30
+      + (this.hostElement.nativeElement.offsetWidth - weekdayWidth) * .5) / weekdayWidth);
+    if (dayIndex < 0) { // Sanity check
+      dayIndex = 0;
+    } else if (dayIndex >= this.days.length) {
+      dayIndex = this.days.length - 1;
+    }
+    const date = new Date(this.days[dayIndex])
+    const hour = 60; // minutes
+    const quarterHour = 15; // minutes
+    let minutes = (this.hostElement.nativeElement.scrollTop + this.hostElement.nativeElement.offsetHeight * .5)
+      / this.pixelsPerMinute - hour;
+    minutes = Math.round(minutes / quarterHour) * quarterHour;
+    if (minutes < 0) { // Sanity check
+      minutes = 0;
+    } else if (minutes > 23 * hour) {
+      minutes = 23 * hour
+    }
+    date.setHours(0, minutes);
+    this.editedWorklog = {started: date.getTime(), timeSpentSeconds: hour * 60};
+    this.cdr.detectChanges();
   }
 }
