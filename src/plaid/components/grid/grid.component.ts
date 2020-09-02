@@ -326,6 +326,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       // starting time in ascending order).
       this.days.filter(d => d < new Date() && d.getDay() >= this.workingDaysStart && d.getDay() <= this.workingDaysEnd)
         .forEach((day: Date, dayIndex: number) => {
+        dayIndex += this.workingDaysStart;
         this.addHintsSplitByDays[dayIndex].length = 0;
         if (this.authenticatedUser != null) {
           let gapStart: Date = new Date(day);
@@ -386,7 +387,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     } else if (dayIndex >= this.days.length) {
       dayIndex = this.days.length - 1;
     }
-    const date = new Date(this.days[dayIndex])
+    const date = new Date(this.days[dayIndex]);
     const hour = 60; // minutes
     const quarterHour = 15; // minutes
     let minutes = (this.hostElement.nativeElement.scrollTop + this.hostElement.nativeElement.offsetHeight * .5)
@@ -395,7 +396,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     if (minutes < 0) { // Sanity check
       minutes = 0;
     } else if (minutes > 23 * hour) {
-      minutes = 23 * hour
+      minutes = 23 * hour;
     }
     date.setHours(0, minutes);
     this.editedWorklog = {started: date.getTime(), timeSpentSeconds: hour * 60};
