@@ -34,7 +34,7 @@ export class IssuePickerCloudComponent implements OnInit {
   set open(open: boolean) {
     this._open = open;
     if (open) {
-      this.searchInput.nativeElement.focus();
+      setTimeout(() => this.searchInput.nativeElement.focus());
     } else {
       this.searchInput.nativeElement.value = '';
       this.searchResults = [];

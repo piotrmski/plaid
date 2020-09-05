@@ -15,7 +15,7 @@ export class IssueFacade {
   private suggestions: Issue[];
 
   private static stripSpecialChars(s: string): string {
-    return s.replace(/([+.,;?|*/%^$#@\[\]"'`])/g, ' ');
+    return s.replace(/([+.,;?|*/%^$#@\[\]"'`])/g, ' ').trim();
   }
 
   private static canPotentiallyBeIssueKey(maybeKey: string): boolean {
@@ -74,7 +74,7 @@ export class IssueFacade {
   }
 
   quickSearch$(query: string): Observable<Issue[]> {
-    if (query) {
+    if (IssueFacade.stripSpecialChars(query)) {
       if (IssueFacade.canPotentiallyBeIssueKey(query)) {
         return zip(
           this.issueApi.getIssue$(query),
