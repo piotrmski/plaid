@@ -1,7 +1,7 @@
 <a class="button both-color-schemes" (click)="decrementWeek()" [class.active]="decrementWeekButtonActive" title="Previous week (F4)">
   <svg class="icon"><use href="assets/icons.svg#arrow-left"></use></svg>
 </a>
-<a class="button both-color-schemes toggle-button" [class.active]="calendarOpen" (click)="calendarOpen = !calendarOpen" title="Select week">
+<a class="button both-color-schemes toggle-button" [class.active]="calendarOpen" (mousedown)="calendarOpen = !calendarOpen" title="Select week">
   {{ buttonText }}
 </a>
 <a class="button both-color-schemes" (click)="incrementWeek()" [class.active]="incrementWeekButtonActive" title="Next week (F6)">

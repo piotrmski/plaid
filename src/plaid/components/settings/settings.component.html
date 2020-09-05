@@ -1,4 +1,4 @@
-<a class="button both-color-schemes" (click)="dropdownOpen = !dropdownOpen" [class.active]="dropdownOpen" title="Settings">
+<a class="button both-color-schemes" (mousedown)="dropdownOpen = !dropdownOpen" [class.active]="dropdownOpen" title="Settings">
   <svg class="icon"><use href="assets/icons.svg#cog"></use></svg>
 </a>
 <div class="dropdown" [class.open]="dropdownOpen">

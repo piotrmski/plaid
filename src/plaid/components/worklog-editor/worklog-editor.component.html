@@ -1,12 +1,12 @@
 <div
   #wrapper
   class="wrapper"
-  [class.visible]="worklog"
+  [class.visible]="!!worklog"
   (mousedown)="handleClickOutsideEditor($event)"
   [class.dragging]="dragging"
   [class.stretching]="stretching"
 >
-  <div
+  <form
     class="panel-wrapper"
     [style.left.%]="panelOffsetLeft * 100"
     [style.top.px]="panelOffsetTop"
@@ -36,24 +36,28 @@ Ctrl to snap to 60 minutes."
         [value]="issueString"
         title=""
         class="tangible"
-        (focusin)="toggleIssuePicker()"
+        (mousedown)="toggleIssuePicker()"
+        [class.cloud-open]="issuePickerOpen"
       >
       <label>Date</label>
-      <a
+      <input
         #calendarToggle
         id="calendar-toggle"
-        class="button input tangible"
-        [class.active]="calendarOpen"
+        class="tangible"
+        [class.cloud-open]="calendarOpen"
         title=""
-        (click)="toggleCalendar()"
+        (mousedown)="toggleCalendar()"
         [class.disabled]="saving"
-      >{{ dateString }}</a>
+        [value]="dateString"
+        readonly
+      />
       <label>Comment</label>
       <textarea
         [(ngModel)]="commentString"
         title=""
         class="tangible space-under"
         [disabled]="saving"
+        [ngModelOptions]="{standalone: true}"
       ></textarea>
     </div>
 
@@ -109,7 +113,7 @@ Ctrl to snap to 60 minutes."
       [updateFavoritesAndSuggestionsAndEmitSuggestion]="updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.asObservable()"
       title=""
     ></plaid-issue-picker-cloud>
-  </div>
+  </form>
 
   <a
     class="button non-translucent"

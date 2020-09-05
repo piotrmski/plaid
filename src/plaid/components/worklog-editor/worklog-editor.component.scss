@@ -187,13 +187,12 @@
   }
 }
 
-#issue-picker-toggle:not([disabled]):focus {
-  box-shadow: none;
-}
+input.cloud-open {
+  box-shadow: none!important;
 
-#calendar-toggle {
-  text-align: left;
-  cursor: default;
+  &#calendar-toggle {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 }
 
 plaid-date-picker-cloud {

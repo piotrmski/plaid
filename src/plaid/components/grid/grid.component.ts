@@ -284,6 +284,9 @@ export class GridComponent implements OnInit, AfterViewInit {
     return this._authenticatedUser;
   }
 
+  @Input()
+  escapeKeyDisabled: boolean;
+
   constructor(
     public hostElement: ElementRef<HTMLElement>,
     private worklogFacade: WorklogFacade,

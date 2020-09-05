@@ -93,6 +93,9 @@ export class WorklogEditorComponent implements OnInit {
   @Input()
   gridElement: HTMLDivElement;
 
+  @Input()
+  escapeKeyDisabled: boolean;
+
   /**
    * In how many vertical pixels is one minute represented
    */
@@ -155,8 +158,10 @@ export class WorklogEditorComponent implements OnInit {
       if (this.adding) {
         this.updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.next();
       }
+      addEventListener('keydown', this.onKeydown);
     } else {
       this._worklog = null;
+      removeEventListener('keydown', this.onKeydown);
     }
   }
   get worklog(): Worklog {
@@ -207,6 +212,14 @@ export class WorklogEditorComponent implements OnInit {
   ngOnInit(): void {
     // Singleton component, no need to unsubscribe
     this.authFacade.getAuthenticatedUser$().subscribe(() => this.close());
+  }
+
+  onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      if (!this.escapeKeyDisabled) {
+        this.close();
+      }
+    }
   }
 
   /**

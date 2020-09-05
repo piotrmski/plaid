@@ -44,18 +44,28 @@ export class AuthStatusComponent {
   /**
    * Closes dropdown menu, if user clicked anywhere outside it.
    */
-  onDocumentClick: (event: MouseEvent) => void = (event: MouseEvent) => {
+  onMousedown: (event: MouseEvent) => void = (event: MouseEvent) => {
     if (!(this.ref.nativeElement as Node).contains(event.target as Node)) {
       this.dropdownOpen = false;
       this.cdr.detectChanges();
     }
   }
+
+  onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      this.dropdownOpen = false;
+      this.cdr.detectChanges();
+    }
+  }
+
   set dropdownOpen(value: boolean) {
     this._dropdownOpen = value;
     if (value) {
-      addEventListener('click', this.onDocumentClick);
+      addEventListener('mousedown', this.onMousedown);
+      addEventListener('keydown', this.onKeydown);
     } else {
-      removeEventListener('click', this.onDocumentClick);
+      removeEventListener('mousedown', this.onMousedown);
+      removeEventListener('keydown', this.onKeydown);
     }
   }
   get dropdownOpen(): boolean {
