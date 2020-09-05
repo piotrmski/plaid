@@ -327,21 +327,21 @@ export class GridComponent implements OnInit, AfterViewInit {
     if (this.days && this.workingHoursStartMinutes != null && this.workingHoursEndMinutes != null) {
       // Assumption is made that this.worklogsSplitByDays is what it's supposed to be (worklogs there are sorted by
       // starting time in ascending order).
-      this.days.filter(d => d < new Date() && d.getDay() >= this.workingDaysStart && d.getDay() <= this.workingDaysEnd)
-        .forEach((day: Date, dayIndex: number) => {
-        dayIndex += this.workingDaysStart;
-        this.addHintsSplitByDays[dayIndex].length = 0;
-        if (this.authenticatedUser != null) {
-          let gapStart: Date = new Date(day);
-          let gapEnd: Date;
-          this.worklogsSplitByDays[dayIndex].forEach(worklog => {
-            gapEnd = new Date(worklog.started);
+      this.days.filter(d => d < new Date()).forEach((day: Date, dayIndex: number) => {
+        if (day.getDay() >= this.workingDaysStart && day.getDay() <= this.workingDaysEnd) {
+          this.addHintsSplitByDays[dayIndex].length = 0;
+          if (this.authenticatedUser != null) {
+            let gapStart: Date = new Date(day);
+            let gapEnd: Date;
+            this.worklogsSplitByDays[dayIndex].forEach(worklog => {
+              gapEnd = new Date(worklog.started);
+              this.addAddHint(gapStart, gapEnd, day, dayIndex);
+              gapStart = new Date(gapEnd.getTime() + worklog.timeSpentSeconds * 1000);
+            });
+            gapEnd = new Date(day);
+            gapEnd.setHours(0, this.workingHoursEndMinutes);
             this.addAddHint(gapStart, gapEnd, day, dayIndex);
-            gapStart = new Date(gapEnd.getTime() + worklog.timeSpentSeconds * 1000);
-          });
-          gapEnd = new Date(day);
-          gapEnd.setHours(0, this.workingHoursEndMinutes);
-          this.addAddHint(gapStart, gapEnd, day, dayIndex);
+          }
         }
       });
     }
