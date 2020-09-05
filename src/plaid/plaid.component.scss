@@ -27,9 +27,8 @@
     z-index: 4;
   }
 
-  plaid-settings {
-    margin-left: auto;
-    margin-right: 0;
+  plaid-add-button {
+    margin-right: auto;
   }
 
   plaid-zoom-controls {
@@ -47,7 +46,7 @@
   }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 555px) {
   .top-bar plaid-zoom-controls {
     &.outside-settings {
       display: none;
@@ -58,7 +57,7 @@
   }
 }
 
-@media (max-width: 460px) {
+@media (max-width: 470px) {
   .top-bar > * {
     margin: 0;
   }
