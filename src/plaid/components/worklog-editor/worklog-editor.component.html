@@ -38,6 +38,7 @@ Ctrl to snap to 60 minutes."
         class="tangible"
         (mousedown)="toggleIssuePicker()"
         [class.cloud-open]="issuePickerOpen"
+        [tabIndex]="shouldTabIndexBe0() && !worklog?.id ? 0 : -1"
       >
       <label>Date</label>
       <input
@@ -47,10 +48,11 @@ Ctrl to snap to 60 minutes."
         [class.cloud-open]="calendarOpen"
         title=""
         (mousedown)="toggleCalendar()"
-        [class.disabled]="saving"
+        [disabled]="saving"
         [value]="dateString"
         readonly
-      />
+        [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
+      >
       <label>Comment</label>
       <textarea
         [(ngModel)]="commentString"
@@ -58,6 +60,7 @@ Ctrl to snap to 60 minutes."
         class="tangible space-under"
         [disabled]="saving"
         [ngModelOptions]="{standalone: true}"
+        [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
       ></textarea>
     </div>
 
@@ -68,6 +71,7 @@ Ctrl to snap to 60 minutes."
         [disabled]="saving || !worklog || !worklog.issueId"
         title=""
         (click)="save()"
+        [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
       >
         <span *ngIf="saving" class="spinner"></span>
         <ng-container *ngIf="!saving">{{ this.adding ? 'Add' : 'Save' }}</ng-container>
@@ -78,6 +82,7 @@ Ctrl to snap to 60 minutes."
         (click)="close()"
         [disabled]="saving"
         title=""
+        [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
       >Cancel</button>
     </div>
 

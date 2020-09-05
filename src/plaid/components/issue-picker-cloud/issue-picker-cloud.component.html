@@ -1,5 +1,11 @@
 <div class="issue-picker" [class.open]="open">
-  <input class="search" #searchInput placeholder="Search" (input)="inputSearch(searchInput.value);">
+  <input
+    class="search"
+    #searchInput
+    placeholder="Search"
+    (input)="inputSearch(searchInput.value);"
+    [tabIndex]="open ? 0 : -1"
+  >
   <span class="spinner" *ngIf="searching"></span>
   <div class="scrollable-area" *ngIf="searchInput.value">
     <div class="section-header">Search results</div>

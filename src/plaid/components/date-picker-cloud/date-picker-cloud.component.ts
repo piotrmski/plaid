@@ -79,12 +79,14 @@ export class DatePickerCloudComponent {
     this.month = new Date(this.month.getFullYear(), this.month.getMonth() + 1);
   }
 
-  selectDate(date: Date): void {
+  selectDate(date: Date, close: boolean = true): void {
     if (this.isDateSelectable(date)) {
       this.selectedDate = date;
       this.selectedDateChange.emit(date);
-      this.open = false;
-      this.openChange.emit(false);
+      if (close) {
+        this.open = false;
+        this.openChange.emit(false);
+      }
     }
   }
 

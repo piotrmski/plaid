@@ -76,13 +76,13 @@ export class WorklogEditorComponent implements OnInit {
   wrapper: ElementRef<HTMLDivElement>;
 
   @ViewChild('calendarToggle')
-  calendarToggle: ElementRef<HTMLAnchorElement>;
+  calendarToggle: ElementRef<HTMLInputElement>;
 
   @ViewChild(DatePickerCloudComponent, {read: ViewContainerRef})
   calendarCloud: ViewContainerRef;
 
   @ViewChild('issuePickerToggle')
-  issuePickerToggle: ElementRef<HTMLAnchorElement>;
+  issuePickerToggle: ElementRef<HTMLInputElement>;
 
   @ViewChild(IssuePickerCloudComponent, {read: ViewContainerRef})
   issuePickerCloud: ViewContainerRef;
@@ -215,11 +215,30 @@ export class WorklogEditorComponent implements OnInit {
   }
 
   onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      if (!this.escapeKeyDisabled) {
-        this.close();
-      }
+    switch (event.key) {
+      case 'Escape':
+        if (!this.escapeKeyDisabled) {
+          if (this.calendarOpen) {
+            this.toggleCalendar();
+            this.calendarToggle.nativeElement.focus();
+          } else if (this.issuePickerOpen) {
+            this.toggleIssuePicker();
+            this.issuePickerToggle.nativeElement.focus();
+          } else {
+            this.close();
+          }
+        }
+        break;
+      case ' ':
+        if (document.activeElement === this.calendarToggle.nativeElement) {
+          this.toggleCalendar();
+          event.preventDefault();
+        } else if (document.activeElement === this.issuePickerToggle.nativeElement) {
+          this.toggleIssuePicker();
+          event.preventDefault();
+        }
     }
+    this.cdr.detectChanges();
   }
 
   /**
@@ -540,5 +559,9 @@ export class WorklogEditorComponent implements OnInit {
   close(): void {
     this.cancelEdit.emit();
     this.worklog = null;
+  }
+
+  shouldTabIndexBe0(): boolean {
+    return !!this.worklog && !this.calendarOpen && !this.issuePickerOpen && !this.saving;
   }
 }
