@@ -1,5 +1,6 @@
 <div
   class="panel-outer"
+  [class.add-hint]="!worklog.id"
   [class.too-low]="tooLow"
   [class.undersized]="undersized"
   [ngStyle]="{
@@ -13,57 +14,51 @@
     #panelInner
     class="panel-inner"
     [class.currently-edited]="currentlyEdited"
-    [ngStyle]="{
+    [ngStyle]="worklog.id ? {
       maxHeight: panelHeight + 1 + 'px',
       backgroundColor: 'hsl(' + panelHue + ', ' + (darkMode ? 40 : 60 ) + '%, ' + (darkMode ? 20 : 92 ) + '%)',
       borderColor: 'hsl(' + panelHue + ', 50%, ' + (darkMode ? 40 : 60 ) + '%)'
-    }"
+    } : {}"
   >
-    <div class="panel-content">
+    <div class="panel-content" *ngIf="worklog.id">
       <a
-        class="button edit-button"
-        title="Edit log"
-        (click)="edit.emit()"
+        class="button worklog-action-button edit-button"
+        [title]="worklog._deleting ? '' : 'Edit log'"
+        (click)="editClick()"
+        [class.disabled]="worklog._deleting"
       >
-        <svg class="icon"><use href="assets/icons.svg#edit"></use></svg>
+        <svg class="icon"><use href="assets/icons.svg#pen"></use></svg>
       </a>
-      <p
-        class="parent-name"
-        *ngIf="worklog.issue.fields.parent"
-        [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.fields.parent.key"
-        title="Show parent issue"
+      <a
+        class="button worklog-action-button delete-button"
+        [title]="worklog._deleting ? 'Deleting...' : 'Delete log'"
+        (click)="deleteClick()"
+        [class.disabled]="worklog._deleting"
       >
-        <svg class="icon-parent"><use href="assets/icons.svg#parent"></use></svg>
-        <b>{{ worklog.issue.fields.parent.key }}</b>
-        {{ worklog.issue.fields.parent.fields.summary }}
-      </p>
-      <p
-        class="name"
-        [plaidExtHref]="jiraURL + '/browse/' + worklog.issue.key"
-        title="Show issue"
-      >
-        <b>{{ worklog.issue.key }}</b>
-        {{ worklog.issue.fields.summary }}
-      </p>
-      <p class="fields">
-        <img
-          *ngIf="worklog.issue.fields.issuetype"
-          [src]="worklog.issue.fields.issuetype.iconUrl"
-          [title]="worklog.issue.fields.issuetype.name"
-          class="field-icon"
-        >
-        <img
-          *ngIf="worklog.issue.fields.priority"
-          [src]="worklog.issue.fields.priority.iconUrl"
-          [title]="worklog.issue.fields.priority.name"
-          class="field-icon"
-        >
-        {{ components }}
-      </p>
+        <span *ngIf="worklog._deleting" class="spinner"></span>
+        <svg *ngIf="!worklog._deleting" class="icon"><use href="assets/icons.svg#trash"></use></svg>
+      </a>
+      <div
+        class="delete-confirmation"
+        [class.open]="deleteConfirmationOpen"
+        (mouseleave)="deleteConfirmationOpen = false"
+      > <!-- TODO deleteConfirmationOpen = false should also happen when clicking outside od delete-confirmation area to support touch devices -->
+        For sure?
+        <a class="button" (click)="deleteConfirm()">Yes</a>
+      </div>
+      <plaid-issue-details [jiraURL]="jiraURL" [issue]="worklog.issue"></plaid-issue-details>
       <p class="time">
         {{ timeRange }}
       </p>
       <pre class="comment">{{ worklog.comment?.trim() }}</pre>
+    </div>
+    <div class="panel-content" *ngIf="!worklog.id">
+      <a
+        class="button add-button"
+        title="Add log"
+        (click)="edit.emit()"
+        [style.top.px]="panelHeight / 2 - 15"
+      ><svg class="icon"><use href="assets/icons.svg#plus"></use></svg></a>
     </div>
   </div>
 </div>

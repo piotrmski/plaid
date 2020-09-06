@@ -21,7 +21,7 @@ export class DatePickerCloudComponent {
   _month: Date;
   today: Date;
   days: Date[][];
-  _calendarOpen = false;
+  _open = false;
 
   @Input()
   selectedDate: Date;
@@ -33,19 +33,25 @@ export class DatePickerCloudComponent {
    * Open or close the calendar. Opening it will set the month to one which the selected date belongs to.
    */
   @Input()
-  set calendarOpen(open: boolean) {
-    this._calendarOpen = open;
+  set open(open: boolean) {
+    this._open = open;
     if (open) {
       const month = new Date(this.selectedDate);
       month.setDate(1);
       this.month = month;
       const curTime: Date = new Date();
       this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
+      addEventListener('keydown', this.onKeydown);
+    } else {
+      removeEventListener('keydown', this.onKeydown);
     }
   }
-  get calendarOpen(): boolean {
-    return this._calendarOpen;
+  get open(): boolean {
+    return this._open;
   }
+
+  @Input()
+  flipped = false;
 
   @Input()
   selectableDaysStart: number;
@@ -54,7 +60,13 @@ export class DatePickerCloudComponent {
   selectableDaysEnd: number;
 
   @Output()
-  calendarOpenChange = new EventEmitter<boolean>();
+  openChange = new EventEmitter<boolean>();
+
+  /**
+   * Whether keyboard navigation should be disabled due to modal or another cloud being open.
+   */
+  @Input()
+  keysDisabled: boolean;
 
   readonly months: string[] = Calendar.monthsShort;
 
@@ -68,6 +80,32 @@ export class DatePickerCloudComponent {
     return this._month;
   }
 
+  /**
+   * When the cloud is open, changes the selected date after user presses an arrow key on their keyboard.
+   */
+  onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
+    if (!this.keysDisabled && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+      event.preventDefault();
+      const newDate = new Date(this.selectedDate);
+      switch (event.key) {
+        case 'ArrowUp':
+        case 'ArrowDown':
+          newDate.setDate(newDate.getDate() + (event.key === 'ArrowUp' ? -7 : 7));
+          break;
+        case 'ArrowLeft':
+        case 'ArrowRight':
+          do {
+            newDate.setDate(newDate.getDate() + (event.key === 'ArrowLeft' ? -1 : 1));
+          } while (newDate.getDay() < this.selectableDaysStart || newDate.getDay() > this.selectableDaysEnd);
+          break;
+      }
+      this.selectDate(newDate, false);
+      const month = new Date(newDate);
+      month.setDate(1);
+      this.month = month;
+    }
+  }
+
   decrementMonth(): void {
     this.month = new Date(this.month.getFullYear(), this.month.getMonth() - 1);
   }
@@ -76,12 +114,14 @@ export class DatePickerCloudComponent {
     this.month = new Date(this.month.getFullYear(), this.month.getMonth() + 1);
   }
 
-  selectDate(date: Date): void {
+  selectDate(date: Date, close: boolean = true): void {
     if (this.isDateSelectable(date)) {
       this.selectedDate = date;
       this.selectedDateChange.emit(date);
-      this.calendarOpen = false;
-      this.calendarOpenChange.emit(false);
+      if (close) {
+        this.open = false;
+        this.openChange.emit(false);
+      }
     }
   }
 

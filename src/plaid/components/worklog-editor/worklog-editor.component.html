@@ -1,12 +1,12 @@
 <div
   #wrapper
   class="wrapper"
-  [class.visible]="worklog"
+  [class.visible]="!!worklog"
   (mousedown)="handleClickOutsideEditor($event)"
   [class.dragging]="dragging"
   [class.stretching]="stretching"
 >
-  <div
+  <form
     class="panel-wrapper"
     [style.left.%]="panelOffsetLeft * 100"
     [style.top.px]="panelOffsetTop"
@@ -24,32 +24,43 @@ Ctrl to snap to 60 minutes."
     <div
       #panel
       class="panel"
-      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      [style.border-color]="'hsl(' + panelHue + ', ' + panelSaturation + '%, 50%)'"
       (mousedown)="dragStart($event)"
     >
       <label>Issue</label>
       <input
-        disabled
+        #issuePickerToggle
+        id="issue-picker-toggle"
+        readonly
+        [disabled]="worklog?.id || saving"
         [value]="issueString"
         title=""
         class="tangible"
+        (mousedown)="toggleIssuePicker()"
+        [class.cloud-open]="issuePickerOpen"
+        [tabIndex]="shouldTabIndexBe0() && !worklog?.id ? 0 : -1"
       >
       <label>Date</label>
-      <a
+      <input
         #calendarToggle
-        id="date-input"
-        class="button input tangible"
-        [class.active]="calendarOpen"
+        id="calendar-toggle"
+        class="tangible"
+        [class.cloud-open]="calendarOpen"
         title=""
-        (click)="toggleCalendar()"
-        [class.disabled]="saving"
-      >{{ dateString }}</a>
+        (mousedown)="toggleCalendar()"
+        [disabled]="saving"
+        [value]="dateString"
+        readonly
+        [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
+      >
       <label>Comment</label>
       <textarea
         [(ngModel)]="commentString"
         title=""
         class="tangible space-under"
         [disabled]="saving"
+        [ngModelOptions]="{standalone: true}"
+        [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
       ></textarea>
     </div>
 
@@ -57,30 +68,32 @@ Ctrl to snap to 60 minutes."
       <button
         id="save-button"
         class="button primary tangible"
-        [disabled]="saving"
+        [disabled]="saving || !worklog || !worklog.issueId"
         title=""
         (click)="save()"
+        [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
       >
         <span *ngIf="saving" class="spinner"></span>
-        <ng-container *ngIf="!saving">Save</ng-container>
+        <ng-container *ngIf="!saving">{{ this.adding ? 'Add' : 'Save' }}</ng-container>
       </button>
       <button
         class="button tangible"
         [class.non-translucent]="panelHeight < 200"
-        (click)="cancelEdit.emit()"
+        (click)="close()"
         [disabled]="saving"
         title=""
+        [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
       >Cancel</button>
     </div>
 
     <div
       class="handle-top"
-      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      [style.border-color]="'hsl(' + panelHue + ', ' + panelSaturation + '%, 50%)'"
       (mousedown)="stretchTopStart($event)"
     ></div>
     <div
       class="handle-bottom"
-      [style.border-color]="'hsl(' + panelHue + ', 50%, 50%)'"
+      [style.border-color]="'hsl(' + panelHue + ', ' + panelSaturation + '%, 50%)'"
       (mousedown)="stretchBottomStart($event)"
     ></div>
 
@@ -88,16 +101,26 @@ Ctrl to snap to 60 minutes."
     <div class="end-time">{{ endTimeString }}</div>
 
     <plaid-date-picker-cloud
-      [(calendarOpen)]="calendarOpen"
+      [(open)]="calendarOpen"
       [style.top.px]="calendarOffsetTop"
-      [class.flip]="flipCalendar"
+      [flipped]="flipCalendar"
       [selectedDate]="date"
       (selectedDateChange)="selectDate($event)"
       title=""
       [selectableDaysStart]="visibleDaysStart"
       [selectableDaysEnd]="visibleDaysEnd"
+      [keysDisabled]="keysDisabled"
     ></plaid-date-picker-cloud>
-  </div>
+
+    <plaid-issue-picker-cloud
+      [(open)]="issuePickerOpen"
+      [style.top.px]="issuePickerOffsetTop"
+      (issueChange)="selectIssue($event)"
+      [updateFavoritesAndSuggestionsAndEmitSuggestion]="updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.asObservable()"
+      title=""
+      [keysDisabled]="keysDisabled"
+    ></plaid-issue-picker-cloud>
+  </form>
 
   <a
     class="button non-translucent"

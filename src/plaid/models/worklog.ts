@@ -9,13 +9,14 @@ export interface Worklog {
   created?: string;
   updated?: string;
   visibility?: any;
-  started?: string;
+  started?: string | number;
   timeSpent?: string;
   timeSpentSeconds?: number;
   id?: string;
   issueId?: string;
   issue?: Issue;
 
-  _column: number;
-  _columns: number;
+  _column?: number;
+  _columns?: number;
+  _deleting?: boolean;
 }

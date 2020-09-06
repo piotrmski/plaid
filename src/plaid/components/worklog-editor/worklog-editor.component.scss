@@ -181,11 +181,18 @@
 
 #save-button {
   min-width: 4em;
+
+  .spinner {
+    color: var(--color-primary-5)
+  }
 }
 
-#date-input {
-  text-align: left;
-  cursor: default;
+input.cloud-open {
+  box-shadow: none!important;
+
+  &#calendar-toggle {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 }
 
 plaid-date-picker-cloud {

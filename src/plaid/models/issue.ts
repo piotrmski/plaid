@@ -17,6 +17,12 @@ export interface Issue {
       name: string;
     };
     summary?: string;
+    status?: {
+      name: string,
+      statusCategory?: {
+        colorName: string;
+      }
+    }
   };
   renderedFields?: {};
   properties?: any;
@@ -28,4 +34,6 @@ export interface Issue {
   changelog?: any;
   versionedRepresentations?: {};
   fieldsToInclude?: any;
+
+  _favorite?: boolean;
 }

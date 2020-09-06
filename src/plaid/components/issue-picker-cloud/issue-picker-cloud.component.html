@@ -1,0 +1,38 @@
+<div class="issue-picker" [class.open]="open">
+  <input
+    class="search"
+    #searchInput
+    placeholder="Search"
+    (input)="inputSearch(searchInput.value);"
+    [tabIndex]="open ? 0 : -1"
+  >
+  <span class="spinner" *ngIf="searching"></span>
+  <div class="scrollable-area" *ngIf="searchInput.value">
+    <div class="section-header">Search results</div>
+    <plaid-issue-list-item
+      *ngFor="let res of searchResults"
+      [issue]="res"
+      (issueSelected)="issueSelected(res);"
+      (favoriteChange)="favoriteChange(res, $event)"
+      [keyboardNavigationEnabled]="open && !keysDisabled"
+    ></plaid-issue-list-item>
+  </div>
+  <div class="scrollable-area" *ngIf="!searchInput.value">
+    <div class="section-header" *ngIf="favorites.length > 0">Favorites</div>
+    <plaid-issue-list-item
+      *ngFor="let res of favorites"
+      [issue]="res"
+      (issueSelected)="issueSelected(res);"
+      (favoriteChange)="favoriteChange(res, $event)"
+      [keyboardNavigationEnabled]="open && !keysDisabled"
+    ></plaid-issue-list-item>
+    <div class="section-header" *ngIf="suggestionsWithoutFavorites.length > 0">Suggestions</div>
+    <plaid-issue-list-item
+      *ngFor="let res of suggestionsWithoutFavorites"
+      [issue]="res"
+      (issueSelected)="issueSelected(res);"
+      (favoriteChange)="favoriteChange(res, $event)"
+      [keyboardNavigationEnabled]="open && !keysDisabled"
+    ></plaid-issue-list-item>
+  </div>
+</div>

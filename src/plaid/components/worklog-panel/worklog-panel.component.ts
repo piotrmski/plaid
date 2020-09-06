@@ -16,8 +16,8 @@ import {Format} from '../../helpers/format';
 import {AuthFacade} from '../../core/auth/auth.facade';
 
 /**
- * Somewhat dumb component, present a panel representing a work log entry, makes use of its own service to manage
- * visual aspects of all class instances at once.
+ * Somewhat dumb component, present a panel representing a work log entry, or a gap prompting user to add a work log
+ * entry. Makes use of its own service to manage visual aspects of all class instances at once.
  */
 @Component({
   selector: 'plaid-worklog-panel',
@@ -39,15 +39,21 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   panelOffsetTop: number;
   panelOffsetLeft: number;
   panelHue: number;
-  components: string;
   timeRange: string;
   _darkMode: boolean;
+  deleteConfirmationOpen = false;
 
   /**
    * Emits when user presses edit button.
    */
   @Output()
   edit = new EventEmitter<void>();
+
+  /**
+   * Emits when user presses delete button and confirms their action.
+   */
+  @Output()
+  delete = new EventEmitter<void>();
 
   /**
    * Presented work log entry. Setting it will set the panel's initial size and position on the grid as well as its
@@ -60,12 +66,11 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     this.date = new Date(this.worklog.started);
     this.panelWidth = 1 / this.worklog._columns;
     this.panelOffsetLeft = this.worklog._column * this.panelWidth;
-    this.panelHue = Math.round((Number(this.worklog.issue.fields.parent
-      ? this.worklog.issue.fields.parent.id
-      : this.worklog.issue.id) * 360 / 1.61803)) % 360;
-    this.components = this.worklog.issue.fields.components
-      ? this.worklog.issue.fields.components.map(c => c.name).join(', ')
-      : null;
+    if (this.worklog.issue) {
+      this.panelHue = Math.round((Number(this.worklog.issue.fields.parent
+        ? this.worklog.issue.fields.parent.id
+        : this.worklog.issue.id) * 360 / 1.61803)) % 360;
+    }
     this.computeHeightAndOffset();
     this.computeTimeRange();
     this.manager.scheduleCheckSizeAndPosition();
@@ -106,7 +111,7 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('panelInner', { static: true })
-  panelInner: ElementRef;
+  panelInner: ElementRef<HTMLDivElement>;
 
   constructor(
     private authFacade: AuthFacade,
@@ -156,10 +161,28 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
    * down. This method is executed asynchronously by the manager and therefore needs to invoke change detector.
    */
   checkSizeAndPosition(): void {
-    if (!this.viewDestroyed) {
+    if (!this.viewDestroyed && this.worklog.issue) {
       this.undersized = this.panelInner.nativeElement.scrollHeight > this.panelHeight;
       this.tooLow = this.panelInner.nativeElement.scrollHeight + 1 > this.maxHeight;
       this.cdr.markForCheck();
     }
+  }
+
+  editClick(): void {
+    if (!this.worklog._deleting) {
+      this.edit.emit();
+    }
+  }
+
+  deleteClick(): void {
+    if (!this.worklog._deleting) {
+      this.deleteConfirmationOpen = true;
+    }
+  }
+
+  deleteConfirm(): void {
+    this.deleteConfirmationOpen = false;
+    this.worklog._deleting = true;
+    this.delete.emit();
   }
 }
