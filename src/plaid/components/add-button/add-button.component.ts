@@ -1,6 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GridComponent } from '../grid/grid.component';
 
+/**
+ * Dumb component, responsible for presenting "Add worklog" button and delegating the action to the grid component.
+ */
 @Component({
   selector: 'plaid-add-button',
   templateUrl: './add-button.component.html'

@@ -51,6 +51,9 @@ export class AuthStatusComponent {
     }
   }
 
+  /**
+   * Closes dropdown menu, if user presses Escape.
+   */
   onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       this.dropdownOpen = false;

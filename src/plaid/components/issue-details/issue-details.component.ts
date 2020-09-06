@@ -1,6 +1,9 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Issue} from '../../models/issue';
 
+/**
+ * Dumb component presenting the details of an issue for the worklog panel and issue selector.
+ */
 @Component({
   selector: 'plaid-issue-details',
   templateUrl: './issue-details.component.html',

@@ -62,6 +62,9 @@ export class DatePickerCloudComponent {
   @Output()
   openChange = new EventEmitter<boolean>();
 
+  /**
+   * Whether keyboard navigation should be disabled due to modal or another cloud being open.
+   */
   @Input()
   keysDisabled: boolean;
 
@@ -77,6 +80,9 @@ export class DatePickerCloudComponent {
     return this._month;
   }
 
+  /**
+   * When the cloud is open, changes the selected date after user presses an arrow key on their keyboard.
+   */
   onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
     if (!this.keysDisabled && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
       event.preventDefault();

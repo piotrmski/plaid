@@ -13,6 +13,10 @@ import {Observable, Subject} from 'rxjs';
 import {IssueFacade} from '../../core/issue/issue.facade';
 import {debounceTime, switchMap, tap} from 'rxjs/operators';
 
+/**
+ * Presents a dropdown listing recent and favorite issues, searches through all issues, gives ability to add and remove
+ * favorite issues, delegates selected issue to parent component.
+ */
 @Component({
   selector: 'plaid-issue-picker-cloud',
   templateUrl: './issue-picker-cloud.component.html',
@@ -53,6 +57,9 @@ export class IssuePickerCloudComponent implements OnInit {
   @Input()
   updateFavoritesAndSuggestionsAndEmitSuggestion: Observable<void>;
 
+  /**
+   * Whether keyboard navigation should be disabled due to modal or another cloud being open.
+   */
   @Input()
   keysDisabled: boolean;
 

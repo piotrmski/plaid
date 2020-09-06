@@ -284,6 +284,9 @@ export class GridComponent implements OnInit, AfterViewInit {
     return this._authenticatedUser;
   }
 
+  /**
+   * Whether keyboard navigation on the worklog editor should be disabled due to modal or a cloud being open.
+   */
   @Input()
   keysDisabled: boolean;
 
@@ -293,7 +296,9 @@ export class GridComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  // Update add hints every minute to keep up with current time marker
+  /**
+   * Update add hints every minute to keep up with current time marker.
+   */
   ngOnInit(): void {
     // Singleton component, no need to clear interval
     setInterval(() => this.updateAddHints(), 60000);
@@ -323,30 +328,37 @@ export class GridComponent implements OnInit, AfterViewInit {
     return JSON.stringify(item);
   }
 
+  /**
+   * Clears existing Add hints and adds them in eligible gaps between worklogs. A gap must fall in the working time
+   * window and before present time.
+   */
   updateAddHints(): void {
     if (this.days && this.workingHoursStartMinutes != null && this.workingHoursEndMinutes != null) {
       // Assumption is made that this.worklogsSplitByDays is what it's supposed to be (worklogs there are sorted by
       // starting time in ascending order).
-      this.days.filter(d => d < new Date()).forEach((day: Date, dayIndex: number) => {
-        if (day.getDay() >= this.workingDaysStart && day.getDay() <= this.workingDaysEnd) {
-          this.addHintsSplitByDays[dayIndex].length = 0;
-          if (this.authenticatedUser != null) {
-            let gapStart: Date = new Date(day);
-            let gapEnd: Date;
-            this.worklogsSplitByDays[dayIndex].forEach(worklog => {
-              gapEnd = new Date(worklog.started);
-              this.addAddHint(gapStart, gapEnd, day, dayIndex);
-              gapStart = new Date(gapEnd.getTime() + worklog.timeSpentSeconds * 1000);
-            });
-            gapEnd = new Date(day);
-            gapEnd.setHours(0, this.workingHoursEndMinutes);
+      this.days.forEach((day: Date, dayIndex: number) => {
+        this.addHintsSplitByDays[dayIndex].length = 0;
+        if (this.authenticatedUser != null && day.getDay() >= this.workingDaysStart &&
+          day.getDay() <= this.workingDaysEnd && day < new Date()) {
+          let gapStart: Date = new Date(day);
+          let gapEnd: Date;
+          this.worklogsSplitByDays[dayIndex].forEach(worklog => {
+            gapEnd = new Date(worklog.started);
             this.addAddHint(gapStart, gapEnd, day, dayIndex);
-          }
+            gapStart = new Date(gapEnd.getTime() + worklog.timeSpentSeconds * 1000);
+          });
+          gapEnd = new Date(day);
+          gapEnd.setHours(0, this.workingHoursEndMinutes);
+          this.addAddHint(gapStart, gapEnd, day, dayIndex);
         }
       });
     }
   }
 
+  /**
+   * Adds an Add hint trimming the start and end of the gap to the eligible window. The added hint will fit in the
+   * working window and not exceed present time rounded to the nearest 5 minutes.
+   */
   addAddHint(gapStart: Date, gapEnd: Date, day: Date, dayIndex: number): void {
     const oneday = 86400000; // ms
     if (day.getTime() - gapStart.getTime() < oneday && day.getTime() - gapEnd.getTime() < oneday) {
@@ -380,6 +392,10 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.worklogFacade.deleteWorklog(worklog);
   }
 
+  /**
+   * Finds a 1-hour long period in the middle of the visible portion of the grid, rounds the start time to 15 minutes
+   * and brings up worklog editor in that period.
+   */
   addWorklogInTheMiddleOfView(): void {
     const weekdayWidth: number = (this.hostElement.nativeElement.scrollWidth - 30)
       / (this.visibleDaysEnd - this.visibleDaysStart + 1);

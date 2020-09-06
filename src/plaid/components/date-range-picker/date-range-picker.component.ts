@@ -124,6 +124,9 @@ export class DateRangePickerComponent implements OnInit {
     }
   }
 
+  /**
+   * Closes dropdown, if user presses Escape.
+   */
   onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       this.calendarOpen = false;

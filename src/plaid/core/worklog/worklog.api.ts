@@ -127,6 +127,9 @@ export class WorklogApi {
     return this.http.put<Worklog>(url, body);
   }
 
+  /**
+   * Deletes work log entry and returns observable emitting when the deletion finishes.
+   */
   deleteWorklog$(issueId: string, worklogId: string): Observable<void> {
     return this.http.delete<void>(this.deleteWorklogUrl.replace('{issueIdOrKey}', issueId).replace('{id}', worklogId));
   }

@@ -93,6 +93,9 @@ export class WorklogEditorComponent implements OnInit {
   @Input()
   gridElement: HTMLDivElement;
 
+  /**
+   * Whether keyboard navigation should be disabled due to modal or a cloud being open.
+   */
   @Input()
   keysDisabled: boolean;
 
@@ -214,6 +217,10 @@ export class WorklogEditorComponent implements OnInit {
     this.authFacade.getAuthenticatedUser$().subscribe(() => this.close());
   }
 
+  /**
+   * Handles keyboard navigation in the editor. Pressing space when focused on date or issue field opens respective
+   * cloud, pressing escape closes a cloud or the editor.
+   */
   onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
     if (!this.keysDisabled) {
       switch (event.key) {
@@ -511,7 +518,7 @@ export class WorklogEditorComponent implements OnInit {
   }
 
   /**
-   * Updates worklog on the server and closes the editor if update was successful
+   * Updates worklog on the server (or adds new to the server) and closes the editor if update was successful
    */
   save(): void {
     this.saving = true;
@@ -540,6 +547,9 @@ export class WorklogEditorComponent implements OnInit {
     return date.getDay() >= this.visibleDaysStart && date.getDay() <= this.visibleDaysEnd;
   }
 
+  /**
+   * Handles issue selection action from issue picker.
+   */
   selectIssue(issue: Issue): void {
     if (this.worklog) {
       this.worklog.issue = issue;
@@ -561,6 +571,9 @@ export class WorklogEditorComponent implements OnInit {
     this.worklog = null;
   }
 
+  /**
+   * Whether editor fields should be traversable with Tab.
+   */
   shouldTabIndexBe0(): boolean {
     return !!this.worklog && !this.calendarOpen && !this.issuePickerOpen && !this.saving && !this.keysDisabled;
   }

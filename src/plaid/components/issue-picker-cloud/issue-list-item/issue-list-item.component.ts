@@ -1,6 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Issue} from '../../../models/issue';
 
+/**
+ * An item on a list of issues in the issue picker. Presents issue details and favorite button, delegates selection of
+ * the item and adding/removing favorite status.
+ */
 @Component({
   selector: 'plaid-issue-list-item',
   templateUrl: './issue-list-item.component.html',
