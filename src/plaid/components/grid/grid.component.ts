@@ -285,10 +285,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   @Input()
-  escapeKeyDisabled: boolean;
-
-  @Input()
-  allKeysDisabled: boolean;
+  keysDisabled: boolean;
 
   constructor(
     public hostElement: ElementRef<HTMLElement>,
