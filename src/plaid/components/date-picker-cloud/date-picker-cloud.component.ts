@@ -41,6 +41,9 @@ export class DatePickerCloudComponent {
       this.month = month;
       const curTime: Date = new Date();
       this.today = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
+      addEventListener('keydown', this.onKeydown);
+    } else {
+      removeEventListener('keydown', this.onKeydown);
     }
   }
   get open(): boolean {
@@ -59,6 +62,9 @@ export class DatePickerCloudComponent {
   @Output()
   openChange = new EventEmitter<boolean>();
 
+  @Input()
+  keysDisabled: boolean;
+
   readonly months: string[] = Calendar.monthsShort;
 
   readonly weekdays: string[] = Calendar.weekdaysShort;
@@ -69,6 +75,29 @@ export class DatePickerCloudComponent {
   }
   get month(): Date {
     return this._month;
+  }
+
+  onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
+    if (!this.keysDisabled && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+      event.preventDefault();
+      const newDate = new Date(this.selectedDate);
+      switch (event.key) {
+        case 'ArrowUp':
+        case 'ArrowDown':
+          newDate.setDate(newDate.getDate() + (event.key === 'ArrowUp' ? -7 : 7));
+          break;
+        case 'ArrowLeft':
+        case 'ArrowRight':
+          do {
+            newDate.setDate(newDate.getDate() + (event.key === 'ArrowLeft' ? -1 : 1));
+          } while (newDate.getDay() < this.selectableDaysStart || newDate.getDay() > this.selectableDaysEnd);
+          break;
+      }
+      this.selectDate(newDate, false);
+      const month = new Date(newDate);
+      month.setDate(1);
+      this.month = month;
+    }
   }
 
   decrementMonth(): void {

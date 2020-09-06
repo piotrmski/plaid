@@ -13,8 +13,9 @@ plaid-issue-details {
   transition: 0.1s background-color;
   display: block;
 
-  &:hover {
+  &:hover, &:focus {
     background-color: rgba(0, 0, 0, 0.125);
+    outline: none;
   }
 
   &:active {

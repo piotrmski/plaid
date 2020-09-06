@@ -198,6 +198,9 @@ export class WorklogEditorComponent implements OnInit {
     return this._visibleDaysEnd;
   }
 
+  @Input()
+  allKeysDisabled: boolean;
+
   constructor(
     private cdr: ChangeDetectorRef,
     private authFacade: AuthFacade,
@@ -215,30 +218,32 @@ export class WorklogEditorComponent implements OnInit {
   }
 
   onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
-    switch (event.key) {
-      case 'Escape':
-        if (!this.escapeKeyDisabled) {
-          if (this.calendarOpen) {
-            this.toggleCalendar();
-            this.calendarToggle.nativeElement.focus();
-          } else if (this.issuePickerOpen) {
-            this.toggleIssuePicker();
-            this.issuePickerToggle.nativeElement.focus();
-          } else {
-            this.close();
+    if (!this.allKeysDisabled) {
+      switch (event.key) {
+        case 'Escape':
+          if (!this.escapeKeyDisabled) {
+            if (this.calendarOpen) {
+              this.toggleCalendar();
+              this.calendarToggle.nativeElement.focus();
+            } else if (this.issuePickerOpen) {
+              this.toggleIssuePicker();
+              this.issuePickerToggle.nativeElement.focus();
+            } else {
+              this.close();
+            }
           }
-        }
-        break;
-      case ' ':
-        if (document.activeElement === this.calendarToggle.nativeElement) {
-          this.toggleCalendar();
-          event.preventDefault();
-        } else if (document.activeElement === this.issuePickerToggle.nativeElement) {
-          this.toggleIssuePicker();
-          event.preventDefault();
-        }
+          break;
+        case ' ':
+          if (document.activeElement === this.calendarToggle.nativeElement) {
+            this.toggleCalendar();
+            event.preventDefault();
+          } else if (document.activeElement === this.issuePickerToggle.nativeElement) {
+            this.toggleIssuePicker();
+            event.preventDefault();
+          }
+      }
+      this.cdr.detectChanges();
     }
-    this.cdr.detectChanges();
   }
 
   /**
@@ -562,6 +567,6 @@ export class WorklogEditorComponent implements OnInit {
   }
 
   shouldTabIndexBe0(): boolean {
-    return !!this.worklog && !this.calendarOpen && !this.issuePickerOpen && !this.saving;
+    return !!this.worklog && !this.calendarOpen && !this.issuePickerOpen && !this.saving && !this.allKeysDisabled;
   }
 }

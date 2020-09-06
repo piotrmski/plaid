@@ -53,6 +53,9 @@ export class IssuePickerCloudComponent implements OnInit {
   @Input()
   updateFavoritesAndSuggestionsAndEmitSuggestion: Observable<void>;
 
+  @Input()
+  keysDisabled: boolean;
+
   constructor(private issueFacade: IssueFacade, private cdr: ChangeDetectorRef) {
   }
 

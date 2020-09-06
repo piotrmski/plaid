@@ -109,6 +109,7 @@ Ctrl to snap to 60 minutes."
       title=""
       [selectableDaysStart]="visibleDaysStart"
       [selectableDaysEnd]="visibleDaysEnd"
+      [keysDisabled]="allKeysDisabled"
     ></plaid-date-picker-cloud>
 
     <plaid-issue-picker-cloud
@@ -117,6 +118,7 @@ Ctrl to snap to 60 minutes."
       (issueChange)="selectIssue($event)"
       [updateFavoritesAndSuggestionsAndEmitSuggestion]="updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.asObservable()"
       title=""
+      [keysDisabled]="allKeysDisabled"
     ></plaid-issue-picker-cloud>
   </form>
 

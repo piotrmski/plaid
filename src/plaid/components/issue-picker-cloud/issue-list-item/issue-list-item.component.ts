@@ -17,9 +17,18 @@ export class IssueListItemComponent {
   @Output()
   favoriteChange = new EventEmitter<boolean>();
 
+  @Input()
+  keyboardNavigationEnabled: boolean;
+
   toggleFavorite(): void {
     this.issue._favorite = !this.issue._favorite;
     this.favoriteChange.emit(this.issue._favorite);
+  }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (this.keyboardNavigationEnabled && (event.key === ' ' || event.key === 'Enter')) {
+      this.issueSelected.next();
+    }
   }
 
 }

@@ -14,6 +14,7 @@
       [issue]="res"
       (issueSelected)="issueSelected(res);"
       (favoriteChange)="favoriteChange(res, $event)"
+      [keyboardNavigationEnabled]="open && !keysDisabled"
     ></plaid-issue-list-item>
   </div>
   <div class="scrollable-area" *ngIf="!searchInput.value">
@@ -23,6 +24,7 @@
       [issue]="res"
       (issueSelected)="issueSelected(res);"
       (favoriteChange)="favoriteChange(res, $event)"
+      [keyboardNavigationEnabled]="open && !keysDisabled"
     ></plaid-issue-list-item>
     <div class="section-header" *ngIf="suggestionsWithoutFavorites.length > 0">Suggestions</div>
     <plaid-issue-list-item
@@ -30,6 +32,7 @@
       [issue]="res"
       (issueSelected)="issueSelected(res);"
       (favoriteChange)="favoriteChange(res, $event)"
+      [keyboardNavigationEnabled]="open && !keysDisabled"
     ></plaid-issue-list-item>
   </div>
 </div>
