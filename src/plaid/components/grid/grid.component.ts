@@ -7,10 +7,10 @@ import {
   Input,
   OnInit
 } from '@angular/core';
-import {Worklog} from '../../models/worklog';
-import {DateRange} from '../../models/date-range';
+import {Worklog} from '../../model/worklog';
+import {DateRange} from '../../model/date-range';
 import {Format} from '../../helpers/format';
-import {User} from 'src/plaid/models/user';
+import {User} from 'src/plaid/model/user';
 import {WorklogFacade} from '../../core/worklog/worklog.facade';
 
 /**

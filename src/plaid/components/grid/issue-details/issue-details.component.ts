@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {Issue} from '../../models/issue';
+import {Issue} from '../../../model/issue';
 
 /**
  * Dumb component presenting the details of an issue for the worklog panel and issue selector.

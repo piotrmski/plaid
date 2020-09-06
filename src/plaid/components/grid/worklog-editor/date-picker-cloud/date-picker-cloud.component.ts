@@ -5,7 +5,7 @@ import {
   Input,
   Output
 } from '@angular/core';
-import {Calendar} from '../../helpers/calendar';
+import {Calendar} from '../../../../helpers/calendar';
 
 /**
  * Dumb component, responsible for presenting current date on a dropdown calendar, currently selected date and

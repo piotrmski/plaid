@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {DateRange} from '../../models/date-range';
+import {DateRange} from '../../../model/date-range';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import Timeout = NodeJS.Timeout;
-import {Format} from '../../helpers/format';
+import {Format} from '../../../helpers/format';
 
 /**
  * Dumb component, responsible for displaying current time and marking current date on the grid.

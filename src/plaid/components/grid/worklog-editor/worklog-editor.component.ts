@@ -10,15 +10,15 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import {DateRange} from '../../models/date-range';
-import {Worklog} from '../../models/worklog';
-import {Format} from '../../helpers/format';
-import {AuthFacade} from '../../core/auth/auth.facade';
-import {AppStateService} from '../../core/app-state.service';
-import {WorklogFacade} from '../../core/worklog/worklog.facade';
-import {DatePickerCloudComponent} from '../date-picker-cloud/date-picker-cloud.component';
-import {Issue} from '../../models/issue';
-import {IssuePickerCloudComponent} from '../issue-picker-cloud/issue-picker-cloud.component';
+import {DateRange} from '../../../model/date-range';
+import {Worklog} from '../../../model/worklog';
+import {Format} from '../../../helpers/format';
+import {AuthFacade} from '../../../core/auth/auth.facade';
+import {AppStateService} from '../../../core/app-state.service';
+import {WorklogFacade} from '../../../core/worklog/worklog.facade';
+import {DatePickerCloudComponent} from './date-picker-cloud/date-picker-cloud.component';
+import {Issue} from '../../../model/issue';
+import {IssuePickerCloudComponent} from './issue-picker-cloud/issue-picker-cloud.component';
 import {Subject} from 'rxjs';
 
 /**

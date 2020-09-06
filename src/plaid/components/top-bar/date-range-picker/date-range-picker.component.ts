@@ -8,9 +8,9 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {DateRange} from '../../models/date-range';
-import {Format} from '../../helpers/format';
-import {Calendar} from '../../helpers/calendar';
+import {DateRange} from '../../../model/date-range';
+import {Format} from '../../../helpers/format';
+import {Calendar} from '../../../helpers/calendar';
 import Timeout = NodeJS.Timeout;
 
 /**

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Theme} from '../models/theme';
-import {FavoriteKeys} from '../models/favorite-keys';
+import {Theme} from '../model/theme';
+import {FavoriteKeys} from '../model/favorite-keys';
 
 @Injectable({ providedIn: 'root' })
 export class UserPreferencesService {

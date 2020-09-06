@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, EventEmitter, Output} from '@angular/core';
-import {AuthInfo} from '../../../models/auth-info';
+import {AuthInfo} from '../../../model/auth-info';
 import {HttpErrorResponse} from '@angular/common/http';
 
 /**

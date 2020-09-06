@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Issue} from '../../../models/issue';
+import {Issue} from '../../../../../model/issue';
 
 /**
  * An item on a list of issues in the issue picker. Presents issue details and favorite button, delegates selection of

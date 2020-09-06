@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ConnectionIssueModalVisible} from '../components/connection-issue-resolver/connection-issue-modal-visible';
-import {DateRange} from '../models/date-range';
+import {DateRange} from '../model/date-range';
 import {UserPreferencesService} from './user-preferences.service';
 
 @Injectable({ providedIn: 'root' })

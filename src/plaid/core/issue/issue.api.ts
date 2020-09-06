@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {Issue} from '../../models/issue';
-import {SearchResults} from '../../models/search-results';
+import {Issue} from '../../model/issue';
+import {SearchResults} from '../../model/search-results';
 
 @Injectable({ providedIn: 'root' })
 export class IssueApi {

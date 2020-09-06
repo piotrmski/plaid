@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Worklog} from '../../models/worklog';
+import {Worklog} from '../../model/worklog';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

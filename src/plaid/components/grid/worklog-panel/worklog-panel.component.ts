@@ -10,10 +10,10 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {Worklog} from '../../models/worklog';
+import {Worklog} from '../../../model/worklog';
 import {WorklogPanelsManagerService} from './worklog-panels-manager.service';
-import {Format} from '../../helpers/format';
-import {AuthFacade} from '../../core/auth/auth.facade';
+import {Format} from '../../../helpers/format';
+import {AuthFacade} from '../../../core/auth/auth.facade';
 
 /**
  * Somewhat dumb component, present a panel representing a work log entry, or a gap prompting user to add a work log

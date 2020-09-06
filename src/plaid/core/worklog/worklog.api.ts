@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
-import {Worklog} from '../../models/worklog';
+import {Worklog} from '../../model/worklog';
 import {HttpClient} from '@angular/common/http';
-import {SearchResults} from '../../models/search-results';
+import {SearchResults} from '../../model/search-results';
 import {formatDate} from '@angular/common';
 import {EMPTY, Observable} from 'rxjs';
-import {Issue} from '../../models/issue';
+import {Issue} from '../../model/issue';
 import {expand, map, mergeAll, mergeMap, scan, takeLast} from 'rxjs/operators';
-import {WorklogWithPagination} from '../../models/worklog-with-pagination';
-import {User} from '../../models/user';
-import {DateRange} from '../../models/date-range';
+import {WorklogWithPagination} from '../../model/worklog-with-pagination';
+import {User} from '../../model/user';
+import {DateRange} from '../../model/date-range';
 
 @Injectable({ providedIn: 'root' })
 export class WorklogApi {

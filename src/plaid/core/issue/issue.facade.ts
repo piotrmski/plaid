@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Observable, of, zip} from 'rxjs';
-import {Issue} from '../../models/issue';
+import {Issue} from '../../model/issue';
 import {IssueApi} from './issue.api';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {IssueState} from './issue.state';
 import {AuthFacade} from '../auth/auth.facade';
 import {UserPreferencesService} from '../user-preferences.service';
-import {FavoriteKeys} from '../../models/favorite-keys';
+import {FavoriteKeys} from '../../model/favorite-keys';
 
 @Injectable({ providedIn: 'root' })
 export class IssueFacade {

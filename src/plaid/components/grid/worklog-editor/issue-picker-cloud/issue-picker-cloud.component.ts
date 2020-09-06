@@ -8,9 +8,9 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {Issue} from '../../models/issue';
+import {Issue} from '../../../../model/issue';
 import {Observable, Subject} from 'rxjs';
-import {IssueFacade} from '../../core/issue/issue.facade';
+import {IssueFacade} from '../../../../core/issue/issue.facade';
 import {debounceTime, switchMap, tap} from 'rxjs/operators';
 
 /**

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {WorklogPanelComponent} from './worklog-panel.component';
 import {fromEvent} from 'rxjs';
 import Timeout = NodeJS.Timeout;
-import {SystemPreferencesService} from '../../core/system-preferences.service';
+import {SystemPreferencesService} from '../../../core/system-preferences.service';
 
 /**
  * Service for managing visual aspects of all panels at once - their size and position and whether dark theme is active.

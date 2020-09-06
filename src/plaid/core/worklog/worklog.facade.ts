@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {DateRange} from '../../models/date-range';
-import {User} from '../../models/user';
-import {Worklog} from '../../models/worklog';
+import {DateRange} from '../../model/date-range';
+import {User} from '../../model/user';
+import {Worklog} from '../../model/worklog';
 import {WorklogState} from './worklog.state';
 import {WorklogApi} from './worklog.api';
 import {AuthFacade} from '../auth/auth.facade';

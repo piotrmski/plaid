@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {Worklog} from './models/worklog';
-import {DateRange} from './models/date-range';
-import {User} from './models/user';
-import {ConnectionIssueModalVisible} from './components/connection-issue-resolver/connection-issue-modal-visible';
-import {AuthFacade} from './core/auth/auth.facade';
-import {WorklogFacade} from './core/worklog/worklog.facade';
-import {AppStateService} from './core/app-state.service';
-import {UserPreferencesService} from './core/user-preferences.service';
-import {Theme} from './models/theme';
-import {SystemPreferencesService} from './core/system-preferences.service';
+import {Worklog} from '../model/worklog';
+import {DateRange} from '../model/date-range';
+import {User} from '../model/user';
+import {ConnectionIssueModalVisible} from './connection-issue-resolver/connection-issue-modal-visible';
+import {AuthFacade} from '../core/auth/auth.facade';
+import {WorklogFacade} from '../core/worklog/worklog.facade';
+import {AppStateService} from '../core/app-state.service';
+import {UserPreferencesService} from '../core/user-preferences.service';
+import {Theme} from '../model/theme';
+import {SystemPreferencesService} from '../core/system-preferences.service';
 
 /**
  * Application container.

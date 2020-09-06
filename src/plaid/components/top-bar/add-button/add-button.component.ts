@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { GridComponent } from '../grid/grid.component';
+import { GridComponent } from '../../grid/grid.component';
 
 /**
  * Dumb component, responsible for presenting "Add worklog" button and delegating the action to the grid component.

@@ -7,8 +7,8 @@ import {
   Input,
   Output
 } from '@angular/core';
-import {User} from '../../models/user';
-import {environment} from '../../../environments/environment';
+import {User} from '../../../model/user';
+import {environment} from '../../../../environments/environment';
 
 /**
  * Dumb component, responsible for displaying status of authentication and delegating intent to log out or change
