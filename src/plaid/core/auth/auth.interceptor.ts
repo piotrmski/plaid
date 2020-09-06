@@ -27,7 +27,6 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleError(request: HttpRequest<any>, next: HttpHandler, error: HttpErrorResponse): Observable<HttpEvent<any>> {
-    console.log(request.url);
     if (!error || error.status !== 404 || request.method !== 'GET' ||
       !/\/rest\/api\/2\/issue\/[A-Za-z][A-Za-z0-9_]*-[1-9][0-9]*\?/.test(request.url)) {
       // 404 status when calling GET /rest/api/2/issue/{issueKey} is unfortunately our only way to tell if issue ID is

@@ -91,7 +91,7 @@ export class GridComponent implements OnInit, AfterViewInit {
    */
   @Input()
   set worklogs(worklogs: Worklog[]) {
-    if (worklogs) {
+    if (worklogs && this.authenticatedUser) {
       this._worklogs = worklogs
         .filter(worklog =>
           new Date(worklog.started) >= this.dateRange.start &&
