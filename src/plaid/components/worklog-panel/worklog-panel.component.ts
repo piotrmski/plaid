@@ -41,7 +41,10 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
   panelHue: number;
   timeRange: string;
   _darkMode: boolean;
-  deleteConfirmationOpen = false;
+  _deleteConfirmationOpen = false;
+
+  @ViewChild('deleteConfirmation')
+  deleteConfirmationElement: ElementRef<HTMLDivElement>;
 
   /**
    * Emits when user presses edit button.
@@ -184,5 +187,27 @@ export class WorklogPanelComponent implements OnInit, OnDestroy {
     this.deleteConfirmationOpen = false;
     this.worklog._deleting = true;
     this.delete.emit();
+  }
+
+  set deleteConfirmationOpen(value: boolean) {
+    this._deleteConfirmationOpen = value;
+    if (value) {
+      addEventListener('mousedown', this.onMousedown);
+    } else {
+      removeEventListener('mousedown', this.onMousedown);
+    }
+  }
+  get deleteConfirmationOpen(): boolean {
+    return this._deleteConfirmationOpen;
+  }
+
+  /**
+   * Closes delete confirmation, if user clicks outside of it. Implemented to make behavior on touchscreen passable.
+   */
+  onMousedown: (event: MouseEvent) => void = (event: MouseEvent) => {
+    if (!(this.deleteConfirmationElement.nativeElement as Node).contains(event.target as Node)) {
+      this.deleteConfirmationOpen = false;
+      this.cdr.detectChanges();
+    }
   }
 }
