@@ -1,7 +1,7 @@
 {
   "name": "plaid",
   "productName": "Plaid",
-  "version": "0.5.2",
+  "version": "1.0.0",
   "author": {
     "name": "Piotr Marczyński",
     "email": "piotmski@gmail.com"
@@ -64,18 +64,18 @@
     "@openfonts/source-sans-pro_all": "^1.44.1",
     "electron-updater": "^4.3.4",
     "ngx-electron": "~2.2.0",
-    "rxjs": "~6.6.2",
+    "rxjs": "^6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1000.6",
-    "@angular/cli": "^10.0.6",
-    "@angular/compiler-cli": "^10.0.9",
-    "@angular/language-service": "^10.0.9",
-    "@types/node": "^12.12.54",
+    "@angular-devkit/build-angular": "^0.1000.8",
+    "@angular/cli": "^10.1.0",
+    "@angular/compiler-cli": "^10.1.0",
+    "@angular/language-service": "^10.1.0",
+    "@types/node": "^12.12.55",
     "codelyzer": "^6.0.0",
-    "electron": "^9.2.0",
+    "electron": "^9.3.0",
     "electron-builder": "^22.8.0",
     "ts-node": "~8.10.2",
     "tslint": "~6.1.0",
