@@ -3,9 +3,7 @@ import {Worklog} from '../../model/worklog';
 import {HttpClient} from '@angular/common/http';
 import {SearchResults} from '../../model/search-results';
 import {formatDate} from '@angular/common';
-import {EMPTY, Observable} from 'rxjs';
-import {Issue} from '../../model/issue';
-import {expand, map, mergeAll, mergeMap, scan, takeLast} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {WorklogWithPagination} from '../../model/worklog-with-pagination';
 import {User} from '../../model/user';
 import {DateRange} from '../../model/date-range';
@@ -21,9 +19,9 @@ export class WorklogApi {
   constructor(private http: HttpClient) { }
 
   /**
-   * Emits search results directly as fetched from API
+   * Emits search results directly as fetched from API.
    */
-  private getWorklogIssuesForTimePeriodSearchResults$(
+  getIssuesForWorklogDateRange$(
     dateRange: DateRange,
     user: User,
     startAt = 0
@@ -40,65 +38,14 @@ export class WorklogApi {
   }
 
   /**
-   * Emits work log issues page by page
+   * Emits a page of work logs directly as fetched from API.
    */
-  private streamWorklogIssuesForDateRange$(dateRange: DateRange, user: User): Observable<Issue[]> {
-    return this.getWorklogIssuesForTimePeriodSearchResults$(dateRange, user).pipe(
-      expand<SearchResults>(
-        (results: SearchResults) => (results.startAt + results.issues.length) < results.total
-          ? this.getWorklogIssuesForTimePeriodSearchResults$(dateRange, user, results.startAt + results.issues.length)
-          : EMPTY
-      ),
-      map<SearchResults, Issue[]>((results: SearchResults) => results.issues)
-    );
-  }
-
-  /**
-   * Emits a page of work logs directly as fetched from API
-   */
-  private getWorklogsForIssueSearchResults$(issueId: string, startAt = 0): Observable<WorklogWithPagination> {
+  getWorklogsForIssue$(issueId: string, startAt = 0): Observable<WorklogWithPagination> {
     let url = this.getWorklogsUrl.replace('{issueIdOrKey}', issueId);
     if (startAt > 0) {
       url += '?startAt=' + startAt;
     }
     return this.http.get<WorklogWithPagination>(url);
-  }
-
-  /**
-   * Emits work logs of an issue page by page
-   */
-  private streamWorklogsForIssue$(issue: Issue): Observable<Worklog[]> {
-    return this.getWorklogsForIssueSearchResults$(issue.id).pipe(
-      expand<WorklogWithPagination>(
-        (results: WorklogWithPagination) => (results.startAt + results.worklogs.length) < results.total
-          ? this.getWorklogsForIssueSearchResults$(issue.id, results.startAt + results.worklogs.length)
-          : EMPTY
-      ),
-      map<WorklogWithPagination, Worklog[]>(results => results.worklogs.map(wl => ({...wl, issue})))
-    );
-  }
-
-  /**
-   * Emits all fetched work logs every time any additional data is retrieved and finishes once the emitted list is
-   * complete
-   */
-  getWorklogsForDateRangeVerbose$(dateRange: DateRange, user: User): Observable<Worklog[]> {
-    return this.streamWorklogIssuesForDateRange$(dateRange, user).pipe(
-      mergeAll<Issue>(),
-      mergeMap<Issue, Observable<Worklog[]>>(issue => this.streamWorklogsForIssue$(issue)),
-      map<Worklog[], Worklog[]>(worklogs => worklogs.filter(worklog => worklog.author.self === user.self
-        && new Date(worklog.started).valueOf() >= dateRange.start.valueOf()
-        && new Date(worklog.started).valueOf() < dateRange.end.valueOf() + 86400000
-      )),
-      scan<Worklog[], Worklog[]>((acc: Worklog[], val: Worklog[]) => acc.concat(val), [])
-    );
-  }
-
-  /**
-   * Emits the complete list of work logs
-   */
-  getWorklogsForDateRangeQuiet$(dateRange: DateRange, user: User): Observable<Worklog[]> {
-    return this.getWorklogsForDateRangeVerbose$(dateRange, user).pipe(takeLast<Worklog[]>(1));
   }
 
   /**
