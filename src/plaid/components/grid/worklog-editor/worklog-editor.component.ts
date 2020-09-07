@@ -84,6 +84,9 @@ export class WorklogEditorComponent implements OnInit {
   @ViewChild('issuePickerToggle')
   issuePickerToggle: ElementRef<HTMLInputElement>;
 
+  @ViewChild('cancelButton')
+  cancelButton: ElementRef<HTMLButtonElement>;
+
   @ViewChild(IssuePickerCloudComponent, {read: ViewContainerRef})
   issuePickerCloud: ViewContainerRef;
 
@@ -219,7 +222,7 @@ export class WorklogEditorComponent implements OnInit {
 
   /**
    * Handles keyboard navigation in the editor. Pressing space when focused on date or issue field opens respective
-   * cloud, pressing escape closes a cloud or the editor.
+   * cloud, pressing escape closes a cloud or the editor and pressing Enter submits the entry.
    */
   onKeydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
     if (!this.keysDisabled) {
@@ -243,6 +246,12 @@ export class WorklogEditorComponent implements OnInit {
             this.toggleIssuePicker();
             event.preventDefault();
           }
+          break;
+        case 'Enter':
+          if (!this.calendarOpen && !this.issuePickerOpen && document.activeElement !== this.cancelButton.nativeElement) {
+            this.save();
+          }
+          break;
       }
       this.cdr.detectChanges();
     }
