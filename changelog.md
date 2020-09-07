@@ -2,6 +2,8 @@
 
 ## 1.0
 
+**1.0.0**
+
 - added the ability to add new worklog entries
 - added the alibity to delete existing worklog entries
 - keyboard navigation in worklog entry editor form is now possible
