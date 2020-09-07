@@ -31,7 +31,7 @@
       </a>
       <a
         class="button worklog-action-button delete-button"
-        [title]="worklog._deleting ? 'Deleting...' : 'Delete log'"
+        [title]="worklog._deleting ? 'Deleting...' : 'Delete entry'"
         (click)="deleteClick()"
         [class.disabled]="worklog._deleting"
       >
@@ -56,7 +56,7 @@
     <div class="panel-content" *ngIf="!worklog.id">
       <a
         class="button add-button"
-        title="Add log"
+        title="Add new entry here"
         (click)="edit.emit()"
         [style.top.px]="panelHeight / 2 - 15"
       ><svg class="icon"><use href="assets/icons.svg#plus"></use></svg></a>

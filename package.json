@@ -6,10 +6,10 @@
     "name": "Piotr Marczyński",
     "email": "piotmski@gmail.com"
   },
-  "description": "Better manage your Jira work log",
+  "description": "Personal Jira worklog editor",
   "keywords": [
     "jira",
-    "work log",
+    "worklog",
     "planner",
     "calendar"
   ],
