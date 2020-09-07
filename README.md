@@ -1,3 +1,7 @@
+![](https://img.shields.io/github/v/release/piotrmski/plaid)
+![](https://img.shields.io/github/downloads/piotrmski/plaid/total)
+[![](https://snapcraft.io//plaid/badge.svg)](https://snapcraft.io/plaid)
+
 # Plaid
 
 ![Screenshot](https://raw.githubusercontent.com/piotrmski/plaid/master/screenshot.png)
