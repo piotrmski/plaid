@@ -27,6 +27,7 @@
     position: fixed;
     top: calc(50% - 0.5em);
     left: calc(50% - 0.5em);
+    pointer-events: none;
   }
 
   &.visible {

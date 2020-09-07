@@ -1,0 +1,67 @@
+:host {
+  display: flex;
+  flex-flow: row;
+  position: relative;
+  pointer-events: none;
+}
+
+.issue-picker {
+  position: absolute;
+  opacity: 0;
+  left: 15px;
+  right: 16px;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  top: 0;
+  transition: 0.1s opacity;
+  height: 400px;
+  overflow: hidden;
+
+  &.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.search {
+  border-radius: 0;
+  background-color: #fff!important;
+  box-shadow: none!important;
+  margin: 0;
+}
+
+.spinner {
+  color: var(--color-gray-2);
+  pointer-events: none;
+  position: absolute;
+  top: 7px;
+  right: 10px;
+}
+
+.scrollable-area {
+  height: 370px;
+  overflow-y: auto;
+  padding-bottom: 15px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.section-header {
+  background-color: var(--color-gray-1);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  line-height: 21px;
+  padding: 0 5px;
+  z-index: 1;
+}

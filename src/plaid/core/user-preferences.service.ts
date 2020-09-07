@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Theme} from '../models/theme';
+import {Theme} from '../model/theme';
+import {FavoriteKeys} from '../model/favorite-keys';
 
 @Injectable({ providedIn: 'root' })
 export class UserPreferencesService {
@@ -11,6 +12,7 @@ export class UserPreferencesService {
   private readonly HIDE_WEEKEND = 'HIDE_WEEKEND';
   private readonly REFRESH_INTERVAL = 'REFRESH_INTERVAL';
   private readonly THEME = 'THEME';
+  private readonly FAVORITE_KEYS = 'FAVORITE_KEYS';
 
   private workingHoursStartMinutes: BehaviorSubject<number> =
     new BehaviorSubject<number>(Number(localStorage.getItem(this.WORKING_HOURS_START_MINUTES) || 540));
@@ -32,6 +34,8 @@ export class UserPreferencesService {
     new BehaviorSubject<number>(Number(localStorage.getItem(this.REFRESH_INTERVAL) || 0));
   private theme: BehaviorSubject<Theme> =
     new BehaviorSubject<Theme>((localStorage.getItem(this.THEME) || 'system') as Theme);
+  private favoriteKeys: BehaviorSubject<FavoriteKeys> =
+    new BehaviorSubject<FavoriteKeys>((JSON.parse(localStorage.getItem(this.FAVORITE_KEYS) || '{}')) as FavoriteKeys);
 
   setWorkingHoursStartMinutes(value: number): void {
     this.workingHoursStartMinutes.next(value);
@@ -122,5 +126,14 @@ export class UserPreferencesService {
   setTheme(value: Theme): void {
     this.theme.next(value);
     localStorage.setItem(this.THEME, value);
+  }
+
+  getFavoriteKeys$(): Observable<FavoriteKeys> {
+    return this.favoriteKeys.asObservable();
+  }
+
+  setFavoriteKeys(value: FavoriteKeys): void {
+    this.favoriteKeys.next(value);
+    localStorage.setItem(this.FAVORITE_KEYS, JSON.stringify(value));
   }
 }

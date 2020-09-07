@@ -1,0 +1,68 @@
+p {
+  margin: 0;
+}
+
+.parent-name {
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.5;
+
+  .icon-parent {
+    margin-right: 4px;
+  }
+}
+
+.name {
+  b {
+    font-weight: 600;
+  }
+
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 3px;
+}
+
+.fields {
+  font-size: 11px;
+
+  .status {
+    display: inline-block;
+    border-radius: 2px;
+    color: #fff;
+    padding: 0 2px;
+    background-color: var(--color-gray-4);
+    margin-right: 2px;
+    line-height: 1;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-gray-7);
+    }
+
+    &.green {
+      background-color: var(--color-green)
+    }
+
+    &.blue {
+      background-color: var(--color-blue)
+    }
+
+    &.yellow {
+      background-color: var(--color-orange)
+    }
+
+    &.red {
+      background-color: var(--color-red)
+    }
+  }
+
+  img {
+    vertical-align: middle;
+    height: 16px;
+    margin-right: 4px;
+  }
+}

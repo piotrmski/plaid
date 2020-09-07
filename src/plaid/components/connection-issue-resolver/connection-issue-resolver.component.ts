@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {AuthInfo} from '../../models/auth-info';
+import {AuthInfo} from '../../model/auth-info';
 import {HttpErrorResponse} from '@angular/common/http';
-import {User} from '../../models/user';
+import {User} from '../../model/user';
 import {ConnectionIssueModalVisible} from './connection-issue-modal-visible';
 import {AuthFacade} from '../../core/auth/auth.facade';
 import {AppStateService} from '../../core/app-state.service';

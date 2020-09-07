@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Worklog} from '../../models/worklog';
+import {Worklog} from '../../model/worklog';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +23,7 @@ export class WorklogState {
     this.worklogs.next(worklogs);
   }
 
-  updateWorklog(updatedWorklog: Worklog): void {
+  addOrUpdateWorklog(updatedWorklog: Worklog): void {
     const worklogs: Worklog[] = this.worklogs.getValue();
     const updatedWorklogIndex: number = worklogs.findIndex(worklog => worklog.id === updatedWorklog.id);
     if (updatedWorklogIndex > -1) {
@@ -32,5 +32,9 @@ export class WorklogState {
       worklogs.push(updatedWorklog);
     }
     this.worklogs.next([...worklogs]);
+  }
+
+  deleteWorklog(worklogId: string) {
+    this.worklogs.next(this.worklogs.getValue().filter(worklog => worklog.id !== worklogId));
   }
 }

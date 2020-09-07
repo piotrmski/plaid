@@ -1,0 +1,38 @@
+<ng-container *ngIf="issue">
+  <p
+    class="parent-name"
+    *ngIf="issue.fields.parent"
+    [plaidExtHref]="jiraURL != null ? jiraURL + '/browse/' + issue.fields.parent.key : null"
+    [title]="jiraURL != null ? 'Show parent issue' : ''"
+  >
+    <svg class="icon-parent"><use href="assets/icons.svg#parent"></use></svg>
+    <b>{{ issue.fields.parent.key }}</b>
+    {{ issue.fields.parent.fields.summary }}
+  </p>
+  <p
+    class="name"
+    [plaidExtHref]="jiraURL != null ? jiraURL + '/browse/' + issue.key : null"
+    [title]="jiraURL != null ? 'Show issue' : ''"
+  >
+    <b>{{ issue.key }}</b>
+    {{ issue.fields.summary }}
+  </p>
+  <p class="fields">
+    <img
+      *ngIf="issue.fields.issuetype"
+      [src]="issue.fields.issuetype.iconUrl"
+      [title]="issue.fields.issuetype.name"
+      class="field-icon"
+    >
+    <img
+      *ngIf="issue.fields.priority"
+      [src]="issue.fields.priority.iconUrl"
+      [title]="issue.fields.priority.name"
+      class="field-icon"
+    >
+    <span class="status" *ngIf="issue.fields.status" [ngClass]="issue.fields.status.statusCategory?.colorName">
+      {{ issue.fields.status.name }}
+    </span>
+    {{ getComponents() }}
+  </p>
+</ng-container>

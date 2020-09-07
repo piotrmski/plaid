@@ -1,0 +1,34 @@
+<div class="calendar" [class.open]="open" [class.flipped]="flipped">
+  <div class="month-changer">
+    <a class="button" (click)="decrementMonth()" title="Previous month">
+      <svg class="icon"><use href="assets/icons.svg#arrow-left"></use></svg>
+    </a>
+    <div class="month-label">
+      {{ months[month?.getMonth()] }} {{ month?.getFullYear() }}
+    </div>
+    <a class="button" (click)="incrementMonth()" title="Next month">
+      <svg class="icon"><use href="assets/icons.svg#arrow-right"></use></svg>
+    </a>
+  </div>
+  <div class="weekdays">
+    <div class="weekday" *ngFor="let weekday of weekdays">
+      {{ weekday }}
+    </div>
+  </div>
+  <div
+    class="week"
+    *ngFor="let week of days"
+  >
+    <div
+      class="day"
+      *ngFor="let day of week"
+      [class.selected]="selectedDate.getTime() === day.getTime()"
+      (click)="selectDate(day)"
+      [class.other-month]="day.getMonth() !== month.getMonth()"
+      [class.today]="day.getTime() === today.getTime()"
+      [class.disabled]="!isDateSelectable(day)"
+    >
+      {{ day.getDate() }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div
+  class="panel-outer"
+  [class.add-hint]="!worklog.id"
+  [class.too-low]="tooLow"
+  [class.undersized]="undersized"
+  [ngStyle]="{
+    width: 'calc(' + panelWidth * 100 + '% + 1px)',
+    height: panelHeight + 1 + 'px',
+    top: panelOffsetTop + 'px',
+    left: 'calc(' + panelOffsetLeft * 100 + '% - 1px)'
+  }"
+>
+  <div
+    #panelInner
+    class="panel-inner"
+    [class.currently-edited]="currentlyEdited"
+    [ngStyle]="worklog.id ? {
+      maxHeight: panelHeight + 1 + 'px',
+      backgroundColor: 'hsl(' + panelHue + ', ' + (darkMode ? 40 : 60 ) + '%, ' + (darkMode ? 20 : 92 ) + '%)',
+      borderColor: 'hsl(' + panelHue + ', 50%, ' + (darkMode ? 40 : 60 ) + '%)'
+    } : {}"
+  >
+    <div class="panel-content" *ngIf="worklog.id">
+      <a
+        class="button worklog-action-button edit-button"
+        [title]="worklog._deleting ? '' : 'Edit log'"
+        (click)="editClick()"
+        [class.disabled]="worklog._deleting"
+      >
+        <svg class="icon"><use href="assets/icons.svg#pen"></use></svg>
+      </a>
+      <a
+        class="button worklog-action-button delete-button"
+        [title]="worklog._deleting ? 'Deleting...' : 'Delete entry'"
+        (click)="deleteClick()"
+        [class.disabled]="worklog._deleting"
+      >
+        <span *ngIf="worklog._deleting" class="spinner"></span>
+        <svg *ngIf="!worklog._deleting" class="icon"><use href="assets/icons.svg#trash"></use></svg>
+      </a>
+      <div
+        #deleteConfirmation
+        class="delete-confirmation"
+        [class.open]="deleteConfirmationOpen"
+        (mouseleave)="deleteConfirmationOpen = false"
+      >
+        For sure?
+        <a class="button" (click)="deleteConfirm()">Yes</a>
+      </div>
+      <plaid-issue-details [jiraURL]="jiraURL" [issue]="worklog.issue"></plaid-issue-details>
+      <p class="time">
+        {{ timeRange }}
+      </p>
+      <pre class="comment">{{ worklog.comment?.trim() }}</pre>
+    </div>
+    <div class="panel-content" *ngIf="!worklog.id">
+      <a
+        class="button add-button"
+        title="Add new entry here"
+        (click)="edit.emit()"
+        [style.top.px]="panelHeight / 2 - 15"
+      ><svg class="icon"><use href="assets/icons.svg#plus"></use></svg></a>
+    </div>
+  </div>
+</div>

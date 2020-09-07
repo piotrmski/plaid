@@ -1,5 +1,20 @@
 # Change log
 
+## 1.0
+
+**1.0.0**
+
+- added the ability to add new worklog entries
+- added the alibity to delete existing worklog entries
+- keyboard navigation in worklog entry editor form is now possible
+- worklog entry editor now has issue picker (for new entries only) which features:
+  - ability to browse through issues, which were recently added or had recently changed status,
+  - selecting, adding and removing favorites
+  - searching by string in issue text or by issue key
+- added issue status to worklog entry panel
+- reorganized top bar
+- updated dependencies 
+
 ## 0.5
 
 **0.5.2**

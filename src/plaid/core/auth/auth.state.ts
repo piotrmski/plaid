@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
-import {AuthInfo} from '../../models/auth-info';
-import {User} from '../../models/user';
+import {AuthInfo} from '../../model/auth-info';
+import {User} from '../../model/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthState {

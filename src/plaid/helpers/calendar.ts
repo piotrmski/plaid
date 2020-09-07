@@ -1,4 +1,4 @@
-import {DateRange} from '../models/date-range';
+import {DateRange} from '../model/date-range';
 
 export class Calendar {
   static readonly months: string[] = [

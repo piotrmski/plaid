@@ -1,0 +1,198 @@
+p {
+  margin: 0;
+}
+
+.panel-outer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    &.undersized {
+      .panel-inner {
+        max-height: none !important;
+        overflow: visible;
+        z-index: 1;
+        background: #fff !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+        @media (prefers-color-scheme: dark) {
+          background: #000 !important;
+        }
+      }
+
+      &.too-low {
+        top: auto !important;
+        bottom: -1px;
+
+        .panel-inner {
+          position: absolute;
+          bottom: 0;
+        }
+      }
+    }
+
+    .worklog-action-button {
+      opacity: 1;
+    }
+  }
+
+  &.add-hint {
+    transition: 0.2s opacity;
+
+    &:not(:hover) {
+      opacity: 0;
+    }
+
+    .panel-inner {
+      border-style: dashed;
+      border-color: rgba(0, 0, 0, 0.5);
+
+      @media (prefers-color-scheme: dark) {
+        border-color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+}
+
+.panel-inner {
+  position: relative;
+  flex: 1;
+  border-radius: 5px;
+  border: 1px solid;
+  overflow: hidden;
+  padding: 0 5px;
+  transition: 0.2s background-color, 0.2s box-shadow;
+  display: flex;
+  flex-direction: column;
+
+  &.currently-edited {
+    border-color: rgba(0, 0, 0, 0.2) !important;
+    background: repeating-linear-gradient(45deg, transparent 0, transparent 2.8284px, rgba(0, 0, 0, 0.2) 2.8284px, rgba(0, 0, 0, 0.2) 5.6569px) !important;
+
+    @media (prefers-color-scheme: dark) {
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      background: repeating-linear-gradient(45deg, transparent 0, transparent 2.8284px, rgba(255, 255, 255, 0.2) 2.8284px, rgba(255, 255, 255, 0.2) 5.6569px) !important;
+    }
+
+    .panel-content {
+      visibility: hidden;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
+  }
+}
+
+.panel-content {
+  flex-grow: 1;
+  position: relative;
+  padding: 2px 0;
+}
+
+.time {
+  font-size: 19px;
+}
+
+.comment {
+  font-size: 14px;
+  font-style: italic;
+  margin: 0;
+  white-space: pre-wrap;
+  opacity: 0.8;
+}
+
+.worklog-action-button {
+  opacity: 0;
+  position: absolute;
+  bottom: 5px;
+  z-index: 1;
+  cursor: default!important;
+
+  &.delete-button {
+    right: 0;
+  }
+
+  &.edit-button {
+    right: 34px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255, 255, 255, 0.1)!important;
+    }
+
+    &:active {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.2)!important;
+    }
+  }
+}
+
+.add-button {
+  margin: 0;
+  position: absolute;
+  left: calc(50% - 15px);
+
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255, 255, 255, 0.1)!important;
+    }
+
+    &:active {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.2)!important;
+    }
+  }
+}
+
+.delete-confirmation {
+  opacity: 0;
+  transition: 0.2s all ease-in;
+  background: transparent;
+  pointer-events: none;
+  height: 30px;
+  border-radius: 15px;
+  color: #fff;
+  position: absolute;
+  bottom: 5px;
+  right: 0;
+  min-width: 150px;
+  width: 150px;
+  z-index: 1;
+  padding: 2px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+
+  &.open {
+    transition-timing-function: ease-out;
+    opacity: 1;
+    background: var(--color-red);
+    pointer-events: all;
+    width: 100%;
+  }
+
+  .button {
+    background: #fff;
+    color: var(--color-red);
+    margin-left: 5px;
+    line-height: 26px;
+    padding: 0 10px;
+    transition: 0.1s opacity;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:active {
+      opacity: 0.8;
+    }
+  }
+}

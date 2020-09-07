@@ -1,5 +1,5 @@
 import {DatePipe} from '@angular/common';
-import {DateRange} from '../models/date-range';
+import {DateRange} from '../model/date-range';
 
 export class Format {
   static date(date: Date): string {
