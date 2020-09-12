@@ -1,5 +1,5 @@
 ![](https://img.shields.io/github/v/release/piotrmski/plaid)
-![](https://img.shields.io/github/downloads/piotrmski/plaid/total)
+![](https://img.shields.io/github/downloads/piotrmski/plaid/latest/Plaid-Setup-1.0.0.exe)
 [![](https://snapcraft.io//plaid/badge.svg)](https://snapcraft.io/plaid)
 
 # Plaid
