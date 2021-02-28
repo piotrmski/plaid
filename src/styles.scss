@@ -134,10 +134,10 @@ img {
     to { background-size: 100%; }
   }
 
-  &.progress-30s {
+  &.progress-10s {
     background-image: linear-gradient(to right, var(--button-color-less-translucent), var(--button-color-less-translucent));
     background-repeat: no-repeat;
-    animation: progress-on-button 30s linear;
+    animation: progress-on-button 10s linear;
     animation-fill-mode: forwards;
   }
 
@@ -180,7 +180,7 @@ img {
         background-color: var(--color-primary-3);
       }
 
-      &.progress-30s {
+      &.progress-10s {
         background-image: linear-gradient(to right, var(--color-primary-3), var(--color-primary-3))
       }
     }

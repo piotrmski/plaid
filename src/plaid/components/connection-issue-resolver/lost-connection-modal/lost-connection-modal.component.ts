@@ -38,7 +38,7 @@ export class LostConnectionModalComponent implements OnInit {
           this.setProgressOnButtonVisible(false);
           this.reconnectCountdown = null;
           this.reconnect.emit();
-        }, 30000);
+        }, 10000);
       }
     });
   }
@@ -53,11 +53,11 @@ export class LostConnectionModalComponent implements OnInit {
 
   setProgressOnButtonVisible(value: boolean): void {
     // Manually manipulating element's class list because toggling the class via component template is wonky
-    this.reconnectButton.nativeElement.classList.remove('progress-30s');
+    this.reconnectButton.nativeElement.classList.remove('progress-10s');
     if (value) {
       setTimeout(() => {
-        this.reconnectButton.nativeElement.classList.add('progress-30s');
-      });
+        this.reconnectButton.nativeElement.classList.add('progress-10s');
+      }, 10 /* <-- This is arbitrary */);
     }
   }
 }
