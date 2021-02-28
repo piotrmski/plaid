@@ -23,7 +23,7 @@
     <div class="panel-content" *ngIf="worklog.id">
       <a
         class="button worklog-action-button edit-button"
-        [title]="worklog._deleting ? '' : 'Edit log'"
+        [title]="worklog._deleting ? '' : 'Edit entry'"
         (click)="editClick()"
         [class.disabled]="worklog._deleting"
       >
