@@ -102,7 +102,7 @@ export class WorklogFacade {
     return this.streamAllIssuesForWorklogDateRange$(dateRange, user).pipe(
       mergeAll<Issue>(),
       mergeMap<Issue, Observable<Worklog[]>>(issue => this.streamAllWorklogsForIssue$(issue)),
-      map<Worklog[], Worklog[]>(worklogs => worklogs.filter(worklog => worklog.author.self === user.self
+      map<Worklog[], Worklog[]>(worklogs => worklogs.filter(worklog => decodeURIComponent(worklog.author.self) === decodeURIComponent(user.self)
         && new Date(worklog.started).valueOf() >= dateRange.start.valueOf()
         && new Date(worklog.started).valueOf() < dateRange.end.valueOf() + 86400000
       )),
