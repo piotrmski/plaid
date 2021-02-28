@@ -84,6 +84,9 @@ export class WorklogEditorComponent implements OnInit {
   @ViewChild('issuePickerToggle')
   issuePickerToggle: ElementRef<HTMLInputElement>;
 
+  @ViewChild('commentTextArea')
+  commentTextArea: ElementRef<HTMLTextAreaElement>;
+
   @ViewChild('cancelButton')
   cancelButton: ElementRef<HTMLButtonElement>;
 
@@ -248,7 +251,8 @@ export class WorklogEditorComponent implements OnInit {
           }
           break;
         case 'Enter':
-          if (!this.calendarOpen && !this.issuePickerOpen && document.activeElement !== this.cancelButton.nativeElement) {
+          if (!this.calendarOpen && !this.issuePickerOpen && document.activeElement !== this.cancelButton.nativeElement
+            && !(document.activeElement === this.commentTextArea.nativeElement && !event.ctrlKey)) {
             this.save();
           }
           break;
