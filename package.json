@@ -1,7 +1,7 @@
 {
   "name": "plaid",
   "productName": "Plaid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Piotr Marczyński",
     "email": "piotmski@gmail.com"
@@ -52,33 +52,33 @@
   },
   "private": false,
   "dependencies": {
-    "@angular/animations": "^10.0.9",
-    "@angular/common": "^10.0.9",
-    "@angular/compiler": "^10.0.9",
-    "@angular/core": "^10.0.9",
-    "@angular/forms": "^10.0.9",
-    "@angular/platform-browser": "^10.0.9",
-    "@angular/platform-browser-dynamic": "^10.0.9",
-    "@angular/router": "^10.0.9",
+    "@angular/animations": "^11.2.3",
+    "@angular/common": "^11.2.3",
+    "@angular/compiler": "^11.2.3",
+    "@angular/core": "^11.2.3",
+    "@angular/forms": "^11.2.3",
+    "@angular/platform-browser": "^11.2.3",
+    "@angular/platform-browser-dynamic": "^11.2.3",
+    "@angular/router": "^11.2.3",
     "@openfonts/comfortaa_latin": "^1.44.4",
-    "@openfonts/source-sans-pro_all": "^1.44.1",
-    "electron-updater": "^4.3.4",
+    "@openfonts/source-sans-pro_all": "^1.44.2",
+    "electron-updater": "^4.3.5",
     "ngx-electron": "~2.2.0",
-    "rxjs": "^6.6.3",
+    "rxjs": "^6.6.6",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1000.8",
-    "@angular/cli": "^10.1.0",
-    "@angular/compiler-cli": "^10.1.0",
-    "@angular/language-service": "^10.1.0",
-    "@types/node": "^12.12.55",
+    "@angular-devkit/build-angular": "^0.1102.2",
+    "@angular/cli": "^11.2.2",
+    "@angular/compiler-cli": "^11.2.3",
+    "@angular/language-service": "^11.2.3",
+    "@types/node": "^12.20.4",
     "codelyzer": "^6.0.0",
-    "electron": "^9.3.0",
-    "electron-builder": "^22.8.0",
+    "electron": "^9.4.3",
+    "electron-builder": "^22.9.1",
     "ts-node": "~8.10.2",
     "tslint": "~6.1.0",
-    "typescript": "~3.9.7"
+    "typescript": "^4.1.5"
   }
 }
