@@ -2,10 +2,20 @@
 
 ## 1.0
 
+**1.0.1**
+
+- fixed user self URI containing `:`
+- sped up automatic reconnecting 
+- disabled closing edit modal while saving
+- pressing Enter in edit modal comment box will result in putting in new line; holding Ctrl while pressing Enter will
+  save the entry
+- tweaked labels
+- updated dependencies
+
 **1.0.0**
 
 - added the ability to add new worklog entries
-- added the alibity to delete existing worklog entries
+- added the ability to delete existing worklog entries
 - keyboard navigation in worklog entry editor form is now possible
 - worklog entry editor now has issue picker (for new entries only) which features:
   - ability to browse through issues, which were recently added or had recently changed status,
