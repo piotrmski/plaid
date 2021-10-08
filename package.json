@@ -38,6 +38,9 @@
     },
     "linux": {
       "icon": "assets/appicon/icon.png"
+    },
+    "mac": {
+      "icon": "assets/appicon/icon.icns"
     }
   },
   "scripts": {
