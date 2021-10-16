@@ -38,6 +38,9 @@
     },
     "linux": {
       "icon": "assets/appicon/icon.png"
+    },
+    "mac": {
+      "icon": "assets/appicon/icon.icns"
     }
   },
   "scripts": {
@@ -75,7 +78,7 @@
     "@angular/language-service": "^11.2.3",
     "@types/node": "^12.20.4",
     "codelyzer": "^6.0.0",
-    "electron": "^9.4.3",
+    "electron": "^11.5.0",
     "electron-builder": "^22.9.1",
     "ts-node": "~8.10.2",
     "tslint": "~6.1.0",
