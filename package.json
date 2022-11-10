@@ -78,7 +78,7 @@
     "@angular/language-service": "^11.2.3",
     "@types/node": "^12.20.4",
     "codelyzer": "^6.0.0",
-    "electron": "^11.5.0",
+    "electron": "^18.3.7",
     "electron-builder": "^22.9.1",
     "ts-node": "~8.10.2",
     "tslint": "~6.1.0",
