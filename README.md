@@ -110,9 +110,3 @@ After building, you can also package the project for the current platform to `./
 ```
 npm run package
 ```
-
-## Roadmap
-
-In plans are:
-- release on Flathub
-- demo which would not require signing in to any live Jira account
