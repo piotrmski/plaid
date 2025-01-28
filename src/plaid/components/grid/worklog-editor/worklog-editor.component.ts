@@ -452,10 +452,6 @@ export class WorklogEditorComponent implements OnInit {
    * Closes the editor if user clicked outside the panel with left mouse button
    */
   handleClickOutsideEditor(event: MouseEvent): void {
-    if (event.button === 0 && event.target === this.wrapper.nativeElement && !this.calendarOpen && !this.issuePickerOpen
-      && !this.saving) {
-      this.close();
-    }
   }
 
   /**
