@@ -199,3 +199,11 @@ plaid-date-picker-cloud {
   max-width: 179px;
   left: calc(50% - 90px);
 }
+/* Estilo para el icono de advertencia de estimación faltante */
+.warning-icon {
+  margin-left: 4px;
+  color: #FFA000;
+  font-size: 1.2em;
+  vertical-align: middle;
+  pointer-events: none;
+}

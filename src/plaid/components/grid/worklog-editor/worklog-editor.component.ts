@@ -20,6 +20,7 @@ import {DatePickerCloudComponent} from './date-picker-cloud/date-picker-cloud.co
 import {Issue} from '../../../model/issue';
 import {IssuePickerCloudComponent} from './issue-picker-cloud/issue-picker-cloud.component';
 import {Subject} from 'rxjs';
+import {IssueApi} from '../../../core/issue/issue.api';
 
 /**
  * Smart component, presenting edited worklog, handling all its interactions and updating worklog on the server
@@ -37,7 +38,7 @@ export class WorklogEditorComponent implements OnInit {
 
   _pixelsPerMinute: number;
   _dateRange: DateRange;
-  _worklog: Worklog;
+  _worklog: Worklog | null;
   start: Date;
   date: Date;
   durationMinutes: number;
@@ -68,6 +69,10 @@ export class WorklogEditorComponent implements OnInit {
   _visibleDaysEnd: number;
   updateFavoriteIssuesAndSuggestionsAndEmitSuggestion = new Subject<void>();
   adding: boolean;
+  /** Indica si la tarea seleccionada no tiene estimación */
+  missingEstimate = false;
+  /** Texto de advertencia a mostrar junto al icono */
+  warningMessage: string = '';
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
@@ -143,16 +148,19 @@ export class WorklogEditorComponent implements OnInit {
    * Currently edited worklog
    */
   @Input()
-  set worklog(worklog: Worklog) {
+  set worklog(worklog: Worklog | null) {
+    // Inicializar warning
+    this.missingEstimate = false;
+    this.warningMessage = '';
     if (worklog) {
       this._worklog = {...worklog};
       this.saving = false;
       this.adding = !worklog.id;
-      this.start = new Date(worklog.started);
+      this.start = new Date(worklog.started ?? Date.now());
       this.start.setSeconds(0, 0);
       this.date = new Date(this.start);
       this.date.setHours(0, 0, 0, 0);
-      this.durationMinutes = Math.round(worklog.timeSpentSeconds / 60);
+      this.durationMinutes = Math.round((worklog.timeSpentSeconds ?? 0) / 60);
       const end = new Date(this.start);
       end.setMinutes(this.start.getMinutes() + this.durationMinutes);
       this.startTimeString = Format.time(this.start);
@@ -160,12 +168,27 @@ export class WorklogEditorComponent implements OnInit {
       this.editedPanelInRange = this.date >= this.dateRange.start && this.date <= this.dateRange.end;
       this.updatePanelHueSaturationAndIssueString(worklog.issue);
       this.dateString = Format.date(this.start);
-      this.commentString = worklog.comment;
+      this.commentString = worklog.comment ?? '';
       if (this.editedPanelInRange) {
         this.computeSizeAndOffset();
       }
       if (this.adding) {
         this.updateFavoriteIssuesAndSuggestionsAndEmitSuggestion.next();
+      }
+      // Al cargar editor, obtener issue completo para validar estimación
+      const key = this._worklog.issue?.key;
+      if (key) {
+        this.issueApi.getIssue$(key).subscribe(full => {
+          if (full) {
+            this._worklog!.issue = full;
+            const estimate = full.fields?.timeoriginalestimate ?? 0;
+            if (estimate <= 0) {
+              this.missingEstimate = true;
+              this.warningMessage = 'No original estimate set';
+            }
+            this.cdr.detectChanges();
+          }
+        });
       }
       addEventListener('keydown', this.onKeydown);
     } else {
@@ -173,7 +196,7 @@ export class WorklogEditorComponent implements OnInit {
       removeEventListener('keydown', this.onKeydown);
     }
   }
-  get worklog(): Worklog {
+  get worklog(): Worklog | null {
     return this._worklog;
   }
 
@@ -211,7 +234,8 @@ export class WorklogEditorComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private authFacade: AuthFacade,
     private worklogFacade: WorklogFacade,
-    private appStateService: AppStateService
+    private appStateService: AppStateService,
+    private issueApi: IssueApi
   ) {
   }
 
@@ -532,8 +556,10 @@ export class WorklogEditorComponent implements OnInit {
    */
   save(): void {
     this.saving = true;
+    // Worklog existe garantizado cuando se invoca save
+    const worklog = this.worklog!;
     if (this.adding) {
-      this.worklogFacade.addWorklog$(this.worklog, this.start, this.durationMinutes * 60, this.commentString)
+      this.worklogFacade.addWorklog$(worklog, this.start, this.durationMinutes * 60, this.commentString)
         .subscribe({
           next: () => this.close(),
           complete: () => {
@@ -542,7 +568,7 @@ export class WorklogEditorComponent implements OnInit {
           }
         });
     } else {
-      this.worklogFacade.updateWorklog$(this.worklog, this.start, this.durationMinutes * 60, this.commentString)
+      this.worklogFacade.updateWorklog$(worklog, this.start, this.durationMinutes * 60, this.commentString)
         .subscribe({
           next: () => this.close(),
           complete: () => {
@@ -561,19 +587,44 @@ export class WorklogEditorComponent implements OnInit {
    * Handles issue selection action from issue picker.
    */
   selectIssue(issue: Issue): void {
-    if (this.worklog) {
-      this.worklog.issue = issue;
-      this.worklog.issueId = issue ? issue.id : null;
+    // Set basic issue info immediately
+    if (this._worklog) {
+      this._worklog.issue = issue;
+      this._worklog.issueId = issue.id;
     }
     this.updatePanelHueSaturationAndIssueString(issue, '');
+    // Reset warning state
+    this.missingEstimate = false;
+    this.warningMessage = '';
+    // Fetch full issue to get original estimate
+    if (issue.key) {
+      this.issueApi.getIssue$(issue.key).subscribe(full => {
+        const chosen = full || issue;
+        if (this._worklog) {
+          this._worklog.issue = chosen;
+        }
+        this.updatePanelHueSaturationAndIssueString(chosen, '');
+        const estimate = chosen.fields?.timeoriginalestimate ?? 0;
+        if (estimate <= 0) {
+          this.missingEstimate = true;
+          this.warningMessage = 'No original estimate set';
+        }
+        this.cdr.detectChanges();
+      });
+    }
   }
 
   updatePanelHueSaturationAndIssueString(issue?: Issue, defaultIssueString: string = '···'): void {
-    this.panelHue = issue ? Math.round((Number(issue.fields.parent
-      ? issue.fields.parent.id
-      : issue.id) * 360 / 1.61803)) % 360 : 0;
-    this.panelSaturation = issue ? 50 : 0;
-    this.issueString = issue ? issue.key + ' - ' + issue.fields.summary : defaultIssueString;
+    if (issue) {
+      const parentOrSelfId = issue.fields?.parent?.id ?? issue.id ?? '';
+      this.panelHue = Math.round((Number(parentOrSelfId) * 360 / 1.61803)) % 360;
+      this.panelSaturation = 50;
+      this.issueString = issue.key + ' - ' + (issue.fields?.summary ?? '');
+    } else {
+      this.panelHue = 0;
+      this.panelSaturation = 0;
+      this.issueString = defaultIssueString;
+    }
   }
 
   close(): void {

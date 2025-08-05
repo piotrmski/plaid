@@ -40,6 +40,9 @@ Ctrl to snap to 60 minutes."
         [class.cloud-open]="issuePickerOpen"
         [tabIndex]="shouldTabIndexBe0() && !worklog?.id ? 0 : -1"
       >
+      <!-- Icono de precaución si la tarea no tiene estimación -->
+      <span *ngIf="missingEstimate" class="warning-icon" title="Esta tarea no tiene estimación">⚠️</span>
+      <span *ngIf="missingEstimate" class="warning-text">{{ warningMessage }}</span>
       <label>Date</label>
       <input
         #calendarToggle

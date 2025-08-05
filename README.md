@@ -95,18 +95,26 @@ npm run start-dev
 
 To build the Angular project to `./build`, run:
 
+```bash
+# If you see the error "digital envelope routines::unsupported" on Node.js 17+, prefix the build command:
+NODE_OPTIONS=--openssl-legacy-provider npm run build
 ```
-npm run build
+
+Then clear the legacy option before starting the app:
+
+```bash
+unset NODE_OPTIONS
+npm run start
 ```
 
 The built project can then be run without packaging:
 
-```
+```bash
 npm run start
 ```
 
 After building, you can also package the project for the current platform to `./dist`:
 
-```
+```bash
 npm run package
 ```

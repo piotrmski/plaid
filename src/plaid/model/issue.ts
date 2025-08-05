@@ -22,7 +22,9 @@ export interface Issue {
       statusCategory?: {
         colorName: string;
       }
-    }
+    };
+    /** Original time estimate in seconds */
+    timeoriginalestimate?: number;
   };
   renderedFields?: {};
   properties?: any;

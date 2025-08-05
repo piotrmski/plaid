@@ -12,9 +12,12 @@ export class IssueApi {
 
   constructor(private http: HttpClient) { }
 
-  getIssue$(issueIdOrKey: string): Observable<Issue> {
-    return this.http.get<Issue>(this.getIssueUrl.replace('{issueIdOrKey}', issueIdOrKey) +
-      '?fields=components,issuetype,parent,priority,summary,status').pipe(catchError(() => of(null)));
+  getIssue$(issueIdOrKey: string): Observable<Issue | null> {
+    // Also fetch original time estimate to detect missing estimations
+    return this.http.get<Issue>(
+      this.getIssueUrl.replace('{issueIdOrKey}', issueIdOrKey) +
+      '?fields=components,issuetype,parent,priority,summary,status,timeoriginalestimate'
+    ).pipe(catchError(() => of(null)));
   }
 
   search$(jql: string, limit: number = 15): Observable<SearchResults> {
