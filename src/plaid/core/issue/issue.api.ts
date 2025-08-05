@@ -32,6 +32,23 @@ export class IssueApi {
         'priority',
         'summary',
         'status'
-      ]});
+      ]
+    });
+  }
+
+  /**
+   * Actualiza la estimación original (timetracking.originalEstimate) de un issue
+   * @param issueKey clave del issue
+   * @param estimateTexto texto de estimación (ej. "1h 30m")
+   */
+  updateOriginalEstimate$(issueKey: string, estimateTexto: string): Observable<any> {
+    const url = this.getIssueUrl.replace('{issueIdOrKey}', issueKey);
+    return this.http.put(url, {
+      fields: {
+        timetracking: {
+          originalEstimate: estimateTexto
+        }
+      }
+    });
   }
 }

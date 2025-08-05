@@ -43,6 +43,22 @@ Ctrl to snap to 60 minutes."
       <!-- Icono de precaución si la tarea no tiene estimación -->
       <span *ngIf="missingEstimate" class="warning-icon" title="Esta tarea no tiene estimación">⚠️</span>
       <span *ngIf="missingEstimate" class="warning-text">{{ warningMessage }}</span>
+      <!-- Campo para ingresar estimación original -->
+      <div *ngIf="missingEstimate" class="original-estimate-entry">
+        <input
+          type="text"
+          class="tangible"
+          [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
+          placeholder="e.g. 1h 30m"
+          [(ngModel)]="originalEstimateText"
+        />
+        <button
+          class="button small tangible"
+          [tabIndex]="shouldTabIndexBe0() ? 0 : -1"
+          (click)="setOriginalEstimate()"
+          [disabled]="!originalEstimateText"
+        >Set estimate</button>
+      </div>
       <label>Date</label>
       <input
         #calendarToggle

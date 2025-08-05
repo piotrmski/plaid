@@ -73,6 +73,8 @@ export class WorklogEditorComponent implements OnInit {
   missingEstimate = false;
   /** Texto de advertencia a mostrar junto al icono */
   warningMessage: string = '';
+  /** Texto para que el usuario ingrese la nueva estimación original */
+  originalEstimateText: string = '';
 
   @ViewChild('panel')
   panel: ElementRef<HTMLDivElement>;
@@ -612,6 +614,25 @@ export class WorklogEditorComponent implements OnInit {
         this.cdr.detectChanges();
       });
     }
+  }
+  /** Guarda la estimación original introducida por el usuario */
+  setOriginalEstimate(): void {
+    if (!this._worklog?.issue?.key || !this.originalEstimateText) {
+      return;
+    }
+    const key = this._worklog.issue.key;
+    this.issueApi.updateOriginalEstimate$(key, this.originalEstimateText).subscribe(() => {
+      // Recargar issue para reflejar la nueva estimación
+      this.issueApi.getIssue$(key).subscribe(full => {
+        if (full) {
+          this._worklog!.issue = full;
+          this.updatePanelHueSaturationAndIssueString(full);
+          this.missingEstimate = false;
+          this.originalEstimateText = '';
+          this.cdr.detectChanges();
+        }
+      });
+    });
   }
 
   updatePanelHueSaturationAndIssueString(issue?: Issue, defaultIssueString: string = '···'): void {
