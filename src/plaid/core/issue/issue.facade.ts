@@ -32,7 +32,7 @@ export class IssueFacade {
 
   private getSuggestionsFromApi$(): Observable<Issue[]> {
     return this.issueApi
-      .search$('status changed by currentUser() OR creator = currentUser() order by updatedDate desc').pipe(
+      .search$('(status changed by currentUser() OR creator = currentUser()) and status not in (Done, Closed) order by updatedDate desc').pipe(
         map(res => res.issues)
       );
   }
