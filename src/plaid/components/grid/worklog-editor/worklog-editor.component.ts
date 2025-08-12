@@ -170,7 +170,7 @@ export class WorklogEditorComponent implements OnInit {
       this.editedPanelInRange = this.date >= this.dateRange.start && this.date <= this.dateRange.end;
       this.updatePanelHueSaturationAndIssueString(worklog.issue);
       this.dateString = Format.date(this.start);
-      this.commentString = worklog.comment ?? '';
+      this.commentString = worklog.comment ?? '**Avances del dia de hoy**\n\n\n**En que punto estamos**\n\n';
       if (this.editedPanelInRange) {
         this.computeSizeAndOffset();
       }
