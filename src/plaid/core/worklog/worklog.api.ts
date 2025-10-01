@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
-import {Worklog} from '../../model/worklog';
-import {HttpClient} from '@angular/common/http';
-import {SearchResults} from '../../model/search-results';
-import {formatDate} from '@angular/common';
-import {Observable} from 'rxjs';
-import {WorklogWithPagination} from '../../model/worklog-with-pagination';
-import {User} from '../../model/user';
-import {DateRange} from '../../model/date-range';
+import { Injectable } from '@angular/core';
+import { Worklog } from '../../model/worklog';
+import { HttpClient } from '@angular/common/http';
+import { SearchResults } from '../../model/search-results';
+import { formatDate } from '@angular/common';
+import { Observable } from 'rxjs';
+import { WorklogWithPagination } from '../../model/worklog-with-pagination';
+import { User } from '../../model/user';
+import { DateRange } from '../../model/date-range';
 
 @Injectable({ providedIn: 'root' })
 export class WorklogApi {
-  private readonly searchUrl = '/rest/api/2/search';
+  private readonly searchUrl = '/rest/api/3/search/jql';
   private readonly getWorklogsUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
   private readonly addWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
   private readonly updateWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog/{id}';
@@ -31,8 +31,8 @@ export class WorklogApi {
       + '&startAt=' + startAt
       + '&jql=' + encodeURIComponent(
         'worklogAuthor = currentUser() && worklogDate >= "'
-          + formatDate(dateRange.start, 'yyyy-MM-dd', 'en-US') + '" && worklogDate <= "'
-          + formatDate(dateRange.end, 'yyyy-MM-dd', 'en-US') + '"'
+        + formatDate(dateRange.start, 'yyyy-MM-dd', 'en-US') + '" && worklogDate <= "'
+        + formatDate(dateRange.end, 'yyyy-MM-dd', 'en-US') + '"'
       );
     return this.http.get<SearchResults>(url);
   }

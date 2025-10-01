@@ -2,6 +2,10 @@
 
 ## 1.0
 
+**1.0.2**
+
+- updated API endpoints for issue and worklog services (thanks [cafesao](https://github.com/cafesao)!)
+
 **1.0.1**
 
 - fixed user self URI containing `:`

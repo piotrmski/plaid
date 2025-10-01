@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {Issue} from '../../model/issue';
-import {SearchResults} from '../../model/search-results';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Issue } from '../../model/issue';
+import { SearchResults } from '../../model/search-results';
 
 @Injectable({ providedIn: 'root' })
 export class IssueApi {
   private readonly getIssueUrl = '/rest/api/2/issue/{issueIdOrKey}';
-  private readonly searchUrl = '/rest/api/2/search';
+  private readonly searchUrl = '/rest/api/3/search/jql';
 
   constructor(private http: HttpClient) { }
 
@@ -18,17 +18,11 @@ export class IssueApi {
   }
 
   search$(jql: string, limit: number = 15): Observable<SearchResults> {
-    return this.http.post<SearchResults>(this.searchUrl, {
-      jql,
-      startAt: 0,
-      maxResults: limit,
-      fields: [
-        'components',
-        'issuetype',
-        'parent',
-        'priority',
-        'summary',
-        'status'
-      ]});
+    const url = this.searchUrl
+      + '?jql=' + encodeURIComponent(jql)
+      + '&startAt=0'
+      + '&maxResults=' + limit
+      + '&fields=components,issuetype,parent,priority,summary,status';
+    return this.http.get<SearchResults>(url);
   }
 }
