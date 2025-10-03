@@ -7,8 +7,8 @@ import { SearchResults } from '../../model/search-results';
 
 @Injectable({ providedIn: 'root' })
 export class IssueApi {
-  private readonly getIssueUrl = '/rest/api/2/issue/{issueIdOrKey}';
-  private readonly searchUrl = '/rest/api/3/search/jql';
+  private readonly getIssueUrl = '/rest/api/latest/issue/{issueIdOrKey}';
+  private readonly searchUrl = '/rest/api/latest/search/jql';
 
   constructor(private http: HttpClient) { }
 
