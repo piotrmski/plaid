@@ -10,11 +10,11 @@ import { DateRange } from '../../model/date-range';
 
 @Injectable({ providedIn: 'root' })
 export class WorklogApi {
-  private readonly searchUrl = '/rest/api/3/search/jql';
-  private readonly getWorklogsUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
-  private readonly addWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog';
-  private readonly updateWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog/{id}';
-  private readonly deleteWorklogUrl = '/rest/api/2/issue/{issueIdOrKey}/worklog/{id}';
+  private readonly searchUrl = '/rest/api/latest/search/jql';
+  private readonly getWorklogsUrl = '/rest/api/latest/issue/{issueIdOrKey}/worklog';
+  private readonly addWorklogUrl = '/rest/api/latest/issue/{issueIdOrKey}/worklog';
+  private readonly updateWorklogUrl = '/rest/api/latest/issue/{issueIdOrKey}/worklog/{id}';
+  private readonly deleteWorklogUrl = '/rest/api/latest/issue/{issueIdOrKey}/worklog/{id}';
 
   constructor(private http: HttpClient) { }
 
