@@ -48,14 +48,6 @@ Plaid lets you get a better overview of your Jira worklog. Add, edit and remove 
   Hover you mouse over a worklog entry panel to reveal action buttons. Click the trash button and then click "Yes" to delete the entry.
 
 
-## New in 1.0
-
-- Adding new worklog entries
-- Deleting existing worklog entries
-- Keyboard navigation in worklog entry editor form is now possible
-
-See full change log in `changelog.md`
-
 ## Installation
 
 ### Windows
